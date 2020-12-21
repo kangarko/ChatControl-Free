@@ -15,6 +15,8 @@ ChatControl Pro is a legendary chat plugin that took the marketplace by storm in
 * Support for regular expressions to create custom filters
 * Thousands of placeholders
 
+Check out https://mineacademy.org/plugins for more information.
+
 For the time being we do not offer a separate Wikipedia for the free version. Instead, you are welcome to check **[ChatControl's Pro Wikipedia](https://github.com/kangarko/ChatControl-Pro/wiki)** that contains very similar information, except that some features are missing or labeled differently in the free version. Please keep in mind that ChatControl Free is no longer receiving updates except for critical vulnerability patches. To support our development, please consider purchasing the Pro version!
 
 If you have any **questions or bugs to report**, try seeing if [those can be resolved quickly](https://github.com/kangarko/ChatControl-Pro/wiki/Frequently-Asked-Questions) by yourself. If that does not help, you are welcome to **fill an issue**. Please read the [Getting Help the Best Way](https://github.com/kangarko/ChatControl-Pro/wiki/Getting-Help-the-Right-Way) to obtain help as quickly as possible.
