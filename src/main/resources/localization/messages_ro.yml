@@ -1,0 +1,72 @@
+# ---------------------------------------------------------
+# This file contains most of the messages
+# and provides simple way to translate the plugin.
+# 
+# If you want to customize the localization, simply
+# copy this file to plugin's folder localization and start editing.
+# Example: plugins/ChatControl/localization/messages_en.yml
+# It will still be updated with new values in future releases.
+#
+# To not display a message, set it to 'none'
+# Messages supports variables beginning with % and color codes with & character
+# ---------------------------------------------------------
+
+Cannot:
+  Broadcast_Empty_Message: '&cMesajul din {event} este gol. Fara broadcast.'
+  Chat_While_Muted: '&7Nu poti vorbi cand chat-ul este oprit!'
+  Command_While_Muted: '&7Nu poti folosi aceasta comanda cand chat-ul este oprit!'
+  Chat_Until_Moved: '&7Nu poti vorbi pana nu te misti!'
+
+Anti_Bot:
+  Rejoin_Message: '{prefix}\n\n&6Te rog asteapta &7{time} {seconds}&6 intainte sa te loghezi din nou.'
+
+Anti_Spam:
+  Similar_Message: '&cTe rog nu repeta acelasi (sau similar) mesaj.'
+  Similar_Command: '&cTe rog nu repeta aceeasi (sau similara) comanda.'
+  Too_Much_Caps: '&cNu folosi atat de mult CAPS LOCK!'
+  Command_Wait_Message: '&cTe rog asteapta {time} {seconds} pana la urmatoarea comanda.'
+  Chat_Wait_Message: '&cTe rog asteapta {time} {seconds} pana la urmatorul mesaj.'
+
+Chat_Mute:
+  Mute: '&7Chat-ul a fost oprit cu succes.'
+  Unmute: '&7Chat-ul nu mai este oprit.'
+  Mute_Broadcast: '{server} &6{player} a oprit chat-ul.'
+  Unmute_Broadcast: '{server} &6{player} a pornit chat-ul.'
+  Anonymous_Mute_Broadcast: '{server} Global mute intializat.'
+  Anonymous_Unmute_Broadcast: '{server} Global mute anulat.'
+
+Chat_Clear:
+  Broadcast: '{server} &6{player} a sters chat-ul.'
+  Anonymous_Broadcast: '{server} Chat-ul server-ului a fost sters.'
+  Console_Player_Message: '{prefix} &7Consola a fost stearsa cu succes.'
+  Console_Message: '&7Consola a fost stearsa de catre {player}'
+  Chat_Staff_Message: '&7^----- [ == &fChat-ul a fost sters de catre {player} &7== ] -----^'
+
+Signs:
+  Duplicate_Text: '{server} Nu poti face mai multe semne cu acelasi text!'
+  Duplicate_Text_Staff: '&c{player} a facut semne cu acelasi text: {message}'
+  Broke_When_Violated_A_Rule: Semnul este stricat, trebuie sa fie ceva in neregula!
+
+Usage:
+  Fake_Command: '{prefix} Usage: /chatcontrol fake <&bjoin&f/&aleave&f/&ekick&f>'
+
+Update_Available: '&2O noua versiune a plugin-ului &3ChatControl&2 este disponibila.\n&2Versiune curenta:
+  &f{current}&2; Versiune noua: &f{new}\n&2Poti opri notificarea din config.'
+
+No_Permission: '&cNu ai permisiunea ({permission}).'
+Reload_Complete: '{prefix} &2Configuratie reincarcata cu succes.'
+Reload_Failed: '{prefix} &cReincarcarea configuratiei a esuat, verifica consola. Eroarea a fost: &4{error}'
+Wrong_Parameters: '&cParametrii gresiti sau lipsa permisiunii.'
+Wrong_Arguments: '&cArgumente gresite. Scrie &6/chc list&c pentru lista comenzilor.'
+
+General:
+  Player_Join: player join
+  Player_Quit: player quit
+  Player_Kick: player kick
+  Prefix: '&8[&3ChatControl&8]&7'
+  Server_Prefix: '&8[&4Server&8]&c'
+  Console: '&cserver'
+  Reason: '&7Motiv: &f{reason}'
+  Sign: SIGN
+  Command: COMMAND
+  Seconds: second, seconds

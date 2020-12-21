@@ -1,0 +1,72 @@
+# ---------------------------------------------------------
+# This file contains most of the messages
+# and provides simple way to translate the plugin.
+# 
+# If you want to customize the localization, simply
+# copy this file to plugin's folder localization and start editing.
+# Example: plugins/ChatControl/localization/messages_en.yml
+# It will still be updated with new values in future releases.
+#
+# To not display a message, set it to 'none'
+# Messages supports {} variables and color codes with & character
+# ---------------------------------------------------------
+
+Cannot:
+  Broadcast_Empty_Message: '&cСъобщението на {event} е празно. Няма излъчване.'
+  Chat_While_Muted: '&7Не можете да пишете в чата докато е заглушен!'
+  Command_While_Muted: '&7Не можете да ползвате тази команда докато чата е заглушен!'
+  Chat_Until_Moved: '&7Не можете да пишете докато не мръднете!'
+
+Anti_Bot:
+  Rejoin_Message: '{prefix}\n\n&6Моля изчакайте &7{time} %секунди&6 преди да влезете отново.'
+
+Anti_Spam:
+  Similar_Message: '&cМоля не повтаряйте сьщото (или подобно) съобщение.'
+  Similar_Command: '&cМоля не повтаряйте същата (или подобна) команда.'
+  Too_Much_Caps: '&cМоля не използвайте толкова много ГЛАВНИ БУКВИ!'
+  Command_Wait_Message: '&cМоля изчакайте {time} %секунди преди следващата ви команда.'
+  Chat_Wait_Message: '&cМоля изчакайте {time} %секунди преди следващото ви съобщение.'
+
+Chat_Mute:
+  Mute: '&7Чатът е заглушен успешно.'
+  Unmute: '&7Чатът вече не е заглушен.'
+  Mute_Broadcast: '{server} &6{player} заглуши чата.'
+  Unmute_Broadcast: '{server} &6{player} отглуши чата.'
+  Anonymous_Mute_Broadcast: '{server} Инициирано глобално заглушаване на чата.'
+  Anonymous_Unmute_Broadcast: '{server} Глобалното заглушаване на чата е отказано.'
+
+Chat_Clear:
+  Broadcast: '{server} &6{player} изчисти чата.'
+  Anonymous_Broadcast: '{server} Чатът е почистен.'
+  Console_Player_Message: '{prefix} &7Конзолата е почистена успешно.'
+  Console_Message: '&7Конзолата е почистена от {player}'
+  Chat_Staff_Message: '&7^----- [ == &fЧатът е почистен от {player} &7== ] -----^'
+
+Signs:
+  Duplicate_Text: '{server} Не можете да правите много знаци с един и същ текст!'
+  Duplicate_Text_Staff: '&c{player} прави много знаци с ��днакъв текст: {message}'
+  Broke_When_Violated_A_Rule: Вашият знак се счупи, значи нещо не е наред!
+
+Usage:
+  Fake_Command: '{prefix} Използване: /chatcontrol fake <&bjoin&f/&aleave&f/&ekick&f>'
+
+Update_Available: '&2Достъпна е нома версия на &3ChatControl&2.\n&2Текуща версия:
+  &f{current}&2; Нова версия: &f{new}\n&2Можете да изключите това съобщение от конфигурацията.'
+
+No_Permission: '&cНедостатъчни права ({permission}).'
+Reload_Complete: '{prefix} &2Конфигурацията презаредена успешно.'
+Reload_Failed: '{prefix} &cПрезареждането на конфигурацията се провали, проверете конзолата. Грешката е: &4{error}'
+Wrong_Parameters: '&cГрешни параметри или нямате права.'
+Wrong_Arguments: '&cГрешни аргументи. Напишете &6/chc list&c за списък с команди.'
+
+General:
+  Player_Join: играч влезе
+  Player_Quit: играч излезе
+  Player_Kick: играч бе изритан.
+  Prefix: '&8[&3ChatControl&8]&7'
+  Server_Prefix: '&8[&4Сървър&8]&c'
+  Console: '&cсървър'
+  Reason: '&7Причин: &f{reason}'
+  Sign: ЗНАК
+  Command: КОМАНДА
+  Seconds: секунда, секунди

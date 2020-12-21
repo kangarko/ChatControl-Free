@@ -1,0 +1,73 @@
+# ---------------------------------------------------------
+# Tento subor obsahuje v�csinu sprav od pluginu
+# a umoznuje jednoduchu distribuciu prekladov.
+# 
+# Ak si zelate preklad upravit, jednoducho
+# vytvorte subor s tymto nazvom do zlozky localizations v plugine
+# ukazka: plugins/ChatControl/localization/messages_sk.yml
+# Do suboru sa nakopiruju vsetky dostupne spravy a bude
+# priebezne aktualizovany s vydavanim novsich verzii.
+#
+# Pre skrytie spravy ju nastavte na 'none'
+# Spravy podporuju premenne s % a farebne kody pomocou znaku &
+# ---------------------------------------------------------
+
+Cannot:
+  Broadcast_Empty_Message: '&cSprava pri akcii \"{event}\" je prazdna, nic sa neposiela.'
+  Chat_While_Muted: '&7Chat bol docasne zablokovany, nemozno pisat.'
+  Command_While_Muted: '&7Prikaz nemozno pouzit ak je chat zablokovany.'
+  Chat_Until_Moved: '&7Pred pisanim do chatu sa prosim pohnite s miesta!'
+
+Anti_Bot:
+  Rejoin_Message: '{prefix}\n\n&6Prosim pockajte &7{time} {seconds}&6 pred prihlasenim sa do hry.'
+
+Anti_Spam:
+  Similar_Message: '&cProsim neopakujte rovnake (alebo podobne) spravy.'
+  Similar_Command: '&cProsim neopakujte rovnake (alebo podobne) prikazy.'
+  Too_Much_Caps: '&cProsim nepouzivajte prilis vela CAPS locku!'
+  Command_Wait_Message: '&cProsim pockajte {time} {seconds} pred dalsim prikazom.'
+  Chat_Wait_Message: '&cProsim pockajte {time} {seconds} pred dalsou spravou.'
+
+Chat_Mute:
+  Mute: '&7Chat bol uspesne zablokovany.'
+  Unmute: '&7Chat bol odblokovany.'
+  Mute_Broadcast: '{server} &6{player} zablokoval herny chat.'
+  Unmute_Broadcast: '{server} &6{player} odblokoval chat.'
+  Anonymous_Mute_Broadcast: '{server} Herny chat bol docasne zablokovany.'
+  Anonymous_Unmute_Broadcast: '{server} Herny chat bol odblokovany.'
+  
+Chat_Clear:
+  Broadcast: '{server} &6{player} vycistil herny chat.'
+  Anonymous_Broadcast: '{server} Herny chat bol preciteny.'
+  Console_Player_Message: '{prefix} &7Konzola bola uspesne precistena.'
+  Console_Message: '&7Konzola bola precistena hracom {player}'
+  Chat_Staff_Message: '&7^---- [ == &fChat bol vycisteny hracom {player} &7== ] ----^'
+
+Signs:
+  Duplicate_Text: '{server} Prosim neopakujte rovnaky text na cedulkach!'
+  Duplicate_Text_Staff: '&c{player} opakoval rovnaky text na cedulkach: {message}'
+  Broke_When_Violated_A_Rule: Nemozno polozit cedulku, nieco nieje v poriadku s textom!
+
+Usage:
+  Fake_Command: '{prefix} Pouzitie: /chatcontrol fake <&bjoin&f/&aleave&f/&ekick&f>'
+
+Update_Available: '&2Je dostupna nova verzia &3ChatControlu&2.\n&2Sucasna verzia:
+  &f{current}&2; Nova verzia: &f{new}\n&2Toto hlasenie je mozne vypnut v nastaveniach.'
+
+No_Permission: '&cNedostatocne povolenie ({permission}).'
+Reload_Complete: '{prefix} &2Nastavenia a pravidla boli znovunacitane.'
+Reload_Failed: '{prefix} &cRestart nastaveni a pravidiel zlyhal, pozri konzolu. Chyba: &4{error}'
+Wrong_Parameters: '&cChybne parametre alebo povolenie na ich pouzitie.'
+Wrong_Arguments: '&cChybne argumenty. Prikazom &6/chc list&c zobrazite pomoc.'
+
+General:
+  Player_Join: pripojenie hraca
+  Player_Quit: odpojenie hraca
+  Player_Kick: vyhodenie hraca
+  Prefix: '&8[&3ChatControl&8]&7'
+  Server_Prefix: '&8[&4Server&8]&c'
+  Console: '&cserver'
+  Reason: '&7Dovod: &f{reason}'
+  Sign: CEDULKA
+  Command: PRIKAZ
+  Seconds: sekundu, sekundy, sekund

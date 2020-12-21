@@ -1,0 +1,72 @@
+# ---------------------------------------------------------
+# This file contains most of the messages
+# and provides simple way to translate the plugin.
+# 
+# If you want to customize the localization, simply
+# copy this file to plugin's folder localization and start editing.
+# Example: plugins/ChatControl/localization/messages_en.yml
+# It will still be updated with new values in future releases.
+#
+# To not display a message, set it to 'none'
+# Messages supports variables beginning with % and color codes with & character
+# ---------------------------------------------------------
+
+Cannot:
+  Broadcast_Empty_Message: '&cMessage on {event} is empty. No broadcast.'
+  Chat_While_Muted: '&7You cannot chat while the chat is muted!'
+  Command_While_Muted: '&7You cannot use this command while the chat is muted!'
+  Chat_Until_Moved: '&7You cannot chat until you move!'
+
+Anti_Bot:
+  Rejoin_Message: '{prefix}\n\n&6Please wait &7{time} {seconds}&6 before logging in again.'
+
+Anti_Spam:
+  Similar_Message: '&cPlease do not repeat the same (or similar) message.'
+  Similar_Command: '&cPlease do not repeat the same (or similar) command.'
+  Too_Much_Caps: '&cDo not use so much CAPS LOCK!'
+  Command_Wait_Message: '&cPlease wait {time} {seconds} before your next command.'
+  Chat_Wait_Message: '&cPlease wait {time} {seconds} before your next message.'
+
+Chat_Mute:
+  Mute: '&7Chat was successfully muted.'
+  Unmute: '&7Chat is no longer muted.'
+  Mute_Broadcast: '{server} &6{player} has muted the chat.'
+  Unmute_Broadcast: '{server} &6{player} has unmuted the chat.'
+  Anonymous_Mute_Broadcast: '{server} Initiated global chat mute.'
+  Anonymous_Unmute_Broadcast: '{server} Global chat mute cancelled.'
+
+Chat_Clear:
+  Broadcast: '{server} &6{player} cleared the chat.'
+  Anonymous_Broadcast: '{server} The game chat was cleared.'
+  Console_Player_Message: '{prefix} &7Console was successfully cleared.'
+  Console_Message: '&7Console was cleared by {player}'
+  Chat_Staff_Message: '&7^----- [ == &fChat was cleared by {player} &7== ] -----^'
+
+Signs:
+  Duplicate_Text: '{server} You cannot make multiple signs with the same text!'
+  Duplicate_Text_Staff: '&c{player} created signs with same text: {message}'
+  Broke_When_Violated_A_Rule: Your sign broke, there must be something wrong with it!
+
+Usage:
+  Fake_Command: '{prefix} Usage: /chatcontrol fake <&bjoin&f/&aleave&f/&ekick&f>'
+
+Update_Available: '&2A new version of &3ChatControl&2 is available.\n&2Current version:
+  &f{current}&2; New version: &f{new}\n&2You can disable this notification in the config.'
+
+No_Permission: '&cInsufficient permission ({permission}).'
+Reload_Complete: '{prefix} &2Configuration reloaded successfully.'
+Reload_Failed: '{prefix} &cReloading configuration failed, check console. The error was: &4{error}'
+Wrong_Parameters: '&cWrong parameters or missing permission.'
+Wrong_Arguments: '&cWrong arguments. Type &6/chc list&c for command list.'
+
+General:
+  Player_Join: player join
+  Player_Quit: player quit
+  Player_Kick: player kick
+  Prefix: '&8[&3ChatControl&8]&7'
+  Server_Prefix: '&8[&4Server&8]&c'
+  Console: '&cserver'
+  Reason: '&7Reason: &f{reason}'
+  Sign: SIGN
+  Command: COMMAND
+  Seconds: second, seconds

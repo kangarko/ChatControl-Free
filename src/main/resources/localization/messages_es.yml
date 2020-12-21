@@ -1,0 +1,72 @@
+# ---------------------------------------------------------
+# This file contains most of the messages
+# and provides simple way to translate the plugin.
+# 
+# If you want to customize the localization, simply
+# copy this file to plugin's folder localization and start editing.
+# Example: plugins/ChatControl/localization/messages_en.yml
+# It will still be updated with new values in future releases.
+#
+# To not display a message, set it to 'none'
+# Messages supports variables beginning with % and color codes with & character
+# ---------------------------------------------------------
+
+Cannot:
+  Broadcast_Empty_Message: '&cMensaje en {event} esta vacio. No se difunde.'
+  Chat_While_Muted: '&7No se puede usar el chat mientras esté silenciado!'
+  Command_While_Muted: '&7No se puede utilizar este comando mientras el chat este silenciado!'
+  Chat_Until_Moved: '&7No puedes usar el chat hasta que te muevas!'
+
+Anti_Bot:
+  Rejoin_Message: '{prefix}\n\n&6Espera &7{time} {seconds}&6 antes de iniciar sesión otra vez.'
+
+Anti_Spam:
+  Similar_Message: '&cPor favor, no repitas el mismo mensaje (o similar).'
+  Similar_Command: '&cPor favor no repitas el mismo comando (o similar).'
+  Too_Much_Caps: '&cNo uses MAYUSCULAS!'
+  Command_Wait_Message: '&cEspera {time} {seconds} antes de poner otro comando.'
+  Chat_Wait_Message: '&cEspera {time} {seconds} antes de poner otro mensaje.'
+
+Chat_Mute:
+  Mute: '&7El Chat fue silenciado con éxito.'
+  Unmute: '&7El Chat ya no está silenciado.'
+  Mute_Broadcast: '{server} &6{player} ha silenciado el chat.'
+  Unmute_Broadcast: '{server} &6{player} ha habilitado el chat.'
+  Anonymous_Mute_Broadcast: '{server} Chat Global silenciado.'
+  Anonymous_Unmute_Broadcast: '{server} Chat Global habilitado.'
+
+Chat_Clear:
+  Broadcast: '{server} &6{player} borro el chat.'
+  Anonymous_Broadcast: '{server} El chat fue borrado.'
+  Console_Player_Message: '{prefix} &7Consola fue borrado con éxito.'
+  Console_Message: '&7Consola fue borrado por {player}'
+  Chat_Staff_Message: '&7^----- [ == &fChat fue borrado por {player} &7== ] -----^'
+
+Signs:
+  Duplicate_Text: '{server} No se pueden hacer varios carteles con el mismo texto!'
+  Duplicate_Text_Staff: '&c{player} ha creado carteles con el mismo texto: {message}'
+  Broke_When_Violated_A_Rule: Tu cartel se rompió, algo tiene que haber de malo en ello!
+
+Usage:
+  Fake_Command: '{prefix} Usa: /chatcontrol fake <&bjoin&f/&aleave&f/&ekick&f>'
+
+Update_Available: '&2Nueva versión de &3ChatControl&2 está disponible.\n&2Current versión:
+  &f{current}&2; Nueva versión: &f{new}\n&2Puedes desactivar esta notificación en la config.'
+
+No_Permission: '&cNo tienes permisos ({permission}).'
+Reload_Complete: '{prefix} &2Configuración cargado con exito.'
+Reload_Failed: '{prefix} &cFallo en cargar, mira la consola. El error fue: &4{error}'
+Wrong_Parameters: '&cParámetros incorrectos o faltan permisos.'
+Wrong_Arguments: '&cParámetros incorrectos. Escribe &6/chc list&c para ver la lista de comandos.'
+
+General:
+  Player_Join: player join
+  Player_Quit: player quit
+  Player_Kick: player kick
+  Prefix: '&8[&3ChatControl&8]&7'
+  Server_Prefix: '&8[&4Server&8]&c'
+  Console: '&cserver'
+  Reason: '&7Razón: &f{reason}'
+  Sign: SIGN
+  Command: COMMAND
+  Seconds: segundo, segundos

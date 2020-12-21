@@ -1,0 +1,64 @@
+# !---------------------------------------------------------!
+# ! For faults in translation, please contact Meepidy
+# ! at Spigot forums.
+# !---------------------------------------------------------!
+
+Cannot:
+  Broadcast_Empty_Message: '&cMeddelande på {event} är tom. Ingen utsändning.'
+  Chat_While_Muted: '&7Du kan inte chatta när chatten är tystad!'
+  Command_While_Muted: '&7Du kan inte använda detta kommando när chatten är tystad!'
+  Chat_Until_Moved: '&7Du kan inte chatta tills du har flyttat på dig!'
+  
+Anti_Bot:
+  Rejoin_Message: '{prefix}\n\n&6Du måste vänta &7{time} {seconds}&6 innan du loggar in igen.'
+  
+Anti_Spam:
+  Similar_Message: '&cUpprepa inte samma (eller ett liknande) meddelande.'
+  Similar_Command: '&cUpprepa inte samma (eller ett liknande) kommando.'
+  Too_Much_Caps: '&cAnvänd inte så mycket CAPS LOCK!'
+  Command_Wait_Message: '&cDu måste vänta {time} {seconds} innan du skriver ett till kommando.'
+  Chat_Wait_Message: '&cDu måste vänta {time} {seconds} innan du skriver ett till meddelande.'
+  
+Chat_Mute:
+  Mute: '&7Chatten har blivit tystad.'
+  Unmute: '&7Chatten är inte längre tystad.'
+  Mute_Broadcast: '{server} &6{player} tystade chatten.'
+  Unmute_Broadcast: '{server} &6{player} otystade chatten.'
+  Anonymous_Mute_Broadcast: '{server} Initierade global chattystning.'
+  Anonymous_Unmute_Broadcast: '{server} Global chattystning avslutades.'
+  
+Chat_Clear:
+  Broadcast: '{server} &6{player} rensade chatten.'
+  Anonymous_Broadcast: '{server} Spelchatten rensades.'
+  Console_Player_Message: '{prefix} &7Konsoll rensades.'
+  Console_Message: '&7Konsoll rensades av {player}'
+  Chat_Staff_Message: '&7^----- [ == &fChatt rensades av {player} &7== ] -----^'
+  
+Signs:
+  Duplicate_Text: '{server} Du kan inte skapa flera skyltar med samma text!'
+  Duplicate_Text_Staff: '&c{player} skapade flera skyltar med samma text: {message}'
+  Broke_When_Violated_A_Rule: Din skylt gick sönder, det måste vara något fel med den!
+  
+Usage:
+  Fake_Command: '{prefix} Användning: /chatcontrol fake <&bjoin&f/&aleave&f/&ekick&f>'
+  
+Update_Available: '&2En ny version av &3ChatControl&2 är tillgänglig.\n&2Nuvarande version:
+  &f{current}&2; New version: &f{new}\n&2Du kan stänga av den här notifikationen i konfigurationen.'
+  
+No_Permission: '&cOtillräcklig tillåtelse ({permission}).'
+Reload_Complete: '{prefix} &2Konfiguration uppdaterades.'
+Reload_Failed: '{prefix} &cKonfigurationsuppdateringen misslyckades, kolla konsollen. Felet var: &4{error}'
+Wrong_Parameters: '&cFelaktiga parametrar eller saknad tillstånd.'
+Wrong_Arguments: '&cFelaktiga argument. Skriv &6/chc list&c för kommandolista.'
+General:
+  Player_Join: player join
+  Player_Quit: player quit
+  Player_Kick: player kick
+  Prefix: '&8[&3ChatControl&8]&7'
+  Server_Prefix: '&8[&4Server&8]&c'
+  Console: '&cserver'
+  Reason: '&7Anledning§: &f{reason}'
+  Sign: SKYLT
+  Command: KOMMANDO
+  Seconds: sekund, sekunder
+ 

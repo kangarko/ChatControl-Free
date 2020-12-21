@@ -1,0 +1,72 @@
+# ---------------------------------------------------------
+# This file contains most of the messages
+# and provides simple way to translate the plugin.
+# 
+# If you want to customize the localization, simply
+# copy this file to plugin's folder localization and start editing.
+# Example: plugins/ChatControl/localization/messages_en.yml
+# It will still be updated with new values in future releases.
+#
+# To not display a message, set it to 'none'
+# Messages supports variables beginning with % and color codes with & character
+# ---------------------------------------------------------
+
+Cannot:
+  Broadcast_Empty_Message: '&cAz üzenet {event} üres. Nincs közvetítés.'
+  Chat_While_Muted: '&7A chat elnémítása közben nem tudsz csevegni!'
+  Command_While_Muted: '&7Ezt a parancsot nem használhatod a chat elnémítása közben!'
+  Chat_Until_Moved: '&7Nem cseveghetsz, amíg nem mozogsz!'
+
+Anti_Bot:
+  Rejoin_Message: '{prefix}\n\n&6Kérlek, várj&7 &7{time} {seconds}&6, hogy újra csatlakozz a szerverbe.'
+
+Anti_Spam:
+  Similar_Message: '&cKérlek, ne ismételd ezt a szót/mondatot.'
+  Similar_Command: '&cKérlek, ne ismételd ezt a parancsot.'
+  Too_Much_Caps: '&cNe használj csupa NAGY betűket!'
+  Command_Wait_Message: '&cKérlek, várj {time} {seconds}, hogy újra használhasd.'
+  Chat_Wait_Message: '&cKérlek, várj {time} {seconds}, hogy újra használhasd.'
+
+Chat_Mute:
+  Mute: '&7A chat sikeresen elnémítva.'
+  Unmute: '&7A chat már nincs elnémítva.'
+  Mute_Broadcast: '{server} &6{player} elnémította a csevegést.'
+  Unmute_Broadcast: '{server} &6{player} feloldotta a csevegést.'
+  Anonymous_Mute_Broadcast: '{server} Kezdett globális csevegés elnémítása.'
+  Anonymous_Unmute_Broadcast: '{server} A globális csevegés elnémítva.'
+
+Chat_Clear:
+  Broadcast: '{server} &6{player} törölte a csevegést.'
+  Anonymous_Broadcast: '{server} A globális csevegést törölve.'
+  Console_Player_Message: '{prefix} &7A konzol sikeresen törölve lett.'
+  Console_Message: '&7A konzol törölve {player} által'
+  Chat_Staff_Message: '&7^----- [ == &fA csevegést törölte {player} &7== ] -----^'
+
+Signs:
+  Duplicate_Text: '{server} Nem adhatsz több táblát ugyanazzal a szöveggel!'
+  Duplicate_Text_Staff: '&c{player} ugyanazt a szöveget létrehozta: {message}'
+  Broke_When_Violated_A_Rule: A tábla kitört, valami baj van vele!
+
+Usage:
+  Fake_Command: '{prefix} Használat: /chatcontrol fake <&bjoin&f/&aleave&f/&ekick&f>'
+
+Update_Available: '&2Új verziója a &3ChatControl&2 pluginnak elérhető.\n&2Jelenlegi verzió:
+  &f{current}&2; Új verzó: &f{new}\n&2Ezt az értesítést letilthatod a konfigurációban.'
+
+No_Permission: '&4Nincs jogosultságod a használatára! ({permission})'
+Reload_Complete: '{prefix} &2A konfiguráció sikeresen újratöltve.'
+Reload_Failed: '{prefix} &cA konfiguráció újratöltése sikertelen, ellenőrizd a konzolt. A hiba: &4{error}'
+Wrong_Parameters: '&cHelytelen paraméterek vagy hiányzó engedélyek.'
+Wrong_Arguments: '&cHibás argumentum. &6/chc list&c a parancslistához.'
+
+General:
+  Player_Join: player join
+  Player_Quit: player quit
+  Player_Kick: player kick
+  Prefix: '&8[&3ChatControl&8]&7'
+  Server_Prefix: '&8[&4Server&8]&c'
+  Console: '&cszerver'
+  Reason: '&7Oka: &f{reason}'
+  Sign: SIGN
+  Command: COMMAND
+  Seconds: másodperc, másodperc

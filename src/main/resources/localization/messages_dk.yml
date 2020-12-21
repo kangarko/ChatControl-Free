@@ -1,0 +1,72 @@
+# ---------------------------------------------------------
+# This file contains most of the messages
+# and provides a simple way to translate the plugin.
+# 
+# If you want to customize the localization, simply
+# copy this file to plugin's folder localization and start editing.
+# Example: plugins/ChatControl/localization/messages_en.yml
+# It will still be updated with new values in future releases.
+#
+# To not display a message, set it to 'none'
+# Messages supports variables in brackets {} and color codes with & character
+# ---------------------------------------------------------
+
+Cannot: 
+  Broadcast_Empty_Message: '&4Beskeder på {event} er tom. Ingen broadcast.'
+  Chat_While_Muted: '&7Du kan ikke skrive imens chatten er slået &4&lFRA'
+  Command_While_Muted: '&7Du kan ikke bruge denne kommando imens chatten er slået &4&lFRA'
+  Chat_Until_Moved: '&7Flyt dig før du kan skrive'
+  
+Anti_Bot:
+  Rejoin_Message: '{prefix}\n\n&6Vent &7{time} {seconds}&6 før du logger ind igen.'
+  
+Anti_Spam:
+  Similar_Message: '&4Ik gentag den samme (eller ligende) besked'
+  Similar_Command: '&4Ik gentag den samme (eller ligende) kommando'
+  Too_Much_Caps: '&4Ik brug så meget CAPS LOCK!'
+  Command_Wait_Message: '&4Vent {time} {seconds} før din næste kommando.'
+  Chat_Wait_Message: '&4Vent {time} {seconds} før din næste besked'
+  
+Chat_Mute:
+  Mute: '&7Chatten er nu slået &4&lFRA'
+  Unmute: '&7Chatten er nu slået &a&lTIL'
+  Mute_Broadcast: '{server} &4{player} har slået chatten &4&lFRA'
+  Unmute_Broadcast: '{server} &4{player} har slået chatten &a&lTIL'
+  Anonymous_Mute_Broadcast: '{server} Chatten blev slået &4&lFRA'
+  Anonymous_Unmute_Broadcast: '{server} Chatten blev slået &a&lTIL'
+  
+Chat_Clear:
+  Broadcast: '{server} &4{player} &7rensede chatten'
+  Anonymous_Broadcast: '{server} Chatten blev renset'
+  Console_Player_Message: '{prefix} &7Console blev renset med succes'
+  Console_Message: '&7Console blev renset af &4{player}'
+  Chat_Staff_Message: '&4-----[== &7Chatten blev renset af &4{player} ==]-----'
+  
+Signs:
+  Duplicate_Text: '{server} Du kan ikke lave flere skilte med samme tekst!'
+  Duplicate_Text_Staff: '&4{player} lavede skilte med samme tekst: {message}'
+  Broke_When_Violated_A_Rule: '&7Dit skilt brød, der må været noget galt med det'
+  
+Usage:
+  Fake_Command: '{prefix} Brug: /chatcontrol fake <&bjoin&f/&aleave&f/&ekick&f>'
+  
+Update_Available: '&2Ny version af &3ChatControl&2 er tilgængelig.\n&2nuværende version:
+  &f{current}&2; Ny version: &f{new}\n&2Du kan slå denne besked fra i configen.'
+  
+No_Permission: '&4Ingen adgang ({permission}).'
+Reload_Complete: '{prefix} &2Konfiguration reloaded med succes.'
+Reload_Failed: '{prefix} &4Reloading Konfiguration fejlede, tjek console. Fejlen er: &4{error}'
+Wrong_Parameters: '&4Forkerte parameter eller manglende tilladelse.'
+Wrong_Arguments: '&4Forkert argument. Skriv &6/chc list&4 for kommando liste.'
+
+General: 
+  Player_Join: player join
+  Player_Quit: player quit
+  Player_Kick: player kick
+  Prefix: '&8[&4&lChatControl&8]&7 '
+  Server_Prefix: '&8[&4&lChat&8]&7 '
+  Console: '&4server'
+  Reason: '&7Grund: &f{reason}'
+  Sign: SIGN
+  Command: COMMAND
+  Seconds: sekund, sekunder

@@ -1,0 +1,118 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.mineacademy</groupId>
+	<artifactId>ChatControl-Free</artifactId>
+	<version>5.9.1</version>
+	<packaging>jar</packaging>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<author>kangarko</author>
+		<plugin.name>chatcontrol</plugin.name>
+		<main.class>${project.groupId}.${plugin.name}.ChatControl</main.class>
+	</properties>
+
+	<repositories>
+		<repository>
+			<id>mineacademy-repo</id>
+			<url>https://bitbucket.org/kangarko/libraries/raw/master</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+		<!-- The Spigot API and PaperSpigot server -->
+		<dependency>
+			<groupId>org.spigotmc</groupId>
+			<artifactId>spigot-api</artifactId>
+			<version>1.16.3-R0.1-SNAPSHOT</version>
+		</dependency>
+		<!-- No longer shipped in SpigotAPI but is present in the server -->
+		<dependency>
+			<groupId>org.apache.clerezza.ext</groupId>
+			<artifactId>org.json.simple</artifactId>
+			<version>0.4</version>
+		</dependency>
+		<!-- This is NOT used anywhere in ChatControl, only here to prevent compile 
+			errors from missing the log4j dependency that is shipped in the server jar -->
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.13.3</version>
+		</dependency>
+		<!-- MineAcademy guaranteed availability repos for plugins -->
+		<dependency>
+			<groupId>org.mineacademy.plugin</groupId>
+			<artifactId>AuthMe</artifactId>
+			<version>5.6.0-SNAPSHOT-2418</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mineacademy.plugin</groupId>
+			<artifactId>EssentialsX</artifactId>
+			<version>2.18.0.10</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mineacademy.plugin</groupId>
+			<artifactId>Factions</artifactId>
+			<version>3.3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mineacademy.plugin</groupId>
+			<artifactId>MassiveCore</artifactId>
+			<version>3.3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mineacademy.plugin</groupId>
+			<artifactId>Multiverse-Core</artifactId>
+			<version>4.1.1-SNAPSHOT-787</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mineacademy.plugin</groupId>
+			<artifactId>PlaceholderAPI</artifactId>
+			<version>2.10.9-DEV-96</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mineacademy.plugin</groupId>
+			<artifactId>ProtocolLib</artifactId>
+			<version>4.6.0-SNAPSHOT-b473</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mineacademy.plugin</groupId>
+			<artifactId>Towny</artifactId>
+			<version>0.96.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mineacademy.plugin</groupId>
+			<artifactId>Vault</artifactId>
+			<version>1.7.3</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.2.0</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+	</build>
+</project>

@@ -1,0 +1,60 @@
+# !---------------------------------------------------------!
+# ! 该文件于 01.01.2019 15:20:48 自动更新
+# ! 适用版本: v5.7.1
+# !---------------------------------------------------------!
+# ! 由于Bukkit处理YAML配置的方式
+# ! , 所有的 (#) 注释会被清空.
+# ! 参考数值和注释可在Github查看
+# ! https://github.com/kangarko/chatcontrol
+# !---------------------------------------------------------!
+
+Cannot:
+  Broadcast_Empty_Message: '&c事件 {event} 的消息为空. 暂无公告.'
+  Chat_While_Muted: '&7Y你不能在全服禁言时聊天!'
+  Command_While_Muted: '&7你不能在全服禁言时使用这个指令!'
+  Chat_Until_Moved: '&7不走两步你就无法聊天!'
+Anti_Bot:
+  Rejoin_Message: '{prefix}\n\n&6请等待 &7{time} {seconds}&6 再次登录.'
+Anti_Spam:
+  Similar_Message: '&c请停止你的复读行为.'
+  Similar_Command: '&c请不要重复你已经输入过（或相似的）的指令.'
+  Too_Much_Caps: '&c不要输入这么多大写字母!'
+  Command_Wait_Message: '&c请等待 {time} {seconds} 来执行下一条指令.'
+  Chat_Wait_Message: '&c请等待 {time} {seconds} 来说出下一句话.'
+Chat_Mute:
+  Mute: '&7全服禁言已开启.'
+  Unmute: '&7全服禁言已国标.'
+  Mute_Broadcast: '{server} &6{player} 开启了全服禁言.'
+  Unmute_Broadcast: '{server} &6{player} 解除了全服禁言.'
+  Anonymous_Mute_Broadcast: '{server} 开启了全服禁言.'
+  Anonymous_Unmute_Broadcast: '{server} 解除了全服禁言.'
+Chat_Clear:
+  Broadcast: '{server} &6{player} 清空了聊天记录.'
+  Anonymous_Broadcast: '{server} 已清空聊天记录.'
+  Console_Player_Message: '{prefix} &7已清空控制台.'
+  Console_Message: '&7控制台已被 {player} 清空'
+  Chat_Staff_Message: '&7^----- [ == &f{player} 清空了聊天记录&7== ] -----^'
+Signs:
+  Duplicate_Text: '{server} 你不能放置相同内容的告示牌!'
+  Duplicate_Text_Staff: '&c{player} 创建了相同内容的告示牌: {message}'
+  Broke_When_Violated_A_Rule: 你的告示牌放置失败, 你可能违反了服务器规则!
+Usage:
+  Fake_Command: '{prefix} 用法: /chatcontrol fake <&bjoin&f/&aleave&f/&ekick&f>'
+Update_Available: '&2检测到新版本的&3ChatControl&2.\n&2当前版本:
+  &f{current}&2; 新版本: &f{new}\n&2你可以在配置内关闭这个提醒.'
+No_Permission: '&c缺乏权限 ({permission}).'
+Reload_Complete: '{prefix} &2成功重载配置.'
+Reload_Failed: '{prefix} &c重载配置失败, 请查看控制台报错. 错误为: &4{error}'
+Wrong_Parameters: '&c错误参数或权限不足.'
+Wrong_Arguments: '&c错误参数. 输入&6/chc list&c 查看指令列表.'
+General:
+  Player_Join: 玩家加入
+  Player_Quit: 玩家退出
+  Player_Kick: 玩家被踢出
+  Prefix: '&8[&3ChatControl&8]&7'
+  Server_Prefix: '&8[&4服务器&8]&c'
+  Console: '&c服务器'
+  Reason: '&7原因: &f{reason}'
+  Sign: 告示牌
+  Command: 指令
+  Seconds: 秒, 秒

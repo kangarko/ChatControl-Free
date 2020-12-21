@@ -1,0 +1,72 @@
+# ---------------------------------------------------------
+# This file contains most of the messages
+# and provides simple way to translate the plugin.
+#
+# If you want to customize the localization, simply
+# copy this file to plugin's folder localization and start editing.
+# Example: plugins/ChatControl/localization/messages_en.yml
+# It will still be updated with new values in future releases.
+#
+# To not display a message, set it to 'none'
+# Messages supports variables beginning with % and color codes with & character
+# ---------------------------------------------------------
+
+Cannot:
+  Broadcast_Empty_Message: '&cTin nhắn ở {event} trống. Không có thông báo.'
+  Chat_While_Muted: '&7Bạn không thể trò chuyện khi chức năng đó đang tắt!'
+  Command_While_Muted: '&7Bạn không thể dùng lệnh này khi chức năng trò chuyện đang tắt!'
+  Chat_Until_Moved: '&7Bạn không thể trò chuyện cho đến khi bạn di chuyển!'
+
+Anti_Bot:
+  Rejoin_Message: '{prefix}\n\n&6Hãy đợi &7{time} {seconds}&6 trước khi vào lại máy chủ.'
+
+Anti_Spam:
+  Similar_Message: '&cLàm ơn đừng lặp lại tin nhắn.'
+  Similar_Command: '&cLàm ơn đừng lặp lại câu lệnh.'
+  Too_Much_Caps: '&cĐừng sử dụng quá nhiều nút CAPS LOCK!'
+  Command_Wait_Message: '&cHãy đợi {time} {seconds} trước khi sử dụng lệnh tiếp.'
+  Chat_Wait_Message: '&cHãy đợi {time} {seconds} trước khi có thể chat tiếp.'
+
+Chat_Mute:
+  Mute: '&7Đã tắt tiếng trò chuyện.'
+  Unmute: '&7Đã bật tiếng trò chuyện.'
+  Mute_Broadcast: '{server} &6{player} đã tắt tiếng trò chuyện.'
+  Unmute_Broadcast: '{server} &6{player} đã bật tiếng trò chuyện.'
+  Anonymous_Mute_Broadcast: '{server} Bắt đầu tắt tiếng trò chuyện toàn cầu.'
+  Anonymous_Unmute_Broadcast: '{server} Đã tắt tiếng tắt trò chuyện toàn cầu.'
+
+Chat_Clear:
+  Broadcast: '{server} &6{player} đã dọn dẹp khung trò chuyện.'
+  Anonymous_Broadcast: '{server} Khung trò chuyện đã được dọn dẹp.'
+  Console_Player_Message: '{prefix} &7Console đã được dọp dẹp.'
+  Console_Message: '&7Console đã được dọn dẹp bởi {player}'
+  Chat_Staff_Message: '&7^----- [ == &f{player} đã dọn dẹp khung chat &7== ] -----^'
+
+Signs:
+  Duplicate_Text: '{server} Bạn không thể tạo nhiều bảng với chữ giống nhau!'
+  Duplicate_Text_Staff: '&c{player} đã tạo bảng với chữ giống nhau: {message}'
+  Broke_When_Violated_A_Rule: Bảng của bạn đã bị phá, sẽ có một số thứ sai với nó!
+
+Usage:
+  Fake_Command: '{prefix} Sử dụng: /chatcontrol fake <&bjoin&f/&aleave&f/&ekick&f>'
+
+Update_Available: '&2Một phiên bản mới của &3ChatControl&2 đang khả dụng.\n&2Phiên bản hiện tại:
+  &f{current}&2; Phiên bản mới: &f{new}\n&2Bạn có thể tắt thông báo này trong config.'
+
+No_Permission: '&cKhông có quyền ({permission}).'
+Reload_Complete: '{prefix} &2Đã tải lại config.'
+Reload_Failed: '{prefix} &cTải lại config thất bại, hãy xem console. Lỗi là: &4{error}'
+Wrong_Parameters: '&cTham số sai hoặc thiếu quyền.'
+Wrong_Arguments: '&cTham số sai. Sử dụng &6/chc list&c cho danh sách lệnh.'
+
+General:
+  Player_Join: player join
+  Player_Quit: player quit
+  Player_Kick: player kick
+  Prefix: '&8[&3ChatControl&8]&7'
+  Server_Prefix: '&8[&4Server&8]&c'
+  Console: '&cserver'
+  Reason: '&7Lí do: &f{reason}'
+  Sign: SIGN
+  Command: COMMAND
+  Seconds: giây, giây

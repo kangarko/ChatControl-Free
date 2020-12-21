@@ -1,0 +1,90 @@
+# ---------------------------------------------------------
+# This file contains most of the messages
+# and provides simple way to translate the plugin.
+# 
+# If you want to customize the localization, simply
+# copy this file to plugin's folder localization and start editing.
+# Example: plugins/ChatControl/localization/messages_en.yml
+# It will still be updated with new values in future releases.
+#
+# To not display a message, set it to 'none'
+# Messages supports variables beginning with % and color codes with & character
+# ---------------------------------------------------------
+
+Cannot:
+  Broadcast_Empty_Message: '&cLe message pour {event} est vide. Pas de diffusion.'
+  Chat_While_Muted: '&7Le chat est en sourdine, vous ne pouvez pas parler !'
+  Command_While_Muted: '&7Cette commande est bloquée quand le chat est en sourdine.'
+  Chat_Until_Moved: '&7Vous ne pouvez pas écrire avant d''avoir bougé !'
+Anti_Bot:
+  Rejoin_Message: |-
+    {prefix}
+    &6
+    &6Veuillez attendre &7{time} {seconds}&6 avant de vous reconnecter.
+Anti_Spam:
+  Similar_Message: '&cVeuillez ne pas répéter le même message (ou similaire).'
+  Similar_Command: '&cVeuillez ne pas répéter la même commande (ou similaire).'
+  Too_Much_Caps: '&cN''abusez pas des MAJUSCULES !'
+  Command_Wait_Message: '&cVeuillez attendre {time} {seconds} avant la prochaine commande.'
+  Chat_Wait_Message: '&cVeuillez attendre {time} {seconds} avant le prochain message.'
+Chat_Mute:
+  Mute: '&7Chat mis en sourdine.'
+  Unmute: '&7Le chat n''est plus en sourdine.'
+  Mute_Broadcast: '{server} &6{player} a mis le chat en sourdine.'
+  Unmute_Broadcast: '{server} &6{player} a rétabli le chat.'
+  Anonymous_Mute_Broadcast: '{server} Mise en sourdine du chat global.'
+  Anonymous_Unmute_Broadcast: '{server} Chat global rétabli.'
+Chat_Clear:
+  Broadcast: '{server} &6{player} a effacé le chat.'
+  Anonymous_Broadcast: '{server} Le chat a été effacé.'
+  Console_Player_Message: '{prefix} &7Console effacée avec succès.'
+  Console_Message: '&7Console effacée par {player}'
+  Chat_Staff_Message: '&7^----- [ == &fChat effacé par {player} &7== ] -----^'
+Signs:
+  Duplicate_Text: '{server} Vous ne pouvez pas faire plusieurs pancartes avec le même texte !'
+  Duplicate_Text_Staff: '&c{player} a fait plusieurs pancartes avec le même texte : {message}'
+  Broke_When_Violated_A_Rule: 'Votre pancarte s''est cassée, elle doit avoir un problème !'
+Books:
+  Block_When_Violated_A_Rule: 'Impossible de créer le livre, il doit avoir un problème !'
+Items:
+  Block_When_Violated_A_Rule: 'Impossible de renommer l''objet, il doit avoir un problème !'
+Announcer:
+  Message: |-
+    &8*___________________________________________________*
+    &f
+                               &7. . . &6&lA N N O N C E&7. . .
+    &8*___________________________________________________*
+    &f
+    &f {message}{dynamicLine}
+    &8*___________________________________________________*
+  Console_Message: '&f[Annonce de &b{player}&f] : &7{message}'
+  Self_Message: '&7Annonce envoyée.'
+Usage:
+  Fake_Command: /chatcontrol fake <&bjoin&f/&aleave&f/&ekick&f>
+  Calc_Command: '/chatcontrol calc <expression> (ex. : 4 + 4 / 2)'
+Invalid:
+  Handler: '&cLe gestionnaire d''événements (handler) ''{handler}'' n''existe pas !'
+Update_Available: |-
+  &2Une mise à jour de &3ChatControl&2 est disponible.
+  &2Version actuelle : &f{current}&2; Nouvelle : &f{new}
+No_Permission: '&cPermissions insuffisantes ({permission}).'
+No_Console: '&cCette commande n''est pas accessible depuis la console !'
+Reload_Complete: '{prefix} &2Configuration rechargée avec succès.'
+Reload_Failed: '{prefix} &cLe rechargement a échoué, vérifiez la console.
+  Erreur : &4{error}'
+Wrong_Parameters: '&cMauvais paramètres ou permission manquante.'
+Wrong_Arguments: '&cMauvais arguments. Tapez &6/chc list&c pour la liste des commandes.'
+General:
+  Player_Join: connexion
+  Player_Quit: déconnexion
+  Player_Kick: expulsion (kick)
+  Prefix: '&8[&3ChatControl&8]&7'
+  Server_Prefix: '&8[&4Serveur&8]&c'
+  Console: '&cserveur'
+  Reason: '&7Raison : &f{reason}'
+  Sign: PANCARTE
+  Sign_At_Location: '[PANCARTE en {location}]'
+  Command: COMMANDE
+  Usage: '&cUtilisation : '
+  Result: '&7Résultat : &f{result}'
+  Seconds: seconde, secondes

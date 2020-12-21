@@ -1,0 +1,72 @@
+# ---------------------------------------------------------
+# Ten plik zawiera najwiecej Wiadomosci
+# i umozliwia szybka droge, by przetlumaczyc Plugin.
+# 
+# Jak chcesz cos pozmieniac, to latwo skopiuj
+# ten plik do pluginowego folderu localization i zacznij edytowac.
+# Przyklad: plugins/ChatControl/localization/messages_en.yml
+# Przy updateach bedzie to sie aktualizowalo.
+#
+# By nic nie pisalo, napisz: 'none'
+# Zmienne wiadomosci % i kolor kodu & symbole
+# ---------------------------------------------------------
+
+Cannot:
+  Broadcast_Empty_Message: '&cWiadomosc na {event} jest pusta. Brak Broadcast'
+  Chat_While_Muted: '&7NIe mozesz pisac, kiedy chat jest wyciszony!'
+  Command_While_Muted: '&7Nie mozesz uzyc tej komendy, kiedy chat jest wyciszony!'
+  Chat_Until_Moved: '&7Nie mozesz pisac kiedy sie poruszasz!'
+
+Anti_Bot:
+  Rejoin_Message: '{prefix}\n\n&6Czekaj &7{time} {seconds}&6 zanim sie zalogujesz.'
+
+Anti_Spam:
+  Similar_Message: '&cNie pisz tej samej (albo podobnej) wiadomosci.'
+  Similar_Command: '&cPoczekaj zanim uzyjesz tej samej (albo podobnej) komendy.'
+  Too_Much_Caps: '&cNie uzywaj CAPS LOCK!'
+  Command_Wait_Message: '&cCzekaj {time} {sec} zanim uzyjesz komendy.'
+  Chat_Wait_Message: '&cCzekaj {time} {sec} zanim napiszesz wiadomosc.'
+
+Chat_Mute:
+  Mute: '&7Chat zostal wyciszony.'
+  Unmute: '&7Chat zostal odciszony.'
+  Mute_Broadcast: '{server} &6{player} wyciszyl chat.'
+  Unmute_Broadcast: '{server} &6{player} odciszyl chat.'
+  Anonymous_Mute_Broadcast: '{server} Ktos wyciszyl chat.'
+  Anonymous_Unmute_Broadcast: '{server} Ktos odciszyl chat.'
+
+Chat_Clear:
+  Broadcast: '{server} &6{player} wyczyscil chat.'
+  Anonymous_Broadcast: '{server} Chat gry zostal wyczyszczony.'
+  Console_Player_Message: '{prefix} &7Konsola zostala wyczyszczona.'
+  Console_Message: '&7Konsola zostala wyczyszczona przez {player}'
+  Chat_Staff_Message: '&7^----- [ == &fChat zostal wyczyszczony przez {player} &7== ] -----^'
+
+Signs:
+  Duplicate_Text: '{server} Nie mozesz tworzyc tabliczek z ta sama wiadomoscia!'
+  Duplicate_Text_Staff: '&c{player} stworzyl tabliczke z ta sama wiadomoscia: {message}'
+  Broke_When_Violated_A_Rule: Twoja tabliczka zniknela, musialo byc na niej cos brzydkiego!
+
+Usage:
+  Fake_Command: '{prefix} Uzyj: /chatcontrol fake <&bjoin&f/&aleave&f/&ekick&f>'
+
+Update_Available: '&2Nowa wersja &3ChatControl&2 jest dostepna.\n&2Aktualna wersja:
+  &f{current}&2; Nowa wersja: &f{new}\n&2Mozesz wylaczyc to powiadomienie w konfigu.'
+
+No_Permission: '&cBrak permisji ({permission}).'
+Reload_Complete: '{prefix} &2Przeladowanie konfiguracji zakonczono sukcesem.'
+Reload_Failed: '{prefix} &cCos poszlo nie tak z przeladowaniem konfiguracji, sprawdz konsole. Blad byl: &4{error}'
+Wrong_Parameters: '&cZle parametry, albo brak permisji.'
+Wrong_Arguments: '&cZly Argument. Napisz &6/chc list&c, by zobaczyc liste komend.'
+
+General:
+  Player_Join: Gracz wszedl
+  Player_Quit: Gracz wyszedl
+  Player_Kick: Gracz wyrzucony
+  Prefix: '&8[&3ChatControl&8]&7'
+  Server_Prefix: '&8[&4Server&8]&c'
+  Console: '&cserver'
+  Reason: '&7Powod: &f{reason}'
+  Sign: TABLICZKA
+  Command: KOMENDA
+  Seconds: Sekunda, Sekundy

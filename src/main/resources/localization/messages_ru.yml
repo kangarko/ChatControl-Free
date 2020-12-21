@@ -1,0 +1,72 @@
+# ---------------------------------------------------------
+# Этот файл содержит большинство сообщений
+# и предоставляет простой способ перевода плагина.
+# 
+# Если вы хотите настроить локализацию, просто
+# скопируйте этот файл в локализацию папки плагина и начните редактирование.
+# Пример: plugins/ChatControl/localization/messages_ru.yml
+# Он будет обновляться новыми значениями в будущих выпусках.
+#
+# Чтобы не отображать сообщение, установите для него значение 'none'
+# В сообщениях поддерживаются переменные, начинающиеся с %, а цветовые коды - с символа &
+# ---------------------------------------------------------
+
+Cannot:
+  Broadcast_Empty_Message: '&cСообщение о {event} пусто. Нет трансляции.'
+  Chat_While_Muted: '&7Вы не можете общаться, пока чат отключен!'
+  Command_While_Muted: '&7Вы не можете использовать эту команду, когда чат отключен!'
+  Chat_Until_Moved: '&7Вы не можете общаться, пока вы в АФК!'
+
+Anti_Bot:
+  Rejoin_Message: '{prefix}\n\n&6Пожалуйста, подождите &7{time} {seconds}&6 прежде чем войти снова.'
+
+Anti_Spam:
+  Similar_Message: '&cПожалуйста, не повторяйте одно и то же (или похожее) сообщение.'
+  Similar_Command: '&cПожалуйста, не повторяйте ту же (или похожую) команду.'
+  Too_Much_Caps: '&cНе используйте так много CAPS LOCK (заглавных букв)!'
+  Command_Wait_Message: '&cПожалуйста, подождите {time} {seconds} перед вашей следующей командой.'
+  Chat_Wait_Message: '&cПожалуйста, подождите {time} {seconds} до вашего следующего сообщения.'
+
+Chat_Mute:
+  Mute: '&7Чат успешно отключен.'
+  Unmute: '&7Чат включен.'
+  Mute_Broadcast: '{server} &6{player} отключил чат'
+  Unmute_Broadcast: '{server} &6{player} включил чат.'
+  Anonymous_Mute_Broadcast: '{server} Глобальный чат отключен.'
+  Anonymous_Unmute_Broadcast: '{server} Глобальный чат включен.'
+
+Chat_Clear:
+  Broadcast: '{server} &6{player} очистил чат.'
+  Anonymous_Broadcast: '{server} Игровой чат очищен.'
+  Console_Player_Message: '{prefix} &7Консоль успешно очищена.'
+  Console_Message: '&7Консоль очищена игроком {player}'
+  Chat_Staff_Message: '&7^----- [ == &fЧат очищен игроком {player} &7== ] -----^'
+
+Signs:
+  Duplicate_Text: '{server} Вы не можете сделать несколько табличек с одним и тем же текстом!'
+  Duplicate_Text_Staff: '&c{player} создал таблички с одинаковым текстом: {message}'
+  Broke_When_Violated_A_Rule: Ваша табличка сломалась, должно быть что-то не так с ней!
+
+Usage:
+  Fake_Command: '{prefix} Используйте: /chatcontrol fake <&bjoin&f/&aleave&f/&ekick&f>'
+
+Update_Available: '&2Доступна новая версия &3ChatControl&2.\n&2Текущая версия:
+  &f{current}&2; Новая версия: &f{new}\n&2Вы можете отключить это уведомление в конфиге.'
+
+No_Permission: '&cНедостаточно разрешения ({permission}).'
+Reload_Complete: '{prefix} &2Конфигурация перезагружена.'
+Reload_Failed: '{prefix} &cПерезагрузка конфигурации не удалась, проверьте консоль. Ошибка: &4{error}'
+Wrong_Parameters: '&cНеправильные параметры или отсутствует разрешение.'
+Wrong_Arguments: '&cНеправильные аргументы. Введите &6/chc list&c для списка команд.'
+
+General:
+  Player_Join: игрок присоединиться
+  Player_Quit: игрок вышел
+  Player_Kick: игрок кикнут
+  Prefix: '&8[&3ChatControl&8]&7'
+  Server_Prefix: '&8[&4Сервер&8]&c'
+  Console: '&cсервер'
+  Reason: '&7Причина: &f{reason}'
+  Sign: SIGN
+  Command: COMMAND
+  Seconds: секунда, секунд

@@ -1,0 +1,76 @@
+# ---------------------------------------------------------
+# Diese Datei beinhaltet die meisten Nachrichten
+# und bietet einen einfachen Weg, das Plugin zu �bersetzen.
+#
+# Wenn du die Nachrichten anpassen m�chtest, kannst du diese Datei
+# in den Ordner mit dem Namen "localization" verschieben und anfangen,
+# die Datei zu editieren.
+# Beispiel: plugins/ChatControl/localization/messages_de.yml
+# Die Datei wird in den n�chsten Versionen mit neuen Variablen versorgt.
+#
+# Wenn eine Nachricht nicht angezeigt werden soll, dann setze diese auf 'none'
+# Es werden Nachrichten mit Variablen (%) und Farbcodes mit (&) Zeichen unterst�tzt.
+# ACHTUNG: Es werden keine Umlaute unterst�tzt!
+# Bei �bersetzungsfehlern kontaktiere DJ_1420 im Forum von SpigotMC. 
+# If there are any fails, please contact DJ_1420 on the SpigotMC forums.
+# ---------------------------------------------------------
+ 
+Cannot:
+  Broadcast_Empty_Message: '&cDie Nachricht des Events {event} ist leer. Kein Rundruf.'
+  Chat_While_Muted: '&7Du kannst nicht schreiben, waehrend der Chat stumm gestellt ist.'
+  Command_While_Muted: '&7Du kannst dieses Kommando nicht nutzen, waehrend der Chat stumm gestellt ist.'
+  Chat_Until_Moved: '&7Du kannst nicht schreiben, bis du dich bewegst.'
+ 
+Anti_Bot:
+  Rejoin_Message: '{prefix}\n\n&6Bitte warte &7{time} {seconds} &6, bevor du dich erneut einloggst.'
+ 
+Anti_Spam:
+  Similar_Message: '&cBitte wiederhole nicht die gleiche (oder aehnliche) Nachricht.'
+  Similar_Command: '&cBitte wiederhole nicht das gleiche (oder aehnliche) Kommando.'
+  Too_Much_Caps: '&cBitte nutze nicht so viele GROSSBUCHSTABEN!'
+  Command_Wait_Message: '&cBitte warte {time} {seconds} bevor du das naechste Kommando sendest.'
+  Chat_Wait_Message: '&cBitte warte {time} {seconds} bevor du die naechste Nachricht sendest.'
+ 
+Chat_Mute:
+  Mute: '&7Der Chat wurde erfolgreich stumm gestellt.'
+  Unmute: '&7Der Chat ist wieder aktiv.'
+  Mute_Broadcast: '{server} &6{player} hat den Chat stumm gestellt.'
+  Unmute_Broadcast: '{server} &6{player} hat den Chat wieder aktiviert.'
+  Anonymous_Mute_Broadcast: '{server} Der globale Chat wurde stumm gestellt.'
+  Anonymous_Unmute_Broadcast: '{server} Der globale Chat wurde wieder aktiviert.'
+ 
+Chat_Clear:
+  Broadcast: '{server} &6{player} hat den Chat bereinigt.'
+  Anonymous_Broadcast: '{server} Der Chat wurde bereinigt.'
+  Console_Player_Message: '{prefix} &7Die Konsole wurde erfolgreich bereinigt.'
+  Console_Message: '&7Die Konsole wurde erfolgreich vom Spieler {player} bereinigt.'
+  Chat_Staff_Message: '&7^----- [ == &fDer Chat wurde von {player} bereinigt &7== ] -----^'
+ 
+Signs:
+  Duplicate_Text: '{server} Du kannst nicht mehrere Schilder mit dem gleichen Inhalt setzen.'
+  Duplicate_Text_Staff: '&c{player} erstellt Schilder mit der gleichen Nachricht: {message}'
+  Broke_When_Violated_A_Rule: Dein Schild ging kaputt. Es muss etwas nicht stimmen.
+ 
+Usage:
+  Fake_Command: '{prefix} Benutzung: /chatcontrol fake <&bjoin&f/&aleave&f/&ekick&f>'
+ 
+Update_Available: '&2Eine neue Version von &3ChatControl&2 ist verfuegbar.\n&2Aktuelle Version:
+  &f{current}&2; Neue Version: &f{new}\n&2Du kannst diese Benachrichtigung in der Konfiguration deaktivieren.'
+ 
+No_Permission: '&cDu hast keine Berechtigung ({permission}).'
+Reload_Complete: '{prefix} &2Die Konfiguration wurde erfolgreich neu geladen.'
+Reload_Failed: '{prefix} &cDas Neuladen der Konsole schlug fehl. Der Fehler ist: &4{error}'
+Wrong_Parameters: '&cFalsche Parameter oder du hast keine Berechtigung.'
+Wrong_Arguments: '&cFalsche Argumente. Nutze &6/chc list&c fuer eine Auflistung der Kommandos.'
+ 
+General:
+  Player_Join: Spieler verbunden
+  Player_Quit: Spieler getrennt
+  Player_Kick: Spieler kick
+  Prefix: '&8[&3ChatControl&8]&7'
+  Server_Prefix: '&8[&4Server&8]&c'
+  Console: '&cserver'
+  Reason: '&7Grund: &f{reason}'
+  Sign: SCHILD
+  Command: KOMMANDO
+  Seconds: Sekunde, Sekunden

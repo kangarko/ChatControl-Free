@@ -1,0 +1,74 @@
+# ---------------------------------------------------------
+# Dit bestand bevat het meeste van de berichten,
+# en is een simpele manier om de berichten te vertalen.
+# 
+# Als de berichten wilt aanpassen dan kan dat hier of gewoon:
+# kopieer dit bestand naar de map "localization" en begin met aanpassen.
+# Voorbeeld: plugins/ChatControl/localization/messages_nl.yml
+# let wel op dat bij nieuwe plugin uitgaven dingen kunnen veranderen!
+#
+# Als je een bericht niet weer weergeven zet dan "none" er achter.
+# Waardes beginnen met een % en kleuren codes met een & teken
+#
+# Vertaald door xknat & sander0542.
+# ---------------------------------------------------------
+
+Cannot:
+  Broadcast_Empty_Message: '&cBericht op {event} is leeg. Geen omroep.'
+  Chat_While_Muted: '&7Je kan niet praten als de chat gesloten is!'
+  Command_While_Muted: '&7Je kan deze opdracht niet gebruiken wanneer de chat gesloten it!'
+  Chat_Until_Moved: '&7Je kan niet praten todat je gaat lopen!'
+
+Anti_Bot:
+  Rejoin_Message: '{prefix}\n\n&6Wacht &7{time} {seconds}&6 om opnieuw in te loggen.'
+
+Anti_Spam:
+  Similar_Message: '&cHerhaal niet het zelfde (of gelijkwaardige) berichten.'
+  Similar_Command: '&cHerhaal niet het zelfde (or gelijkwaardige) opdrachten.'
+  Too_Much_Caps: '&cGebruik niet zo veel CAPS OF HOOFDLETTERS!'
+  Command_Wait_Message: '&cWacht {time} {seconds} voor je volgende opdrachten.'
+  Chat_Wait_Message: '&cWacht {time} {seconds} voor je volgende bericht.'
+
+Chat_Mute:
+  Mute: '&7Chat is succesvol gesloten.'
+  Unmute: '&7Chat is niet langer gesloten.'
+  Mute_Broadcast: '{server} &6{player} heeft de chat gesloten.'
+  Unmute_Broadcast: '{server} &6{player} heeft de chat geopend.'
+  Anonymous_Mute_Broadcast: '{server} Initiated global chat gesloten.'
+  Anonymous_Unmute_Broadcast: '{server} Globale chat is geopend.'
+
+Chat_Clear:
+  Broadcast: '{server} &6{player} maakte de chat leeg.'
+  Anonymous_Broadcast: '{server} de chat is geleegd.'
+  Console_Player_Message: '{prefix} &7Console is succesvol geleegd.'
+  Console_Message: '&7Console is geleegd door {player}'
+  Chat_Staff_Message: '&7^----- [ == &fChat is geleegd door {player} &7== ] -----^'
+
+Signs:
+  Duplicate_Text: '{server} je kan niet meerdere borden maken met dezelfde tekst!'
+  Duplicate_Text_Staff: '&c{player} heeft een bord gemaakt met de tekst: {message}'
+  Broke_When_Violated_A_Rule: Je bord is kapot, er moet iets mis mee zijn!
+
+Usage:
+  Fake_Command: '{prefix} Gebruik: /chatcontrol fake <&bjoin&f/&aleave&f/&ekick&f>'
+
+Update_Available: '&2Er is een nieuwe versie van &3ChatControl&2 beschikbaar.\n&2actuele versie:
+  &f{current}&2; Nieuwe versie: &f{new}\n&2Je kan in de config instellen of je dit bericht wil verbergen.'
+
+No_Permission: '&cNiet genoeg toestemming ({permission}).'
+Reload_Complete: '{prefix} &2Confugiratie succesvol herladen.'
+Reload_Failed: '{prefix} &cHet herladen van de confugiratie ging fout, kijk in de console. De fout was: &4{error}'
+Wrong_Parameters: '&cVerkeerde waarde of missende permissies.'
+Wrong_Arguments: '&cVerkeerde opdracht. Type &6/chc list&c voor de opdrachten lijst.'
+
+General:
+  Player_Join: player join
+  Player_Quit: player quit
+  Player_Kick: player kick
+  Prefix: '&8[&3ChatControl&8]&7'
+  Server_Prefix: '&8[&4Server&8]&c'
+  Console: '&cserver'
+  Reason: '&7Reden: &f{reason}'
+  Sign: BORD
+  Command: OPDRACHT
+  Seconds: seconde, seconden
