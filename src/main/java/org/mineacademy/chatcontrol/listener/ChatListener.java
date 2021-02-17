@@ -54,7 +54,8 @@ public class ChatListener implements Listener, EventExecutor {
 			return;
 		}
 
-		timeCheck: {
+		timeCheck:
+		{
 			final long now = System.currentTimeMillis() / 1000L;
 			final int messageDelay = Settings.AntiSpam.Messages.DELAY.getFor(plData);
 
@@ -72,7 +73,8 @@ public class ChatListener implements Listener, EventExecutor {
 			plData.lastMessageTime = now;
 		}
 
-		dupeCheck: if (Settings.AntiSpam.Messages.SIMILARITY > 0 && Settings.AntiSpam.Messages.SIMILARITY < 100) {
+		dupeCheck:
+		if (Settings.AntiSpam.Messages.SIMILARITY > 0 && Settings.AntiSpam.Messages.SIMILARITY < 100) {
 			if (Common.hasPerm(pl, Permissions.Bypasses.SIMILAR_CHAT) || isWhitelisted(message, Settings.AntiSpam.Messages.WHITELIST_SIMILARITY))
 				break dupeCheck;
 
@@ -140,6 +142,7 @@ public class ChatListener implements Listener, EventExecutor {
 
 		if (!Common.hasPerm(pl, Permissions.Bypasses.CAPITALIZE))
 			message = Common.capitalize(message);
+
 		if (!Common.hasPerm(pl, Permissions.Bypasses.PUNCTUATE))
 			message = Common.insertDot(message);
 
