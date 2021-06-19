@@ -5,7 +5,7 @@
 
 	<groupId>org.mineacademy</groupId>
 	<artifactId>ChatControl-Free</artifactId>
-	<version>5.9.1</version>
+	<version>5.9.2</version>
 	<packaging>jar</packaging>
 
 	<properties>
@@ -21,6 +21,10 @@
 			<id>mineacademy-repo</id>
 			<url>https://bitbucket.org/kangarko/libraries/raw/master</url>
 		</repository>
+		<repository>
+	        <id>spigot-repo</id>
+	        <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+	    </repository>
 	</repositories>
 
 	<dependencies>
@@ -28,7 +32,7 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.16.5-R0.1-SNAPSHOT</version>
+			<version>1.17-R0.1-SNAPSHOT</version>
 		</dependency>
 		<!-- No longer shipped in SpigotAPI but is present in the server -->
 		<dependency>

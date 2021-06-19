@@ -145,7 +145,15 @@ public class PlayerListener implements Listener {
 
 		switch (kickMessage.getType()) {
 			case HIDDEN:
-				e.setLeaveMessage(null);
+
+				try {
+					e.setLeaveMessage(null);
+
+				} catch (final Throwable t) {
+					// MC 1.16 on Paper with Adventure
+					e.setLeaveMessage("");
+				}
+
 				break;
 			case CUSTOM:
 				e.setLeaveMessage(replacePlayerVariables(kickMessage.getMessage(), pl));
