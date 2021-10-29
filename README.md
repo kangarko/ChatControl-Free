@@ -1,4 +1,4 @@
-# Attention: This plugin is now updated and distributed [here](https://github.com/kangarko/ChatControl-Free/releases) instead of SpigotMC.
+# We have left SpigotMC and [continue ChatControl Free development here](https://mineacademy.org).
 
 <p align="center">
   Do you want to build your own ChatControl with unique features only for your server?
