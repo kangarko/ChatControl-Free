@@ -1,4 +1,4 @@
-# We have left SpigotMC and [continue ChatControl Free development here](https://mineacademy.org).
+# We have left SpigotMC and [continue ChatControl Free development here](https://mineacademy.org/plugin).
 
 <p align="center">
   Do you want to build your own ChatControl with unique features only for your server?
