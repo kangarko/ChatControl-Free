@@ -1,4 +1,4 @@
-# We have left SpigotMC and [continue ChatControl Free development here](https://mineacademy.org/plugin).
+# We're still active: We have left SpigotMC and [continue ChatControl development here](https://mineacademy.org/chatcontrol-red).
 
 <p align="center">
   Do you want to learn Java and code highly-customized Minecraft plugins? I've made a training for you!
