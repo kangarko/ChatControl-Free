@@ -1,9 +1,9 @@
 # We're still active: We have left SpigotMC and [continue ChatControl development here](https://mineacademy.org/chatcontrol-red).
 
 <p align="center">
-  Do you want to learn Java and code highly-customized Minecraft plugins? I've made a training for you!
-  <a href="https://mineacademy.org/project-orion">
-    <img src="https://i.imgur.com/OJuN0qP.png" />
+  Learn Java and code highly-customized Minecraft plugins in 20 days (without experience):
+  <a href="https://mineacademy.org/project-orion?st=github&sc=chatcontrol_free&utm_source=github&utm_medium=overview&utm_campaign=chatcontrol_free">
+    <img src="https://i.imgur.com/lpZ2pJN.jpg" />
   </a>
 </p>
 
