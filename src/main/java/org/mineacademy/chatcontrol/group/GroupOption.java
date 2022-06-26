@@ -1,8 +1,9 @@
 package org.mineacademy.chatcontrol.group;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.Validate;
+import java.util.Arrays;
+
 import org.mineacademy.chatcontrol.settings.ConfHelper.ChatMessage;
+import org.mineacademy.chatcontrol.util.Valid;
 
 public class GroupOption {
 
@@ -22,7 +23,7 @@ public class GroupOption {
 		return value;
 	}
 
-	public static enum OptionType {
+	public enum OptionType {
 		MESSAGE_DELAY(Integer.class),
 		COMMAND_DELAY(Integer.class),
 
@@ -71,14 +72,14 @@ public class GroupOption {
 				if (type.name().equalsIgnoreCase(name) || type.toString().equalsIgnoreCase(name))
 					return type;
 
-			throw new RuntimeException("Unknown group setting: '" + name + "', use one of these: " + StringUtils.join(values(), ", "));
+			throw new RuntimeException("Unknown group setting: '" + name + "', use one of these: " + Arrays.asList(values()));
 		}
 
 		private void checkValid(Object value) {
 			if (validValue == ChatMessage.class) {
 				// all valid
 			} else
-				Validate.isTrue(value.getClass().isAssignableFrom(validValue), this + " has to be " + validValue.getSimpleName() + "! (got " + value + ")");
+				Valid.checkBoolean(value.getClass().isAssignableFrom(validValue), this + " has to be " + validValue.getSimpleName() + "! (got " + value + ")");
 		}
 
 		private String makeString() {

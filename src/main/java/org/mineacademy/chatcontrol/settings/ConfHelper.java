@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import org.apache.commons.lang.Validate;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.mineacademy.chatcontrol.ChatControl;
@@ -21,6 +20,7 @@ import org.mineacademy.chatcontrol.group.Group;
 import org.mineacademy.chatcontrol.group.GroupOption;
 import org.mineacademy.chatcontrol.util.Common;
 import org.mineacademy.chatcontrol.util.CompatProvider;
+import org.mineacademy.chatcontrol.util.Valid;
 import org.mineacademy.chatcontrol.util.Writer;
 
 /**
@@ -77,7 +77,7 @@ public abstract class ConfHelper {
 			final int modifier = m.getModifiers();
 
 			if (Modifier.isPrivate(modifier) && Modifier.isStatic(modifier) && m.getReturnType() == Void.TYPE && m.getParameterTypes().length == 0) {
-				Validate.isTrue(m.getName().equals("init") || m.getName().startsWith("lambda"), "Method must be called init() not " + m.getName());
+				Valid.checkBoolean(m.getName().equals("init") || m.getName().startsWith("lambda"), "Method must be called init() not " + m.getName());
 
 				m.setAccessible(true);
 				m.invoke(null);
@@ -129,7 +129,7 @@ public abstract class ConfHelper {
 		path = addPathPrefix(path);
 		addDefault(path, def);
 
-		Validate.isTrue(cfg.isBoolean(path), "Malformed config value, expected boolean at: " + path);
+		Valid.checkBoolean(cfg.isBoolean(path), "Malformed config value, expected boolean at: " + path);
 		return cfg.getBoolean(path);
 	}
 
@@ -137,7 +137,7 @@ public abstract class ConfHelper {
 		path = addPathPrefix(path);
 		addDefault(path, def);
 
-		Validate.isTrue(cfg.isString(path), "Malformed config value, expected string at: " + path);
+		Valid.checkBoolean(cfg.isString(path), "Malformed config value, expected string at: " + path);
 		return cfg.getString(path);
 	}
 
@@ -145,7 +145,7 @@ public abstract class ConfHelper {
 		path = addPathPrefix(path);
 		addDefault(path, def);
 
-		Validate.isTrue(cfg.isInt(path), "Malformed config value, expected integer at: " + path);
+		Valid.checkBoolean(cfg.isInt(path), "Malformed config value, expected integer at: " + path);
 		return cfg.getInt(path);
 	}
 
@@ -153,7 +153,7 @@ public abstract class ConfHelper {
 		path = addPathPrefix(path);
 		addDefault(path, def);
 
-		Validate.isTrue(cfg.isDouble(path), "Malformed config value, expected double at: " + path);
+		Valid.checkBoolean(cfg.isDouble(path), "Malformed config value, expected double at: " + path);
 		return cfg.getDouble(path);
 	}
 
@@ -168,7 +168,7 @@ public abstract class ConfHelper {
 				cfg.set(path + "." + str, def.get(str));
 		}
 
-		Validate.isTrue(cfg.isConfigurationSection(path), "Malformed config value, expected configuration section at: " + path);
+		Valid.checkBoolean(cfg.isConfigurationSection(path), "Malformed config value, expected configuration section at: " + path);
 		final HashMap<String, List<String>> keys = new HashMap<>();
 
 		for (final String key : cfg.getConfigurationSection(path).getKeys(true)) {
@@ -192,7 +192,7 @@ public abstract class ConfHelper {
 				cfg.set(path + "." + str, def.get(str));
 		}
 
-		Validate.isTrue(cfg.isConfigurationSection(path), "Malformed config value, expected configuration section at: " + path);
+		Valid.checkBoolean(cfg.isConfigurationSection(path), "Malformed config value, expected configuration section at: " + path);
 		final HashMap<String, Object> keys = new HashMap<>();
 
 		for (final String key : cfg.getConfigurationSection(path).getKeys(deep)) {
@@ -209,7 +209,7 @@ public abstract class ConfHelper {
 			path = addPathPrefix(path);
 		addDefault(path, def);
 
-		Validate.isTrue(cfg.isList(path), "Malformed config value, expected list at: " + path);
+		Valid.checkBoolean(cfg.isList(path), "Malformed config value, expected list at: " + path);
 		return cfg.getStringList(path);
 	}
 
@@ -308,7 +308,7 @@ public abstract class ConfHelper {
 		}
 
 		protected ChatMessage(Type type) {
-			Validate.isTrue(type != Type.CUSTOM, "Type cannot be custom.");
+			Valid.checkBoolean(type != Type.CUSTOM, "Type cannot be custom.");
 
 			this.type = type;
 			message = type == Type.DEFAULT ? "default" : type == Type.HIDDEN ? "hidden" : null;
@@ -392,7 +392,7 @@ public abstract class ConfHelper {
 				return;
 			}
 
-			Validate.isTrue(values.length == 3, "Malformed sound type, use format: 'sound' OR 'sound, volume, pitch'");
+			Valid.checkBoolean(values.length == 3, "Malformed sound type, use format: 'sound' OR 'sound, volume, pitch'");
 			sound = CompatProvider.parseSound(mapSomeSounds(values[0].toUpperCase()));
 			volume = Float.parseFloat(values[1]);
 			pitch = Float.parseFloat(values[2]);

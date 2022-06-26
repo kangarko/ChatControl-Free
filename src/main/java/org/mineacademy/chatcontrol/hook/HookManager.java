@@ -8,9 +8,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicesManager;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.mineacademy.chatcontrol.ChatControl;
+import org.mineacademy.chatcontrol.jsonsimple.JSONObject;
+import org.mineacademy.chatcontrol.jsonsimple.JSONParser;
 import org.mineacademy.chatcontrol.rules.ChatCeaser.PacketCancelledException;
 import org.mineacademy.chatcontrol.settings.Settings;
 import org.mineacademy.chatcontrol.util.Common;
@@ -33,7 +33,6 @@ import com.onarandombox.MultiverseCore.MultiverseCore;
 import com.onarandombox.MultiverseCore.api.MultiverseWorld;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
-import com.palmergames.bukkit.towny.object.TownyUniverse;
 
 import fr.xephi.authme.data.auth.PlayerCache;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -325,7 +324,7 @@ class TownyHook {
 
 	private Town getTown(Player pl) {
 		try {
-			final Resident res = TownyUniverse.getDataSource().getResident(pl.getName());
+			final Resident res = com.palmergames.bukkit.towny.TownyUniverse.getInstance().getResident(pl.getName());
 
 			if (res != null)
 				return res.getTown();
@@ -417,7 +416,7 @@ class ProtocolLibHook {
 						return;
 
 					final JSONObject json = (JSONObject) parsed;
-					final String origin = json.toJSONString();
+					final String origin = json.toString();
 
 					try {
 						ChatControl.instance().chatCeaser.parsePacketRules(e.getPlayer(), json);
@@ -426,8 +425,8 @@ class ProtocolLibHook {
 						return;
 					}
 
-					if (!json.toJSONString().equals(origin))
-						chat.write(0, WrappedChatComponent.fromJson(json.toJSONString()));
+					if (!json.toString().equals(origin))
+						chat.write(0, WrappedChatComponent.fromJson(json.toString()));
 				}
 			});
 	}

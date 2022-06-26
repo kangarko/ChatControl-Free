@@ -8,11 +8,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang.Validate;
 import org.bukkit.entity.Player;
 import org.mineacademy.chatcontrol.group.GroupOption.OptionType;
 import org.mineacademy.chatcontrol.settings.Settings;
 import org.mineacademy.chatcontrol.util.Common;
+import org.mineacademy.chatcontrol.util.Valid;
 
 /**
  * A group with settings. A player can be associated with one or more groups
@@ -58,7 +58,7 @@ public class Group {
 	}
 
 	public void addSetting(OptionType type, Object value) {
-		Validate.isTrue(!settings.containsKey(type), "Duplicate setting: " + type + " for: " + name);
+		Valid.checkBoolean(!settings.containsKey(type), "Duplicate setting: " + type + " for: " + name);
 
 		settings.put(type, type.create(value));
 	}

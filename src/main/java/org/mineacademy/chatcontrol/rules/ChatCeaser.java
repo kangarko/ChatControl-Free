@@ -17,23 +17,22 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.mineacademy.chatcontrol.ChatControl;
 import org.mineacademy.chatcontrol.hook.HookManager;
+import org.mineacademy.chatcontrol.jsonsimple.JSONArray;
+import org.mineacademy.chatcontrol.jsonsimple.JSONObject;
 import org.mineacademy.chatcontrol.settings.Localization;
 import org.mineacademy.chatcontrol.settings.Settings;
 import org.mineacademy.chatcontrol.util.Common;
 import org.mineacademy.chatcontrol.util.CompatProvider;
 import org.mineacademy.chatcontrol.util.LagCatcher;
+import org.mineacademy.chatcontrol.util.Valid;
 import org.mineacademy.chatcontrol.util.Writer;
 
 /**
@@ -86,7 +85,7 @@ public final class ChatCeaser {
 						// creating it. This makes a new instance of 'rule' variable.
 						if (line.startsWith("match ")) {
 							if (rule != null) { // Found another match, assuming previous rule is finished creating.
-								Validate.isTrue(!createdRules.contains(rule), ruleType.getFileName() + " already contains rule where match is: " + line);
+								Valid.checkBoolean(!createdRules.contains(rule), ruleType.getFileName() + " already contains rule where match is: " + line);
 								createdRules.add(rule);
 							}
 
@@ -190,7 +189,7 @@ public final class ChatCeaser {
 				ex.printStackTrace();
 			}
 
-			Validate.isTrue(!rulesMap.containsKey(ruleType), "Rules map already contains rules from: " + ruleType.getFileName() + "!");
+			Valid.checkBoolean(!rulesMap.containsKey(ruleType), "Rules map already contains rules from: " + ruleType.getFileName() + "!");
 			rulesMap.put(ruleType, createdRules);
 		}
 
@@ -543,7 +542,7 @@ public final class ChatCeaser {
 	 *         strings
 	 */
 	private String getRandomString(Player player, Rule rule, String[] messages, String msgReplacement) {
-		Validate.isTrue(messages.length > 0, "Got empty message '" + StringUtils.join(messages) + "'");
+		Valid.checkBoolean(messages.length > 0, "Got empty message '" + String.join(", ", messages) + "'");
 
 		final String randomMsg = messages[rand.nextInt(messages.length)];
 		return Common.colorize(replaceVariables(player, rule, randomMsg, msgReplacement));

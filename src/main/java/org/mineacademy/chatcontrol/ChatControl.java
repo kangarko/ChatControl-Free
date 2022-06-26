@@ -13,7 +13,6 @@ import java.util.logging.Filter;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -235,8 +234,6 @@ public class ChatControl extends JavaPlugin {
 	}
 
 	private final void registerEvent(Class<? extends org.bukkit.event.Event> eventClass, Object listener, EventPriority priority) {
-		Validate.isTrue(listener instanceof Listener && listener instanceof EventExecutor, "Class " + listener.getClass().getSimpleName() + " must implement Listener and EventExecutor");
-
 		getServer().getPluginManager().registerEvent(eventClass, (Listener) listener, priority, (EventExecutor) listener, this, true);
 	}
 

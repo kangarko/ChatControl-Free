@@ -2,7 +2,6 @@ package org.mineacademy.chatcontrol.listener;
 
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventException;
@@ -74,19 +73,19 @@ public class ChatListener implements Listener, EventExecutor {
 		}
 
 		dupeCheck:
-		if (Settings.AntiSpam.Messages.SIMILARITY > 0 && Settings.AntiSpam.Messages.SIMILARITY < 100) {
-			if (Common.hasPerm(pl, Permissions.Bypasses.SIMILAR_CHAT) || isWhitelisted(message, Settings.AntiSpam.Messages.WHITELIST_SIMILARITY))
-				break dupeCheck;
+			if (Settings.AntiSpam.Messages.SIMILARITY > 0 && Settings.AntiSpam.Messages.SIMILARITY < 100) {
+				if (Common.hasPerm(pl, Permissions.Bypasses.SIMILAR_CHAT) || isWhitelisted(message, Settings.AntiSpam.Messages.WHITELIST_SIMILARITY))
+					break dupeCheck;
 
-			final String strippedMsg = Common.prepareForSimilarityCheck(message);
+				final String strippedMsg = Common.prepareForSimilarityCheck(message);
 
-			if (Common.similarity(strippedMsg, plData.lastMessage) > Settings.AntiSpam.Messages.SIMILARITY) {
-				Common.tell(pl, Localization.ANTISPAM_SIMILAR_MESSAGE);
-				e.setCancelled(true);
-				return;
+				if (Common.similarity(strippedMsg, plData.lastMessage) > Settings.AntiSpam.Messages.SIMILARITY) {
+					Common.tell(pl, Localization.ANTISPAM_SIMILAR_MESSAGE);
+					e.setCancelled(true);
+					return;
+				}
+				plData.lastMessage = strippedMsg;
 			}
-			plData.lastMessage = strippedMsg;
-		}
 
 		if (Settings.Rules.CHECK_CHAT && !Common.hasPerm(e.getPlayer(), Permissions.Bypasses.RULES))
 			message = ChatControl.instance().chatCeaser.parseRules(e, pl, message);
@@ -133,7 +132,7 @@ public class ChatListener implements Listener, EventExecutor {
 						whitelisted = false;
 					}
 
-					message = StringUtils.join(parts, " ");
+					message = String.join(" ", parts);
 
 					if (!msgBefore.equals(message) && Settings.AntiCaps.WARN_PLAYER)
 						Common.tellLater(pl, 1, Localization.ANTISPAM_CAPS_MESSAGE);

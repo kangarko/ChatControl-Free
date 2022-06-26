@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.event.EventPriority;
 import org.mineacademy.chatcontrol.group.Group;
 import org.mineacademy.chatcontrol.group.GroupOption;
@@ -413,13 +412,13 @@ public class Settings extends ConfHelper {
 			FORMATTER = EventPriority.valueOf(form);
 
 			if (FORMATTER == null)
-				throw new RuntimeException("Unknown formatter priority: " + form + ". Available: " + StringUtils.join(EventPriority.values(), ", "));
+				throw new RuntimeException("Unknown formatter priority: " + form + ". Available: " + Arrays.asList(EventPriority.values()));
 
 			form = getString("Checker", "NORMAL");
 			CHECKER = EventPriority.valueOf(form);
 
 			if (CHECKER == null)
-				throw new RuntimeException("Unknown checker priority: " + form + ". Available: " + StringUtils.join(EventPriority.values(), ", "));
+				throw new RuntimeException("Unknown checker priority: " + form + ". Available: " + Arrays.asList(EventPriority.values()));
 
 		}
 	}

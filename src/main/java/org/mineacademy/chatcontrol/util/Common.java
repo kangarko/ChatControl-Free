@@ -8,7 +8,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -293,7 +292,7 @@ public class Common {
 				if (whitelisted.equalsIgnoreCase(parts[i]))
 					parts[i] = parts[i].toLowerCase();
 
-		final String msg = StringUtils.join(parts, " ");
+		final String msg = String.join(" ", parts);
 
 		for (int i = 0; i < msg.length(); i++)
 			if (Character.isUpperCase(msg.charAt(i)) && Character.isLetter(msg.charAt(i)))

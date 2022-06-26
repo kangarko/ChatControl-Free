@@ -7,7 +7,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -99,7 +98,7 @@ public class CompatProvider {
 	 *            if an exception should be thrown if hover/click event is found.
 	 */
 	public static String unpackMessage(String json, boolean denyEvents) throws InteractiveTextFoundException {
-		Validate.isTrue(bungeeApiPresent, "(Un)packing chat requires Spigot 1.7.10 or newer");
+		Valid.checkBoolean(bungeeApiPresent, "(Un)packing chat requires Spigot 1.7.10 or newer");
 		String text = "";
 
 		try {
@@ -121,7 +120,7 @@ public class CompatProvider {
 	 * world converts to {text:"Hello world",color="gold"}
 	 */
 	public static String packMessage(String message) {
-		Validate.isTrue(bungeeApiPresent, "(Un)packing chat requires Spigot 1.7.10 or newer");
+		Valid.checkBoolean(bungeeApiPresent, "(Un)packing chat requires Spigot 1.7.10 or newer");
 
 		return ComponentSerializer.toString(net.md_5.bungee.api.chat.TextComponent.fromLegacyText(message));
 	}

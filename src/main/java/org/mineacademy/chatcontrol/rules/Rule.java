@@ -1,17 +1,17 @@
 package org.mineacademy.chatcontrol.rules;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.Validate;
 import org.bukkit.GameMode;
 import org.mineacademy.chatcontrol.util.Common;
+import org.mineacademy.chatcontrol.util.Valid;
 
 /**
  * Represents a single rule
- * 
+ *
  * @author kangarko
  */
 public class Rule {
@@ -19,7 +19,7 @@ public class Rule {
 	/**
 	 * Flags
 	 */
-	public static enum Type {
+	public enum Type {
 		GLOBAL("rules.txt", false),
 		PACKET("packets.txt", false),
 
@@ -150,7 +150,7 @@ public class Rule {
 
 	/**
 	 * Creates a new rule with provided regular expression
-	 * 
+	 *
 	 * @param match
 	 *            the regular expression used against the checked message
 	 */
@@ -160,7 +160,7 @@ public class Rule {
 
 	/**
 	 * Checks specified message against regex {@link #match}
-	 * 
+	 *
 	 * @param message
 	 *            The checked message
 	 * @return if the message matches the {@link #match} regular expression
@@ -190,13 +190,13 @@ public class Rule {
 	}
 
 	public void setId(String id) {
-		Validate.isTrue(this.id == null, "ID already set on: " + this);
+		Valid.checkBoolean(this.id == null, "ID already set on: " + this);
 
 		this.id = id;
 	}
 
 	public void setIgnoredMessage(String ignoredMessage) {
-		Validate.isTrue(this.ignoredMessage == null, "Ignored message already set on: " + this);
+		Valid.checkBoolean(this.ignoredMessage == null, "Ignored message already set on: " + this);
 
 		this.ignoredMessage = ignoredMessage;
 	}
@@ -206,7 +206,7 @@ public class Rule {
 	}
 
 	public void parseIgnoreEvent(String ignoreEvent) {
-		Validate.isTrue(ignoredEvent == null, "Ignored event already set on: " + this);
+		Valid.checkBoolean(ignoredEvent == null, "Ignored event already set on: " + this);
 
 		ignoredEvent = parseRuleType(ignoreEvent);
 	}
@@ -216,7 +216,7 @@ public class Rule {
 	}
 
 	public void parseIgnoredGamemodes(String line) {
-		Validate.isTrue(ignoredGamemodes == null, "Ignored gamemodes already set on: " + this);
+		Valid.checkBoolean(ignoredGamemodes == null, "Ignored gamemodes already set on: " + this);
 
 		final HashSet<GameMode> modes = new HashSet<>();
 
@@ -239,13 +239,13 @@ public class Rule {
 	}
 
 	public void setBypassPerm(String bypassPerm) {
-		Validate.isTrue(this.bypassPerm == null, "Bypass permission already set on: " + this);
+		Valid.checkBoolean(this.bypassPerm == null, "Bypass permission already set on: " + this);
 
 		this.bypassPerm = bypassPerm;
 	}
 
 	public void setStripBefore(String stripBefore) {
-		Validate.isTrue(this.stripBefore == null, "Strip before already set on: " + this);
+		Valid.checkBoolean(this.stripBefore == null, "Strip before already set on: " + this);
 
 		this.stripBefore = stripBefore;
 	}
@@ -254,9 +254,9 @@ public class Rule {
 	// [aZ-01 ] with Hello World
 	public void parseReplaceBefore(String line) {
 		final String[] parts = line.split(" with ");
-		Validate.isTrue(parts.length == 2, "Malformed replace - must specify regex and a replacement in format: replace <regex> with <replacement>");
+		Valid.checkBoolean(parts.length == 2, "Malformed replace - must specify regex and a replacement in format: replace <regex> with <replacement>");
 
-		Validate.isTrue(replaceBefore == null, "Replace before already set on " + this);
+		Valid.checkBoolean(replaceBefore == null, "Replace before already set on " + this);
 		replaceBefore = parts;
 	}
 
@@ -265,7 +265,7 @@ public class Rule {
 	}
 
 	public void parseReplacements(String line) {
-		Validate.isTrue(replacements == null, "Replacement already set on: " + this);
+		Valid.checkBoolean(replacements == null, "Replacement already set on: " + this);
 
 		replacements = line.split("\\|");
 	}
@@ -275,7 +275,7 @@ public class Rule {
 	}
 
 	public void parseRewrites(String line) {
-		Validate.isTrue(rewrites == null, "Rewrite message already set on: " + this);
+		Valid.checkBoolean(rewrites == null, "Rewrite message already set on: " + this);
 
 		rewrites = line.split("\\|");
 	}
@@ -285,7 +285,7 @@ public class Rule {
 	}
 
 	public void parseCommandsToExecute(String line) {
-		Validate.isTrue(commandToExecute == null, "Command to execute already set on: " + this);
+		Valid.checkBoolean(commandToExecute == null, "Command to execute already set on: " + this);
 
 		commandToExecute = line.split("\\|");
 	}
@@ -295,18 +295,18 @@ public class Rule {
 	}
 
 	public void setWarnMessage(String warnMessage) {
-		Validate.isTrue(this.warnMessage == null, "Warn message already set on: " + this);
+		Valid.checkBoolean(this.warnMessage == null, "Warn message already set on: " + this);
 
 		this.warnMessage = warnMessage;
 	}
 
 	public void parseCustomNotify(String raw) {
 		final String[] parts = raw.split(" ");
-		Validate.isTrue(parts.length > 0, "Malformed then notify - must specify permission and a message.");
+		Valid.checkBoolean(parts.length > 0, "Malformed then notify - must specify permission and a message.");
 
 		final String permission = parts[0];
 
-		Validate.isTrue(customNotifyPermission == null, "Custom notify already set on " + this);
+		Valid.checkBoolean(customNotifyPermission == null, "Custom notify already set on " + this);
 		customNotifyPermission = permission;
 		customNotifyMessage = raw.replace(permission + " ", "");
 	}
@@ -324,7 +324,7 @@ public class Rule {
 	}
 
 	public void setKickMessage(String kickMessage) {
-		Validate.isTrue(this.kickMessage == null, "Kick message already set on: " + this);
+		Valid.checkBoolean(this.kickMessage == null, "Kick message already set on: " + this);
 
 		this.kickMessage = kickMessage.isEmpty() ? "Kicked from the server" : kickMessage;
 	}
@@ -334,7 +334,7 @@ public class Rule {
 	}
 
 	public void setHandler(Handler handler) {
-		Validate.isTrue(this.handler == null, "Handler already set on: " + this);
+		Valid.checkBoolean(this.handler == null, "Handler already set on: " + this);
 
 		this.handler = handler;
 	}
@@ -344,7 +344,7 @@ public class Rule {
 	}
 
 	public void setCancelEvent() {
-		Validate.isTrue(!cancel, "Message already set to be cancelled on: " + this);
+		Valid.checkBoolean(!cancel, "Message already set to be cancelled on: " + this);
 
 		cancel = true;
 	}
@@ -354,7 +354,7 @@ public class Rule {
 	}
 
 	public void setLog() {
-		Validate.isTrue(!log, "Rule already being logged on: " + this);
+		Valid.checkBoolean(!log, "Rule already being logged on: " + this);
 
 		log = true;
 	}
@@ -364,13 +364,13 @@ public class Rule {
 	}
 
 	public void setFine(Double fine) {
-		Validate.isTrue(this.fine == null, "Fine already set on: " + this);
+		Valid.checkBoolean(this.fine == null, "Fine already set on: " + this);
 
 		this.fine = fine;
 	}
 
 	public void setPacketRule() {
-		Validate.isTrue(packetRule == null, "Rule is already a packet rule: " + this);
+		Valid.checkBoolean(packetRule == null, "Rule is already a packet rule: " + this);
 
 		packetRule = new PacketRule();
 	}
@@ -381,13 +381,13 @@ public class Rule {
 
 	@Override
 	public String toString() {
-		return Common.stripColors(getPacketRule() != null ? getPacketRule().toString() : "Rule{\n" + (id != null ? "    Id = " + id + "\n" : "") + "    Match = \'" + match + "\',\n" + (stripBefore != null ? "    Strip Before Match = \'" + stripBefore + "\',\n" : "") + (bypassPerm != null ? "    Bypass With Perm = \'" + bypassPerm + "\',\n" : "") + (ignoredMessage != null ? "    Ignore Message = \'" + ignoredMessage + "\',\n" : "") + (ignoredEvent != null ? "    Ignore Event = \'" + ignoredEvent + "\',\n" : "") + (replacements != null ? "    Replace With = \'" + StringUtils.join(replacements, ",") + "\',\n" : "") + (rewrites != null ? "    Rewrite = \'" + rewrites + "\',\n" : "") + (commandToExecute != null ? "    Execute Command = \'" + StringUtils.join(commandToExecute, ",") + "\',\n" : "") + (handler != null ? "    Handler = \'" + handler + "\',\n" : "") + (warnMessage != null ? "    Warn Message = \'" + warnMessage + "\',\n" : "") + (cancel ? "    Deny = " + cancel + "\n" : "") + (log ? "    Log = " + log + "\n" : "") + "}");
+		return Common.stripColors(getPacketRule() != null ? getPacketRule().toString() : "Rule{\n" + (id != null ? "    Id = " + id + "\n" : "") + "    Match = \'" + match + "\',\n" + (stripBefore != null ? "    Strip Before Match = \'" + stripBefore + "\',\n" : "") + (bypassPerm != null ? "    Bypass With Perm = \'" + bypassPerm + "\',\n" : "") + (ignoredMessage != null ? "    Ignore Message = \'" + ignoredMessage + "\',\n" : "") + (ignoredEvent != null ? "    Ignore Event = \'" + ignoredEvent + "\',\n" : "") + (replacements != null ? "    Replace With = \'" + String.join(",", replacements) + "\',\n" : "") + (rewrites != null ? "    Rewrite = \'" + rewrites + "\',\n" : "") + (commandToExecute != null ? "    Execute Command = \'" + String.join(",", commandToExecute) + "\',\n" : "") + (handler != null ? "    Handler = \'" + handler + "\',\n" : "") + (warnMessage != null ? "    Warn Message = \'" + warnMessage + "\',\n" : "") + (cancel ? "    Deny = " + cancel + "\n" : "") + (log ? "    Log = " + log + "\n" : "") + "}");
 	}
 
 	/**
 	 * Short version of {@link #toString()} that returns only regex used in this
 	 * rule.
-	 * 
+	 *
 	 * @return rule's regular expression
 	 */
 	public String toShortString() {
@@ -411,7 +411,7 @@ public class Rule {
 				break;
 		}
 
-		Validate.isTrue(ruleType != null && ruleType.canBeIgnored, "Unknown ignore event: " + str, " Valid: " + StringUtils.join(Type.values(), ", "));
+		Valid.checkBoolean(ruleType != null && ruleType.canBeIgnored, "Unknown ignore event: " + str, " Valid: " + Arrays.asList(Type.values()));
 		return ruleType;
 	}
 }
@@ -450,7 +450,7 @@ class PacketRule {
 	private HashMap<String, String> rewritePerWorld;
 
 	public void setDeny() {
-		Validate.isTrue(!deny, "Rule is already denied: " + this);
+		Valid.checkBoolean(!deny, "Rule is already denied: " + this);
 
 		deny = true;
 	}
@@ -460,7 +460,7 @@ class PacketRule {
 	}
 
 	public void setReplacePacket(String replace) {
-		Validate.isTrue(this.replace == null, "Replace already set on: " + this);
+		Valid.checkBoolean(this.replace == null, "Replace already set on: " + this);
 
 		this.replace = replace;
 	}
@@ -470,7 +470,7 @@ class PacketRule {
 	}
 
 	public void setRewritePacket(String rewrite) {
-		Validate.isTrue(this.rewrite == null, "Rewrite already set on: " + this);
+		Valid.checkBoolean(this.rewrite == null, "Rewrite already set on: " + this);
 
 		this.rewrite = rewrite;
 	}
@@ -484,9 +484,9 @@ class PacketRule {
 			rewritePerWorld = new HashMap<>();
 
 		final String[] parts = line.split(" ");
-		Validate.isTrue(parts.length > 1, "Malformed rule then rewritein, please specify world and message! If you want to hide rule, set the message to \'none\'. Example: then rewritein hardcore &cCommand disabled in Hardcore world.");
+		Valid.checkBoolean(parts.length > 1, "Malformed rule then rewritein, please specify world and message! If you want to hide rule, set the message to \'none\'. Example: then rewritein hardcore &cCommand disabled in Hardcore world.");
 
-		Validate.isTrue(!rewritePerWorld.containsKey(parts[0]), "Rewrite already set in world: " + parts[0] + " to: " + rewritePerWorld.get(parts[0]) + " on: " + this);
+		Valid.checkBoolean(!rewritePerWorld.containsKey(parts[0]), "Rewrite already set in world: " + parts[0] + " to: " + rewritePerWorld.get(parts[0]) + " on: " + this);
 
 		rewritePerWorld.put(parts[0], line.replace(parts[0] + " ", ""));
 	}
@@ -500,13 +500,13 @@ class PacketRule {
 	}
 
 	public void setDoNotVerbose() {
-		Validate.isTrue(!doNotVerbose, "Rule already being ignored from verbose: " + this);
+		Valid.checkBoolean(!doNotVerbose, "Rule already being ignored from verbose: " + this);
 
 		doNotVerbose = true;
 	}
 
 	@Override
 	public String toString() {
-		return "PacketRule{\n" + (replace != null ? "    Replace Word: \'" + replace + "\'\n" : "") + (rewrite != null ? "    Rewrite With: \'" + rewrite + "\'\n" : "") + (rewritePerWorld != null ? "    Rewrite In Worlds: \'" + StringUtils.join(rewritePerWorld.keySet().toArray(), ", ") + "\'\n" : "") + (doNotVerbose ? "    Do Not Verbose: \'" + doNotVerbose + "\'\n" : "") + "    Then Deny: " + deny + "\n" + "}";
+		return "PacketRule{\n" + (replace != null ? "    Replace Word: \'" + replace + "\'\n" : "") + (rewrite != null ? "    Rewrite With: \'" + rewrite + "\'\n" : "") + (rewritePerWorld != null ? "    Rewrite In Worlds: \'" + String.join(", ", rewritePerWorld.keySet()) + "\'\n" : "") + (doNotVerbose ? "    Do Not Verbose: \'" + doNotVerbose + "\'\n" : "") + "    Then Deny: " + deny + "\n" + "}";
 	}
 }
