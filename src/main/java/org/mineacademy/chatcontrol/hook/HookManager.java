@@ -366,7 +366,15 @@ class ProtocolLibHook {
 
 		if (Settings.Rules.CHECK_PACKETS) {
 
-			if (MinecraftVersion.atOrAbove(MinecraftVersion.WILD_UPDATE))
+			boolean is_1_19 = false;
+
+			try {
+				is_1_19 = MinecraftVersion.atOrAbove(MinecraftVersion.WILD_UPDATE);
+			} catch (Throwable t) {
+				// not
+			}
+
+			if (is_1_19)
 				Common.Log("Parsing packet rules only works on Minecraft 1.18 and lower. Upgrade to mineacademy.org/chatcontrol-red for new MC support.");
 
 			else
