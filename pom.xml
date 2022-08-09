@@ -5,7 +5,7 @@
 
 	<groupId>org.mineacademy</groupId>
 	<artifactId>ChatControl-Free</artifactId>
-	<version>5.9.3</version>
+	<version>5.9.4</version>
 	<packaging>jar</packaging>
 
 	<properties>
@@ -32,7 +32,7 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.19-R0.1-SNAPSHOT</version>
+			<version>1.19.2-R0.1-SNAPSHOT</version>
 		</dependency>
 		<!-- This is NOT used anywhere in ChatControl, only here to prevent compile 
 			errors from missing the log4j dependency that is shipped in the server jar -->
@@ -75,7 +75,7 @@
 		<dependency>
 			<groupId>org.mineacademy.plugin</groupId>
 			<artifactId>ProtocolLib</artifactId>
-			<version>5.0.0-SNAPSHOT-554</version>
+			<version>5.0.0-SNAPSHOT-586</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mineacademy.plugin</groupId>

@@ -23,6 +23,7 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
+import com.comphenix.protocol.utility.MinecraftVersion;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import com.earth2me.essentials.CommandSource;
 import com.earth2me.essentials.Essentials;
@@ -363,72 +364,78 @@ class ProtocolLibHook {
 				}
 			});
 
-		if (Settings.Rules.CHECK_PACKETS)
-			manager.addPacketListener(new PacketAdapter(ChatControl.instance(), PacketType.Play.Server.CHAT) {
+		if (Settings.Rules.CHECK_PACKETS) {
 
-				@Override
-				public void onPacketSending(PacketEvent e) {
-					if (e.getPlayer() == null || !e.getPlayer().isOnline())
-						return;
+			if (MinecraftVersion.atOrAbove(MinecraftVersion.WILD_UPDATE))
+				Common.Log("Parsing packet rules only works on Minecraft 1.18 and lower. Upgrade to mineacademy.org/chatcontrol-red for new MC support.");
 
-					final StructureModifier<WrappedChatComponent> chat = e.getPacket().getChatComponents();
+			else
+				manager.addPacketListener(new PacketAdapter(ChatControl.instance(), PacketType.Play.Server.CHAT) {
 
-					final WrappedChatComponent comp = chat.read(0);
-					if (comp == null)
-						return;
-
-					final String raw = comp.getJson();
-					if (raw == null || raw.isEmpty())
-						return;
-
-					if (Settings.Rules.UNPACK_PACKET_MESSAGE)
-						try {
-							String unpacked = CompatProvider.unpackMessage(raw, true);
-							if (unpacked == null || unpacked.isEmpty())
-								return;
-
-							final String oldUnpacked = unpacked;
-
-							try {
-								unpacked = ChatControl.instance().chatCeaser.parsePacketRulesRaw(e.getPlayer(), unpacked);
-							} catch (final PacketCancelledException ex) {
-								e.setCancelled(true);
-								return;
-							}
-
-							if (!oldUnpacked.equals(unpacked))
-								chat.write(0, WrappedChatComponent.fromJson(CompatProvider.packMessage(unpacked)));
-
+					@Override
+					public void onPacketSending(PacketEvent e) {
+						if (e.getPlayer() == null || !e.getPlayer().isOnline())
 							return;
 
-						} catch (final CompatProvider.InteractiveTextFoundException ex) {
+						final StructureModifier<WrappedChatComponent> chat = e.getPacket().getChatComponents();
+
+						final WrappedChatComponent comp = chat.read(0);
+						if (comp == null)
+							return;
+
+						final String raw = comp.getJson();
+						if (raw == null || raw.isEmpty())
+							return;
+
+						if (Settings.Rules.UNPACK_PACKET_MESSAGE)
+							try {
+								String unpacked = CompatProvider.unpackMessage(raw, true);
+								if (unpacked == null || unpacked.isEmpty())
+									return;
+
+								final String oldUnpacked = unpacked;
+
+								try {
+									unpacked = ChatControl.instance().chatCeaser.parsePacketRulesRaw(e.getPlayer(), unpacked);
+								} catch (final PacketCancelledException ex) {
+									e.setCancelled(true);
+									return;
+								}
+
+								if (!oldUnpacked.equals(unpacked))
+									chat.write(0, WrappedChatComponent.fromJson(CompatProvider.packMessage(unpacked)));
+
+								return;
+
+							} catch (final CompatProvider.InteractiveTextFoundException ex) {
+							}
+
+						Object parsed;
+
+						try {
+							parsed = parser.parse(raw);
+						} catch (final Throwable t) {
+							return;
 						}
 
-					Object parsed;
+						if (!(parsed instanceof JSONObject))
+							return;
 
-					try {
-						parsed = parser.parse(raw);
-					} catch (final Throwable t) {
-						return;
+						final JSONObject json = (JSONObject) parsed;
+						final String origin = json.toString();
+
+						try {
+							ChatControl.instance().chatCeaser.parsePacketRules(e.getPlayer(), json);
+						} catch (final PacketCancelledException ex) {
+							e.setCancelled(true);
+							return;
+						}
+
+						if (!json.toString().equals(origin))
+							chat.write(0, WrappedChatComponent.fromJson(json.toString()));
 					}
-
-					if (!(parsed instanceof JSONObject))
-						return;
-
-					final JSONObject json = (JSONObject) parsed;
-					final String origin = json.toString();
-
-					try {
-						ChatControl.instance().chatCeaser.parsePacketRules(e.getPlayer(), json);
-					} catch (final PacketCancelledException ex) {
-						e.setCancelled(true);
-						return;
-					}
-
-					if (!json.toString().equals(origin))
-						chat.write(0, WrappedChatComponent.fromJson(json.toString()));
-				}
-			});
+				});
+		}
 	}
 }
 

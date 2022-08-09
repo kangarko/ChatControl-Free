@@ -250,6 +250,7 @@ Rules:
   
   # Needs ProtocolLib. If enabled, messages will be checked against rules/packets.txt
   # which supports replacing even bukkit / plugin messages.
+  # Won't work on Minecraft 1.19 and up. Upgrade to mineacademy.org/chatcontrol-red for new MC support.
   Check_Packets: true
   
   Packets:
