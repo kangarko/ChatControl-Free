@@ -90,12 +90,12 @@ public class CompatProvider {
 	 * message with color codes. e.g. {text:"Hello world",color="red"} converts to
 	 * &cHello world
 	 *
+	 * @param json
+	 * @param denyEvents if an exception should be thrown if hover/click event is found.
+	 *
 	 * @throws InteractiveTextFoundException
 	 *             if click/hover event are found. Such events would be removed, and
 	 *             therefore message containing them shall not be unpacked
-	 *
-	 * @param denyEvents
-	 *            if an exception should be thrown if hover/click event is found.
 	 */
 	public static String unpackMessage(String json, boolean denyEvents) throws InteractiveTextFoundException {
 		Valid.checkBoolean(bungeeApiPresent, "(Un)packing chat requires Spigot 1.7.10 or newer");

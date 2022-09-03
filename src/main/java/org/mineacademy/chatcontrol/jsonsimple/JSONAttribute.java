@@ -228,7 +228,7 @@ public @interface JSONAttribute {
 	/**
 	 * {@link Type#GETTER} is used for serializing an object. If it is used on a method, it is not allowed to have any parameters!
 	 * {@link Type#SETTER} is used for deserializing an object. If it is used on a method, it can only have one parameter!
-	 * If this {@linkplain Annotation} is used on a field, it has to be accessible!
+	 * If this Annotation is used on a field, it has to be accessible!
 	 *
 	 * @return the attribute type
 	 * @since 1.0.0
