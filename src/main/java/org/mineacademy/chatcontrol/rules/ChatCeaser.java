@@ -51,7 +51,7 @@ public final class ChatCeaser {
 	private final Random rand = new Random();
 
 	/**
-	 * Clears {@link #rules} and load them .
+	 * Clears rules and load them .
 	 */
 	public void load() {
 		rulesMap.clear();
@@ -333,9 +333,8 @@ public final class ChatCeaser {
 				}
 
 				if (rule.cancelEvent()) {
-					System.out.println("Cancelled the message");
-
 					e.setCancelled(true);
+
 					return msg; // The message will not appear in the chat, no need to continue.
 				}
 			}
