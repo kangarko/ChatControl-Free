@@ -8,6 +8,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicesManager;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.mineacademy.chatcontrol.ChatControl;
 import org.mineacademy.chatcontrol.jsonsimple.JSONObject;
 import org.mineacademy.chatcontrol.jsonsimple.JSONParser;
@@ -370,7 +372,7 @@ class ProtocolLibHook {
 
 			try {
 				is_1_19 = MinecraftVersion.atOrAbove(MinecraftVersion.WILD_UPDATE);
-			} catch (Throwable t) {
+			} catch (final Throwable t) {
 				// not
 			}
 
@@ -503,6 +505,7 @@ class FactionsHook {
 class PlaceholderAPIHook {
 
 	private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("[%]([^%]+)[%]");
+	private static final Pattern BRACKET_PLACEHOLDER_PATTERN = Pattern.compile("[{]([^{}]+)[}]");
 
 	String replacePlaceholders(Player pl, String msg) {
 		try {
@@ -517,34 +520,92 @@ class PlaceholderAPIHook {
 		}
 	}
 
-	private String setBracketPlaceholders(Player player, String text) throws Throwable {
-		final Map<String, PlaceholderHook> placeholders = PlaceholderAPI.getPlaceholders();
-		final Matcher matcher = PLACEHOLDER_PATTERN.matcher(text);
+	private String setBracketPlaceholders(Player player, String text) {
+		final Map<String, PlaceholderHook> hooks = PlaceholderAPI.getPlaceholders();
+
+		if (hooks.isEmpty())
+			return text;
+
+		text = setBracketPlaceholders(player, text, PLACEHOLDER_PATTERN.matcher(text), hooks);
+		text = setBracketPlaceholders(player, text, BRACKET_PLACEHOLDER_PATTERN.matcher(text), hooks);
+
+		return text;
+	}
+
+	private String setBracketPlaceholders(Player player, String text, Matcher matcher, Map<String, PlaceholderHook> hooks) {
+		final String oldText = text;
 
 		while (matcher.find()) {
 
-			final String format = matcher.group(1);
+			String format = matcher.group(1);
+			boolean frontSpace = false;
+			boolean backSpace = false;
+
+			if (format.startsWith("+")) {
+				frontSpace = true;
+
+				format = format.substring(1);
+			}
+
+			if (format.endsWith("+")) {
+				backSpace = true;
+
+				format = format.substring(0, format.length() - 1);
+			}
+
 			final int index = format.indexOf("_");
 
-			if (index > 0 && index < format.length()) {
+			if (index <= 0 || index >= format.length())
+				continue;
 
-				final String identifier = format.substring(0, index).toLowerCase();
-				final String params = format.substring(index + 1);
+			final String identifier = format.substring(0, index);
+			final String params = format.substring(index + 1);
+			final String finalFormat = format;
 
-				Common.Debug("Placeholders: " + placeholders);
+			if (hooks.containsKey(identifier)) {
 
-				if (placeholders.containsKey(identifier)) {
-					final String value = placeholders.get(identifier).onRequest(player, params);
+				// Wait 0.5 seconds then kill the thread to prevent server
+				// crashing on PlaceholderAPI variables hanging up on the main thread
+				final Thread currentThread = Thread.currentThread();
+				final boolean main = Bukkit.isPrimaryThread();
+				final BukkitTask watchDog = new BukkitRunnable() {
 
-					Common.Debug("Replacing {" + identifier + "_" + params + "} with '" + value + "'");
+					@Override
+					public void run() {
+						Common.LogInFrame(false,
+								"IMPORTANT: PREVENTED SERVER CRASH FROM PLACEHOLDERAPI",
+								"",
+								"Replacing PlaceholderAPI variable took over " + (main ? "1.5" : "4") + " sec",
+								"and was interrupted to prevent hanging the server.",
+								"",
+								"This is typically caused when a variable sends",
+								"blocking HTTP request, such as checking stuff on",
+								"the Internet or resolving offline player names.",
+								"This is NOT error in ChatControl, you need",
+								"to contact placeholder expansion author instead.",
+								"",
+								"Variable: " + finalFormat,
+								"Text: " + oldText,
+								"Player: " + (player == null ? "none" : player.getName()));
 
-					if (value != null)
-						text = text.replaceAll(Pattern.quote(matcher.group()), Matcher.quoteReplacement(value));
+						currentThread.stop();
+					}
+				}.runTaskLater(ChatControl.instance(), main ? 30 : 80);
+
+				String value = hooks.get(identifier).onRequest(player, params);
+
+				// Indicate we no longer have to kill the thread
+				watchDog.cancel();
+
+				if (value != null) {
+					value = Matcher.quoteReplacement(Common.colorize(value));
+
+					text = text.replaceAll(Pattern.quote(matcher.group()), value.isEmpty() ? "" : (frontSpace ? " " : "") + value + (backSpace ? " " : ""));
 				}
 			}
 		}
 
-		return Common.colorize(text);
+		return text;
 	}
 
 }
