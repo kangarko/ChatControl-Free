@@ -1,0 +1,72 @@
+# ---------------------------------------------------------
+# This file contains most of the messages
+# and provides simple way to translate the plugin.
+# 
+# If you want to customize the localization, simply
+# copy this file to plugin's folder localization and start editing.
+# Example: plugins/ChatControl/localization/messages_en.yml
+# It will still be updated with new values in future releases.
+#
+# To not display a message, set it to 'none'
+# Messages supports variables beginning with % and color codes with & character
+# ---------------------------------------------------------
+
+Cannot:
+  Broadcast_Empty_Message: '&c{event}のメッセージが空です。ブロードキャストできません。'
+  Chat_While_Muted: '&7チャットがミュートされている間はチャットできません！'
+  Command_While_Muted: '&7チャットがミュートされている間はこのコマンドを使用できません！'
+  Chat_Until_Moved: '&7移動するまでチャットできません！'
+
+Anti_Bot:
+  Rejoin_Message: '{prefix}\n\n&6ログインする前に、&7{time} {seconds}&6待ってください。'
+
+Anti_Spam:
+  Similar_Message: '&c同じ（または類似の）メッセージを繰り返さないでください。'
+  Similar_Command: '&c同じ（または類似の）コマンドを繰り返さないでください。'
+  Too_Much_Caps: '&c大文字ロックを使いすぎないでください！'
+  Command_Wait_Message: '&c次のコマンドを入力する前に、{time} {seconds}待ってください。'
+  Chat_Wait_Message: '&c次のメッセージを入力する前に、{time} {seconds}待ってください。'
+
+Chat_Mute:
+  Mute: '&7チャットがミュートされました。'
+  Unmute: '&7チャットがミュート解除されました。'
+  Mute_Broadcast: '{server} &6{player}がチャットをミュートしました。'
+  Unmute_Broadcast: '{server} &6{player}がチャットのミュートを解除しました。'
+  Anonymous_Mute_Broadcast: '{server} グローバルチャットがミュートされました。'
+  Anonymous_Unmute_Broadcast: '{server} グローバルチャットのミュートが解除されました。'
+
+Chat_Clear:
+  Broadcast: '{server} &6{player}がチャットをクリアしました。'
+  Anonymous_Broadcast: '{server} ゲームチャットがクリアされました。'
+  Console_Player_Message: '{prefix} &7コンソールが正常にクリアされました。'
+  Console_Message: '&7{player}がコンソールをクリアしました。'
+  Chat_Staff_Message: '&7^----- [ == {player}によってチャットがクリアされました == ] -----^'
+
+Signs:
+  Duplicate_Text: '{server} 同じテキストの複数の看板を作成することはできません！'
+  Duplicate_Text_Staff: '&c{player}が同じテキストを持つ看板を作成しました：{message}'
+  Broke_When_Violated_A_Rule: 看板が壊れました。何か問題があります！
+
+Usage:
+  Fake_Command: '{prefix} 使用方法：/chatcontrol fake <&bjoin&f/&aleave&f/&ekick&f>'
+
+Update_Available: '&2新しいバージョンのChatControlが利用可能です。\n&2現在のバージョン：
+  &f{current}&2；新しいバージョン：&f{new}\n&2この通知を無効にするには、設定を変更してください。'
+
+No_Permission: '&c権限が不足しています（{permission}）。'
+Reload_Complete: '{prefix} &2設定が正常にリロードされました。'
+Reload_Failed: '{prefix} &c設定のリロードに失敗しました。コンソールを確認してください。エラーは次のとおりです：&4{error}'
+Wrong_Parameters: '&cパラメータが間違っているか、権限が不足しています。'
+Wrong_Arguments: '&c引数が間違っています。コマンドリストを表示するには、&6/chc list&cを入力してください。'
+
+General:
+  Player_Join: プレイヤーが参加しました
+  Player_Quit: プレイヤーが退出しました
+  Player_Kick: プレイヤーがキックされました
+  Prefix: '&8[&3ChatControl&8]&7'
+  Server_Prefix: '&8[&4サーバー&8]&c'
+  Console: '&cサーバー'
+  Reason: '&7理由：&f{reason}'
+  Sign: 看板
+  Command: コマンド
+  Seconds: 秒, 秒間
