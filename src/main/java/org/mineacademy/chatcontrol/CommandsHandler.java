@@ -183,7 +183,7 @@ public final class CommandsHandler implements CommandExecutor {
 		/**
 		 * RELOAD COMMAND
 		 */
-		else if ("reload".equals(argument) || "znovunacitat".equals(argument) || "r".equals(argument) || "rl".equals("argument")) {
+		else if ("reload".equals(argument) || "znovunacitat".equals(argument) || "r".equals(argument) || "rl".equals(argument)) {
 			checkPerm(sender, Permissions.Commands.RELOAD);
 
 			final ChatControl instance = ChatControl.getInstance();
