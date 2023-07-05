@@ -41,7 +41,7 @@ import org.mineacademy.chatcontrol.util.LagCatcher;
 import org.mineacademy.chatcontrol.util.Permissions;
 import org.mineacademy.chatcontrol.util.UpdateCheck;
 
-public class ChatControl extends JavaPlugin {
+public final class ChatControl extends JavaPlugin {
 
 	/**
 	 * Variable indicating if the chat is globally muted.
