@@ -30,7 +30,7 @@ public final class GeoAPI {
 	 * @param ip
 	 * @return
 	 */
-	public static final GeoResponse getResponse(InetAddress ip) {
+	public static GeoResponse getResponse(InetAddress ip) {
 		GeoResponse response = new GeoResponse("", "", "", "");
 
 		if (!Settings.GEO_DATA || ip == null || ip.getHostAddress() == null)
@@ -69,13 +69,12 @@ public final class GeoAPI {
 				}
 
 			} finally {
-				if (reader != null) {
+				if (reader != null)
 					try {
 						reader.close();
 					} catch (IOException ex) {
 						ex.printStackTrace();
 					}
-				}
 			}
 
 		} catch (NoRouteToHostException ex) {
@@ -92,7 +91,7 @@ public final class GeoAPI {
 	/*
 	 * A primitive helper method to get data from json response
 	 */
-	private static final String getJson(String page, String element) {
+	private static String getJson(String page, String element) {
 		return page.contains("\"" + element + "\":\"") ? page.split("\"" + element + "\":\"")[1].split("\",")[0] : "";
 	}
 

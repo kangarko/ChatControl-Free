@@ -303,7 +303,7 @@ public abstract class ConfHelper {
 			if (message.startsWith("kangarko"))
 				Thread.dumpStack();
 
-			type = Type.fromValue(message);
+			this.type = Type.fromValue(message);
 			this.message = message;
 		}
 
@@ -311,16 +311,16 @@ public abstract class ConfHelper {
 			Common.checkBoolean(type != Type.CUSTOM, "Type cannot be custom.");
 
 			this.type = type;
-			message = type == Type.DEFAULT ? "default" : type == Type.HIDDEN ? "hidden" : null;
+			this.message = type == Type.DEFAULT ? "default" : type == Type.HIDDEN ? "hidden" : null;
 		}
 
 		public Type getType() {
-			return type;
+			return this.type;
 		}
 
 		public String getMessage() {
-			Objects.requireNonNull(message, "Message cannot be null!");
-			return message;
+			Objects.requireNonNull(this.message, "Message cannot be null!");
+			return this.message;
 		}
 
 		public enum Type {
@@ -354,27 +354,27 @@ public abstract class ConfHelper {
 			final String[] values = raw.split(", ");
 
 			if (values.length == 2) {
-				akuzativSg = values[0];
-				nominativPl = values[1];
-				genitivePl = nominativPl;
+				this.akuzativSg = values[0];
+				this.nominativPl = values[1];
+				this.genitivePl = this.nominativPl;
 				return;
 			}
 
 			if (values.length != 3)
 				throw new RuntimeException("Malformed type, use format: 'second, seconds' OR 'sekundu, sekundy, sekund' (if your language has it)");
 
-			akuzativSg = values[0];
-			nominativPl = values[1];
-			genitivePl = values[2];
+			this.akuzativSg = values[0];
+			this.nominativPl = values[1];
+			this.genitivePl = values[2];
 		}
 
 		public String formatNumbers(long count) {
 			if (count == 1)
-				return akuzativSg;
+				return this.akuzativSg;
 			if (count > 1 && count < 5)
-				return nominativPl;
+				return this.nominativPl;
 
-			return genitivePl;
+			return this.genitivePl;
 		}
 	}
 
@@ -386,16 +386,16 @@ public abstract class ConfHelper {
 			final String[] values = raw.split(", ");
 
 			if (values.length == 1) {
-				sound = CompatProvider.parseSound(values[0].toUpperCase());
-				volume = 1F;
-				pitch = 1.5F;
+				this.sound = CompatProvider.parseSound(values[0].toUpperCase());
+				this.volume = 1F;
+				this.pitch = 1.5F;
 				return;
 			}
 
 			Common.checkBoolean(values.length == 3, "Malformed sound type, use format: 'sound' OR 'sound, volume, pitch'");
-			sound = CompatProvider.parseSound(mapSomeSounds(values[0].toUpperCase()));
-			volume = Float.parseFloat(values[1]);
-			pitch = Float.parseFloat(values[2]);
+			this.sound = CompatProvider.parseSound(this.mapSomeSounds(values[0].toUpperCase()));
+			this.volume = Float.parseFloat(values[1]);
+			this.pitch = Float.parseFloat(values[2]);
 		}
 
 		@Deprecated
@@ -434,21 +434,21 @@ public abstract class ConfHelper {
 		}
 
 		public T getDefault() {
-			return def;
+			return this.def;
 		}
 
 		public T getFor(PlayerCache cache) {
 			if (!Settings.Groups.ENABLED)
-				return def;
+				return this.def;
 
 			for (final Group group : cache.groups) {
-				final GroupOption setting = group.getSetting(type);
+				final GroupOption setting = group.getSetting(this.type);
 
 				if (setting != null)
 					return (T) setting.getValue();
 			}
 
-			return def;
+			return this.def;
 		}
 
 		@Override

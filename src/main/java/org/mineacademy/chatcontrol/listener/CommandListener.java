@@ -92,9 +92,8 @@ public final class CommandListener implements Listener {
 		if (Settings.Rules.CHECK_COMMANDS && !Common.hasPermission(event.getPlayer(), Permissions.Bypass.RULES))
 			command = ChatControl.getInstance().getChatCeaser().parseRules(event, player, command);
 
-		if (event.isCancelled()) { // some of the rule or handler has cancelled it
+		if (event.isCancelled())
 			return;
-		}
 
 		if (!command.equals(event.getMessage()))
 			event.setMessage(command);

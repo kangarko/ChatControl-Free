@@ -26,10 +26,10 @@ public final class PlayerCache {
 		if (!Settings.Groups.ENABLED)
 			return;
 
-		if (groups == null || Settings.Groups.ALWAYS_CHECK_UPDATES) {
+		if (this.groups == null || Settings.Groups.ALWAYS_CHECK_UPDATES) {
 			Common.debug("&bLoading group for &f" + player.getName() + "&b ...");
 
-			groups = Group.loadFor(player);
+			this.groups = Group.loadFor(player);
 		}
 	}
 }

@@ -72,7 +72,7 @@ public final class PlayerListener implements Listener {
 				event.setJoinMessage(null);
 				break;
 			case CUSTOM:
-				event.setJoinMessage(replacePlayerVariables(joinMessage.getMessage(), player));
+				event.setJoinMessage(this.replacePlayerVariables(joinMessage.getMessage(), player));
 				break;
 			default:
 				break;
@@ -81,7 +81,7 @@ public final class PlayerListener implements Listener {
 
 	@EventHandler
 	public void onQuit(PlayerQuitEvent event) {
-		handleLeaveMessage(event);
+		this.handleLeaveMessage(event);
 
 		if (Settings.RESET_CACHE_ON_QUIT)
 			ChatControl.removeCache(event.getPlayer());
@@ -108,7 +108,7 @@ public final class PlayerListener implements Listener {
 				event.setQuitMessage(null);
 				break;
 			case CUSTOM:
-				event.setQuitMessage(replacePlayerVariables(leaveMessage.getMessage(), player));
+				event.setQuitMessage(this.replacePlayerVariables(leaveMessage.getMessage(), player));
 				break;
 			default:
 				break;
@@ -147,7 +147,7 @@ public final class PlayerListener implements Listener {
 
 				break;
 			case CUSTOM:
-				event.setLeaveMessage(replacePlayerVariables(kickMessage.getMessage(), player));
+				event.setLeaveMessage(this.replacePlayerVariables(kickMessage.getMessage(), player));
 				break;
 			default:
 				break;

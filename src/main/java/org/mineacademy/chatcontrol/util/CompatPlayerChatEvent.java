@@ -27,10 +27,10 @@ public final class CompatPlayerChatEvent implements Cancellable {
 		final Class<?> eventClass = event.getClass();
 
 		try {
-			player = (Player) eventClass.getMethod("getPlayer").invoke(event);
-			message = (String) eventClass.getMethod("getMessage").invoke(event);
-			format = (String) eventClass.getMethod("getFormat").invoke(event);
-			recipients = (Set<Player>) eventClass.getMethod("getRecipients").invoke(event);
+			this.player = (Player) eventClass.getMethod("getPlayer").invoke(event);
+			this.message = (String) eventClass.getMethod("getMessage").invoke(event);
+			this.format = (String) eventClass.getMethod("getFormat").invoke(event);
+			this.recipients = (Set<Player>) eventClass.getMethod("getRecipients").invoke(event);
 		} catch (final Throwable t) {
 			throw new RuntimeException(t);
 		}
@@ -38,14 +38,14 @@ public final class CompatPlayerChatEvent implements Cancellable {
 
 	public void install(Event event) {
 
-		if (cancelled)
+		if (this.cancelled)
 			((Cancellable) event).setCancelled(true);
 
 		final Class<?> eventClass = event.getClass();
 
 		try {
-			eventClass.getMethod("setMessage", String.class).invoke(event, message);
-			eventClass.getMethod("setFormat", String.class).invoke(event, format);
+			eventClass.getMethod("setMessage", String.class).invoke(event, this.message);
+			eventClass.getMethod("setFormat", String.class).invoke(event, this.format);
 
 		} catch (final Throwable t) {
 			throw new RuntimeException(t);
@@ -56,7 +56,7 @@ public final class CompatPlayerChatEvent implements Cancellable {
 	public void setFormat(final String format) throws IllegalFormatException, NullPointerException {
 		// Oh for a better way to do this!
 		try {
-			String.format(format, player, message);
+			String.format(format, this.player, this.message);
 		} catch (final RuntimeException ex) {
 			ex.fillInStackTrace();
 			throw ex;

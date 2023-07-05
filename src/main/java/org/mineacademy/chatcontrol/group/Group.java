@@ -45,7 +45,7 @@ public final class Group {
 	}
 
 	public Collection<GroupOption> getSettings() {
-		return settings.values();
+		return this.settings.values();
 	}
 
 	/**
@@ -55,13 +55,13 @@ public final class Group {
 	 * @return
 	 */
 	public GroupOption getSetting(OptionType type) {
-		return settings.get(type);
+		return this.settings.get(type);
 	}
 
 	public void addSetting(OptionType type, Object value) {
-		Common.checkBoolean(!settings.containsKey(type), "Duplicate setting: " + type + " for: " + name);
+		Common.checkBoolean(!this.settings.containsKey(type), "Duplicate setting: " + type + " for: " + this.name);
 
-		settings.put(type, type.create(value));
+		this.settings.put(type, type.create(value));
 	}
 
 	public static List<Group> loadFor(Player player) {

@@ -222,17 +222,17 @@ class EssentialsHook {
 	private final Essentials essentialsApi;
 
 	EssentialsHook() {
-		essentialsApi = (Essentials) Bukkit.getPluginManager().getPlugin("Essentials");
+		this.essentialsApi = (Essentials) Bukkit.getPluginManager().getPlugin("Essentials");
 	}
 
 	boolean isAfk(String playerName) {
-		final User user = getUser(playerName);
+		final User user = this.getUser(playerName);
 
 		return user != null ? user.isAfk() : false;
 	}
 
 	Player getReplyTo(String playerName) {
-		final User user = getUser(playerName);
+		final User user = this.getUser(playerName);
 		if (user == null)
 			return null;
 
@@ -267,7 +267,7 @@ class EssentialsHook {
 	}
 
 	String getNick(String playerName) {
-		final User user = getUser(playerName);
+		final User user = this.getUser(playerName);
 		if (user == null)
 			return playerName;
 
@@ -276,7 +276,7 @@ class EssentialsHook {
 	}
 
 	private User getUser(String playerName) {
-		return essentialsApi.getUserMap().getUser(playerName);
+		return this.essentialsApi.getUserMap().getUser(playerName);
 	}
 
 }
@@ -286,11 +286,11 @@ class MultiverseHook {
 	private final MultiverseCore multiVerse;
 
 	MultiverseHook() {
-		multiVerse = (MultiverseCore) Bukkit.getPluginManager().getPlugin("Multiverse-Core");
+		this.multiVerse = (MultiverseCore) Bukkit.getPluginManager().getPlugin("Multiverse-Core");
 	}
 
 	String getWorldAlias(String world) {
-		final MultiverseWorld mvWorld = multiVerse.getMVWorldManager().getMVWorld(world);
+		final MultiverseWorld mvWorld = this.multiVerse.getMVWorldManager().getMVWorld(world);
 
 		if (mvWorld != null)
 			return mvWorld.getColoredWorldString();
@@ -303,7 +303,7 @@ class TownyHook {
 
 	String getNation(Player player) {
 		try {
-			final Town town = getTown(player);
+			final Town town = this.getTown(player);
 
 			return town != null ? town.getNation().getName() : "";
 		} catch (final Exception e) {
@@ -312,7 +312,7 @@ class TownyHook {
 	}
 
 	String getTownName(Player player) {
-		final Town town = getTown(player);
+		final Town town = this.getTown(player);
 
 		return town != null ? town.getName() : "";
 	}
@@ -338,7 +338,7 @@ class ProtocolLibHook {
 	void initPacketListening() {
 
 		if (Settings.Packets.TabComplete.DISABLE)
-			manager.addPacketListener(new PacketAdapter(ChatControl.getInstance(), PacketType.Play.Client.TAB_COMPLETE) {
+			this.manager.addPacketListener(new PacketAdapter(ChatControl.getInstance(), PacketType.Play.Client.TAB_COMPLETE) {
 
 				@Override
 				public void onPacketReceiving(PacketEvent event) {
@@ -372,7 +372,7 @@ class ProtocolLibHook {
 				Common.log("Parsing packet rules only works on Minecraft 1.18 and lower. Upgrade to mineacademy.org/chatcontrol-red for new MC support.");
 
 			else
-				manager.addPacketListener(new PacketAdapter(ChatControl.getInstance(), PacketType.Play.Server.CHAT) {
+				this.manager.addPacketListener(new PacketAdapter(ChatControl.getInstance(), PacketType.Play.Server.CHAT) {
 
 					@Override
 					public void onPacketSending(PacketEvent event) {
@@ -415,7 +415,7 @@ class ProtocolLibHook {
 						Object parsed;
 
 						try {
-							parsed = parser.parse(raw);
+							parsed = ProtocolLibHook.this.parser.parse(raw);
 						} catch (final Throwable t) {
 							return;
 						}
@@ -452,12 +452,12 @@ class VaultHook {
 		final RegisteredServiceProvider<Economy> economyProvider = services.getRegistration(Economy.class);
 
 		if (economyProvider != null)
-			economy = economyProvider.getProvider();
+			this.economy = economyProvider.getProvider();
 
 		final RegisteredServiceProvider<Chat> chatProvider = services.getRegistration(Chat.class);
 
 		if (chatProvider != null)
-			chat = chatProvider.getProvider();
+			this.chat = chatProvider.getProvider();
 
 		else if (Settings.Chat.Formatter.ENABLED)
 			Common.logInFrame(true,
@@ -467,22 +467,22 @@ class VaultHook {
 	}
 
 	String getPlayerPrefix(Player player) {
-		if (chat == null)
+		if (this.chat == null)
 			return "";
 
-		return chat.getPlayerPrefix(player);
+		return this.chat.getPlayerPrefix(player);
 	}
 
 	String getPlayerSuffix(Player player) {
-		if (chat == null)
+		if (this.chat == null)
 			return "";
 
-		return chat.getPlayerSuffix(player);
+		return this.chat.getPlayerSuffix(player);
 	}
 
 	void takeMoney(String player, double amount) {
-		if (economy != null)
-			economy.withdrawPlayer(player, amount);
+		if (this.economy != null)
+			this.economy.withdrawPlayer(player, amount);
 	}
 }
 
@@ -503,7 +503,7 @@ class PlaceholderAPIHook {
 
 	String replacePlaceholders(Player player, String msg) {
 		try {
-			return setBracketPlaceholders(player, msg);
+			return this.setBracketPlaceholders(player, msg);
 
 		} catch (final Throwable t) {
 			Common.log(
@@ -520,8 +520,8 @@ class PlaceholderAPIHook {
 		if (hooks.isEmpty())
 			return text;
 
-		text = setBracketPlaceholders(player, text, PLACEHOLDER_PATTERN.matcher(text), hooks);
-		text = setBracketPlaceholders(player, text, BRACKET_PLACEHOLDER_PATTERN.matcher(text), hooks);
+		text = this.setBracketPlaceholders(player, text, PLACEHOLDER_PATTERN.matcher(text), hooks);
+		text = this.setBracketPlaceholders(player, text, BRACKET_PLACEHOLDER_PATTERN.matcher(text), hooks);
 
 		return text;
 	}

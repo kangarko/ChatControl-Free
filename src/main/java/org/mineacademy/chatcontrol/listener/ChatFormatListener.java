@@ -42,7 +42,7 @@ public final class ChatFormatListener implements Listener, EventExecutor {
 	public void execute(Listener listener, Event event) throws EventException {
 		final CompatPlayerChatEvent compatibleEvent = new CompatPlayerChatEvent(event);
 
-		onChatFormat(compatibleEvent);
+		this.onChatFormat(compatibleEvent);
 		compatibleEvent.install(event);
 	}
 
@@ -60,10 +60,10 @@ public final class ChatFormatListener implements Listener, EventExecutor {
 			format = Settings.Chat.Formatter.GLOBAL_FORMAT;
 		}
 
-		message = formatColor(message, player);
+		message = this.formatColor(message, player);
 
 		format = format.replace("{display_name}", player.getName());
-		format = replaceAllVariables(player, format);
+		format = this.replaceAllVariables(player, format);
 		format = format.replace("{message}", message);
 
 		try {
@@ -78,14 +78,14 @@ public final class ChatFormatListener implements Listener, EventExecutor {
 
 		if (rangedChat) {
 			event.getRecipients().clear();
-			event.getRecipients().addAll(getLocalRecipients(player, message, Settings.Chat.Formatter.RANGE));
+			event.getRecipients().addAll(this.getLocalRecipients(player, message, Settings.Chat.Formatter.RANGE));
 		}
 	}
 
 	private String replaceAllVariables(Player player, String message) {
-		message = replacePlayerVariables(player, message);
-		message = formatColor(message);
-		message = replaceTime(message);
+		message = this.replacePlayerVariables(player, message);
+		message = this.formatColor(message);
+		message = this.replaceTime(message);
 
 		return message;
 	}
@@ -100,14 +100,14 @@ public final class ChatFormatListener implements Listener, EventExecutor {
 			message = message.replace("{country_code}", geo != null ? geo.getCountryCode() : "").replace("{country_name}", geo != null ? geo.getCountryName() : "").replace("{region_name}", geo != null ? geo.getRegionName() : "").replace("{isp}", geo != null ? geo.getIsp() : "");
 		}
 
-		String prefix = formatColor(HookManager.getPlayerPrefix(player));
-		String suffix = formatColor(HookManager.getPlayerSuffix(player));
+		String prefix = this.formatColor(HookManager.getPlayerPrefix(player));
+		String suffix = this.formatColor(HookManager.getPlayerSuffix(player));
 
 		message = message
 				.replace("{player_prefix}", prefix).replace("{player_suffix}", suffix)
 				.replace("{pl_prefix}", prefix).replace("{pl_suffix}", suffix)
 				.replace("{player}", player.getName()).replace("{display_name}", player.getDisplayName()).replace("{tab_name}", player.getPlayerListName()).replace("{nick}", HookManager.getNick(player))
-				.replace("{world}", HookManager.getWorldAlias(player.getWorld().getName())).replace("{health}", formatHealth(player) + ChatColor.RESET)
+				.replace("{world}", HookManager.getWorldAlias(player.getWorld().getName())).replace("{health}", this.formatHealth(player) + ChatColor.RESET)
 				.replace("{town}", HookManager.getTownName(player)).replace("{nation}", HookManager.getNation(player))
 				.replace("{faction}", HookManager.getFaction(player));
 
@@ -155,38 +155,37 @@ public final class ChatFormatListener implements Listener, EventExecutor {
 		boolean canReset = false;
 
 		if (Common.hasPermission(player, Permissions.Formatter.COLOR)) {
-			message = COLOR_REGEX.matcher(message).replaceAll("\u00A7$1");
+			message = this.COLOR_REGEX.matcher(message).replaceAll("\u00A7$1");
 			canReset = true;
 		}
 
 		if (Common.hasPermission(player, Permissions.Formatter.MAGIC)) {
-			message = MAGIC_REGEN.matcher(message).replaceAll("\u00A7$1");
+			message = this.MAGIC_REGEN.matcher(message).replaceAll("\u00A7$1");
 			canReset = true;
 		}
 
 		if (Common.hasPermission(player, Permissions.Formatter.BOLD)) {
-			message = BOLD_REGEX.matcher(message).replaceAll("\u00A7$1");
+			message = this.BOLD_REGEX.matcher(message).replaceAll("\u00A7$1");
 			canReset = true;
 		}
 
 		if (Common.hasPermission(player, Permissions.Formatter.STRIKETHROUGH)) {
-			message = STRIKETHROUGH_REGEX.matcher(message).replaceAll("\u00A7$1");
+			message = this.STRIKETHROUGH_REGEX.matcher(message).replaceAll("\u00A7$1");
 			canReset = true;
 		}
 
 		if (Common.hasPermission(player, Permissions.Formatter.UNDERLINE)) {
-			message = UNDERLINE_REGEX.matcher(message).replaceAll("\u00A7$1");
+			message = this.UNDERLINE_REGEX.matcher(message).replaceAll("\u00A7$1");
 			canReset = true;
 		}
 
 		if (Common.hasPermission(player, Permissions.Formatter.ITALIC)) {
-			message = ITALIC_REGEX.matcher(message).replaceAll("\u00A7$1");
+			message = this.ITALIC_REGEX.matcher(message).replaceAll("\u00A7$1");
 			canReset = true;
 		}
 
-		if (canReset) {
-			message = RESET_REGEX.matcher(message).replaceAll("\u00A7$1");
-		}
+		if (canReset)
+			message = this.RESET_REGEX.matcher(message).replaceAll("\u00A7$1");
 
 		return message;
 	}
@@ -212,7 +211,7 @@ public final class ChatFormatListener implements Listener, EventExecutor {
 					}
 
 				if (Common.hasPermission(receiver, Permissions.Formatter.SPY))
-					Common.tell(receiver, replaceAllVariables(player, Settings.Chat.Formatter.SPY_FORMAT.replace("{message}", message)));
+					Common.tell(receiver, this.replaceAllVariables(player, Settings.Chat.Formatter.SPY_FORMAT.replace("{message}", message)));
 			}
 
 			return recipients;

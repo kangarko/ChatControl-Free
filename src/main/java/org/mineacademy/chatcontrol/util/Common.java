@@ -393,8 +393,8 @@ public final class Common {
 	 */
 	public static int getPercentageCaps(int[] caps) {
 		int sum = 0;
-		for (int i = 0; i < caps.length; i++)
-			sum += caps[i];
+		for (int cap : caps)
+			sum += cap;
 
 		final double ratio = sum / caps.length;
 		final int percent = (int) (100.0D * ratio);
@@ -652,29 +652,29 @@ final class TimedCharSequence implements CharSequence {
 	public TimedCharSequence(CharSequence message, int timeoutLimit) {
 		this.message = message;
 		this.timeoutLimit = timeoutLimit;
-		timeoutTime = System.currentTimeMillis() + timeoutLimit;
+		this.timeoutTime = System.currentTimeMillis() + timeoutLimit;
 	}
 
 	@Override
 	public char charAt(int index) {
-		if (System.currentTimeMillis() > timeoutTime)
-			throw new RuntimeException("\'" + message + "\' timed out after " + timeoutLimit + " ms! (malformed regex?)");
+		if (System.currentTimeMillis() > this.timeoutTime)
+			throw new RuntimeException("\'" + this.message + "\' timed out after " + this.timeoutLimit + " ms! (malformed regex?)");
 
-		return message.charAt(index);
+		return this.message.charAt(index);
 	}
 
 	@Override
 	public int length() {
-		return message.length();
+		return this.message.length();
 	}
 
 	@Override
 	public CharSequence subSequence(int start, int end) {
-		return new TimedCharSequence(message.subSequence(start, end), timeoutLimit);
+		return new TimedCharSequence(this.message.subSequence(start, end), this.timeoutLimit);
 	}
 
 	@Override
 	public String toString() {
-		return message.toString();
+		return this.message.toString();
 	}
 }

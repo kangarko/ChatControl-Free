@@ -139,7 +139,7 @@ public final class Handler {
 	}
 
 	public void setStaffAlertPermission(String staffAlertPermission) {
-		Objects.requireNonNull(staffAlertMessage, "Staff alert message is null, cannot get staff permission! Handler: " + this);
+		Objects.requireNonNull(this.staffAlertMessage, "Staff alert message is null, cannot get staff permission! Handler: " + this);
 
 		this.staffAlertPermission = staffAlertPermission;
 	}
@@ -163,13 +163,13 @@ public final class Handler {
 	}
 
 	public void setMessageBlocked() {
-		Common.checkBoolean(!messageBlocked, "Message is already blocked for: " + this);
+		Common.checkBoolean(!this.messageBlocked, "Message is already blocked for: " + this);
 
-		messageBlocked = true;
+		this.messageBlocked = true;
 	}
 
 	public void parseFine(String line) {
-		Common.checkBoolean(fine == null, "Fine already set on: " + this);
+		Common.checkBoolean(this.fine == null, "Fine already set on: " + this);
 
 		try {
 			final double fine = Double.parseDouble(line);
@@ -180,22 +180,22 @@ public final class Handler {
 	}
 
 	public void setMessageReplacement(String msgReplacement) {
-		Common.checkBoolean(!messageBlocked, "Replacement cannot be defined when the message is blocked: " + this);
-		Common.checkBoolean(rewriteTo == null, "Whole message replacement already defined for: " + this);
+		Common.checkBoolean(!this.messageBlocked, "Replacement cannot be defined when the message is blocked: " + this);
+		Common.checkBoolean(this.rewriteTo == null, "Whole message replacement already defined for: " + this);
 
 		this.messageReplacement = msgReplacement;
 	}
 
 	public void setRewriteTo(String wholeMsgReplacement) {
-		Common.checkBoolean(!messageBlocked, "Whole replacement cannot be defined when the message is blocked: " + this);
-		Common.checkBoolean(messageReplacement == null, "Part message replacement already defined for: " + this);
+		Common.checkBoolean(!this.messageBlocked, "Whole replacement cannot be defined when the message is blocked: " + this);
+		Common.checkBoolean(this.messageReplacement == null, "Part message replacement already defined for: " + this);
 
-		rewriteTo = wholeMsgReplacement;
+		this.rewriteTo = wholeMsgReplacement;
 	}
 
 	private String printCommands() {
-		String commands = "(" + commandsToExecute.size() + ")";
-		for (final String command : commandsToExecute)
+		String commands = "(" + this.commandsToExecute.size() + ")";
+		for (final String command : this.commandsToExecute)
 			commands += command;
 
 		return commands;
@@ -203,9 +203,10 @@ public final class Handler {
 
 	@Override
 	public String toString() {
-		return Common.stripColors("    Handler{\n" + "        Name: \'" + name + "\'\n" + (ruleId != null ? "        Rule ID: " + ruleId + "\n" : "") + (ignoredInCommands != null ? "        Ignored In Commands: " + ignoredInCommands + "\n" : "") + (bypassPermission != null ? "        Bypass Permission: \'" + bypassPermission + "\'\n" : "") + (playerWarningMessage != null ? "        Player Warn Msg: \'" + playerWarningMessage + "\'\n" : "")
-				+ (broadcastMessage != null ? "        Broadcast Msg: \'" + broadcastMessage + "\'" : "") + (staffAlertPermission != null ? "        Staff Alert Permission: \'" + staffAlertPermission + "\'\n" : "") + (staffAlertMessage != null ? "        Staff Alert Msg: \'" + staffAlertMessage + "\'\n" : "") + (consoleMessage != null ? "        Console Msg: \'" + consoleMessage + "\'\n" : "")
-				+ (commandsToExecute != null ? "        Commands To Execute: \'" + printCommands() + "\'\n" : "")
-				+ (writeToFileName != null ? "        Write To File Name: \'" + writeToFileName + "\'\n" : "") + (messageBlocked ? "        Block Message: \'" + messageBlocked + "\'\n" : "") + (messageReplacement != null ? "        Replace Part With: \'" + messageReplacement + "\'\n" : "") + (rewriteTo != null ? "        Replace Whole With: \'" + rewriteTo + "\'\n" : "") + "    }");
+		return Common.stripColors(
+				"    Handler{\n" + "        Name: \'" + this.name + "\'\n" + (this.ruleId != null ? "        Rule ID: " + this.ruleId + "\n" : "") + (this.ignoredInCommands != null ? "        Ignored In Commands: " + this.ignoredInCommands + "\n" : "") + (this.bypassPermission != null ? "        Bypass Permission: \'" + this.bypassPermission + "\'\n" : "") + (this.playerWarningMessage != null ? "        Player Warn Msg: \'" + this.playerWarningMessage + "\'\n" : "")
+						+ (this.broadcastMessage != null ? "        Broadcast Msg: \'" + this.broadcastMessage + "\'" : "") + (this.staffAlertPermission != null ? "        Staff Alert Permission: \'" + this.staffAlertPermission + "\'\n" : "") + (this.staffAlertMessage != null ? "        Staff Alert Msg: \'" + this.staffAlertMessage + "\'\n" : "") + (this.consoleMessage != null ? "        Console Msg: \'" + this.consoleMessage + "\'\n" : "")
+						+ (this.commandsToExecute != null ? "        Commands To Execute: \'" + this.printCommands() + "\'\n" : "")
+						+ (this.writeToFileName != null ? "        Write To File Name: \'" + this.writeToFileName + "\'\n" : "") + (this.messageBlocked ? "        Block Message: \'" + this.messageBlocked + "\'\n" : "") + (this.messageReplacement != null ? "        Replace Part With: \'" + this.messageReplacement + "\'\n" : "") + (this.rewriteTo != null ? "        Replace Whole With: \'" + this.rewriteTo + "\'\n" : "") + "    }");
 	}
 }

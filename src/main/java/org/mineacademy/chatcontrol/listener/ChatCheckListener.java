@@ -31,7 +31,7 @@ public final class ChatCheckListener implements Listener, EventExecutor {
 	public void execute(Listener listener, Event event) throws EventException {
 		final CompatPlayerChatEvent compatibleEvent = new CompatPlayerChatEvent(event);
 
-		onPlayerChat(compatibleEvent);
+		this.onPlayerChat(compatibleEvent);
 		compatibleEvent.install(event);
 	}
 
@@ -62,7 +62,7 @@ public final class ChatCheckListener implements Listener, EventExecutor {
 			final int messageDelay = Settings.AntiSpam.Messages.DELAY.getFor(cache);
 
 			if (now - cache.lastMessageTime < messageDelay) {
-				if (Common.hasPermission(player, Permissions.Bypass.DELAY_CHAT) || isWhitelisted(message, Settings.AntiSpam.Messages.WHITELIST_DELAY))
+				if (Common.hasPermission(player, Permissions.Bypass.DELAY_CHAT) || this.isWhitelisted(message, Settings.AntiSpam.Messages.WHITELIST_DELAY))
 					break timeCheck;
 
 				final long time = messageDelay - (now - cache.lastMessageTime);
@@ -77,7 +77,7 @@ public final class ChatCheckListener implements Listener, EventExecutor {
 
 		dupeCheck:
 		if (Settings.AntiSpam.Messages.SIMILARITY > 0 && Settings.AntiSpam.Messages.SIMILARITY < 100) {
-			if (Common.hasPermission(player, Permissions.Bypass.SIMILAR_CHAT) || isWhitelisted(message, Settings.AntiSpam.Messages.WHITELIST_SIMILARITY))
+			if (Common.hasPermission(player, Permissions.Bypass.SIMILAR_CHAT) || this.isWhitelisted(message, Settings.AntiSpam.Messages.WHITELIST_SIMILARITY))
 				break dupeCheck;
 
 			final String strippedMsg = Common.stripUnicodeOrDuplicates(message);
@@ -157,12 +157,12 @@ public final class ChatCheckListener implements Listener, EventExecutor {
 		if (CompatProvider.hasSounds() && Settings.SoundNotify.ENABLED)
 			if (Settings.SoundNotify.CHAT_PREFIX.equalsIgnoreCase("none")) {
 				for (final Player online : CompatProvider.getOnlinePlayers())
-					if (message.toLowerCase().contains(online.getName().toLowerCase()) && canSoundNotify(online.getName()) && Common.hasPermission(online, Permissions.Notify.WHEN_MENTIONED))
+					if (message.toLowerCase().contains(online.getName().toLowerCase()) && this.canSoundNotify(online.getName()) && Common.hasPermission(online, Permissions.Notify.WHEN_MENTIONED))
 						online.playSound(online.getLocation(), Settings.SoundNotify.SOUND.sound, Settings.SoundNotify.SOUND.volume, Settings.SoundNotify.SOUND.pitch);
 
 			} else
 				for (final Player online : CompatProvider.getOnlinePlayers())
-					if (message.toLowerCase().contains(Settings.SoundNotify.CHAT_PREFIX + online.getName().toLowerCase()) && canSoundNotify(online.getName()) && Common.hasPermission(online, Permissions.Notify.WHEN_MENTIONED))
+					if (message.toLowerCase().contains(Settings.SoundNotify.CHAT_PREFIX + online.getName().toLowerCase()) && this.canSoundNotify(online.getName()) && Common.hasPermission(online, Permissions.Notify.WHEN_MENTIONED))
 						online.playSound(online.getLocation(), Settings.SoundNotify.SOUND.sound, Settings.SoundNotify.SOUND.volume, Settings.SoundNotify.SOUND.pitch);
 	}
 

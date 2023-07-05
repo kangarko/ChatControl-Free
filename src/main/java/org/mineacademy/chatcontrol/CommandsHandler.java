@@ -20,7 +20,7 @@ public final class CommandsHandler implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		try {
-			handleCommand(sender, args);
+			this.handleCommand(sender, args);
 
 		} catch (final MissingPermissionException ex) {
 			Common.tell(sender, ex.getMessage());
@@ -52,7 +52,7 @@ public final class CommandsHandler implements CommandExecutor {
 		 * MUTE COMMAND
 		 */
 		if ("mute".equals(argument) || "m".equals(argument)) {
-			checkPerm(sender, Permissions.Commands.MUTE);
+			this.checkPerm(sender, Permissions.Commands.MUTE);
 
 			if (param.isEmpty())
 				Common.broadcastIfEnabled(Settings.Mute.BROADCAST, sender, ChatControl.isMuted() ? Localization.MUTE_UNMUTE_BROADCAST : Localization.MUTE_BROADCAST, reason);
@@ -73,7 +73,7 @@ public final class CommandsHandler implements CommandExecutor {
 		 * CLEAR COMMAND
 		 */
 		else if ("clear".equals(argument) || "c".equals(argument)) {
-			checkPerm(sender, Permissions.Commands.CLEAR);
+			this.checkPerm(sender, Permissions.Commands.CLEAR);
 
 			if ((param.equals("-console") || param.equals("-c")) && Common.hasPermission(sender, Permissions.Commands.CLEAR_CONSOLE)) {
 				for (int i = 0; i < Settings.Clear.CONSOLE_LINES; i++)
@@ -120,7 +120,7 @@ public final class CommandsHandler implements CommandExecutor {
 		 * FAKE COMMAND
 		 */
 		else if ("fake".equals(argument) || "f".equals(argument)) {
-			checkPerm(sender, Permissions.Commands.FAKE);
+			this.checkPerm(sender, Permissions.Commands.FAKE);
 
 			if (args.length < 2 || args.length > 3) {
 				Common.tell(sender, Localization.USAGE_FAKE_CMD);
@@ -147,7 +147,7 @@ public final class CommandsHandler implements CommandExecutor {
 					Common.tell(sender, Localization.CANNOT_BROADCAST_EMPTY_MESSAGE.replace("{event}", Localization.Parts.JOIN));
 
 				else
-					Common.broadcast(replacePlayerVariables(fakeMessage.getMessage(), onlineFakePlayer, fakePlayer));
+					Common.broadcast(this.replacePlayerVariables(fakeMessage.getMessage(), onlineFakePlayer, fakePlayer));
 
 			} else if (param.equals("quit") || param.equals("q") || param.equals("leave") || param.equals("l")) {
 				messageHelper = Settings.Messages.QUIT;
@@ -160,7 +160,7 @@ public final class CommandsHandler implements CommandExecutor {
 					Common.tell(sender, Localization.CANNOT_BROADCAST_EMPTY_MESSAGE.replace("{event}", Localization.Parts.QUIT));
 
 				else
-					Common.broadcast(replacePlayerVariables(fakeMessage.getMessage(), onlineFakePlayer, fakePlayer));
+					Common.broadcast(this.replacePlayerVariables(fakeMessage.getMessage(), onlineFakePlayer, fakePlayer));
 
 			} else if (param.equals("kick") || param.equals("k")) {
 				messageHelper = Settings.Messages.KICK;
@@ -173,7 +173,7 @@ public final class CommandsHandler implements CommandExecutor {
 					Common.tell(sender, Localization.CANNOT_BROADCAST_EMPTY_MESSAGE.replace("{event}", Localization.Parts.QUIT));
 
 				else
-					Common.broadcast(replacePlayerVariables(fakeMessage.getMessage(), onlineFakePlayer, fakePlayer));
+					Common.broadcast(this.replacePlayerVariables(fakeMessage.getMessage(), onlineFakePlayer, fakePlayer));
 
 			} else
 				Common.tell(sender, Localization.USAGE_FAKE_CMD);
@@ -184,7 +184,7 @@ public final class CommandsHandler implements CommandExecutor {
 		 * RELOAD COMMAND
 		 */
 		else if ("reload".equals(argument) || "znovunacitat".equals(argument) || "r".equals(argument) || "rl".equals(argument)) {
-			checkPerm(sender, Permissions.Commands.RELOAD);
+			this.checkPerm(sender, Permissions.Commands.RELOAD);
 
 			final ChatControl instance = ChatControl.getInstance();
 			try {
@@ -203,7 +203,7 @@ public final class CommandsHandler implements CommandExecutor {
 		 * LIST COMMAND
 		 */
 		else if ("commands".equals(argument) || "?".equals(argument) || "list".equals(argument) || "help".equals(argument)) {
-			checkPerm(sender, Permissions.Commands.LIST);
+			this.checkPerm(sender, Permissions.Commands.LIST);
 
 			Common.tell(sender,
 					" ",

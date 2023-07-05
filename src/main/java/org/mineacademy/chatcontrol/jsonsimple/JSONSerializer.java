@@ -208,7 +208,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -683,11 +682,7 @@ public final class JSONSerializer {
 	private static JSONArray serializeArray(Collection<?> collection, Class<?> clazz, Object classObject) throws Exception {
 
 		final JSONArray json = new JSONArray();
-		final Iterator<?> iterator = collection.iterator();
-
-		while (iterator.hasNext()) {
-
-			final Object value = iterator.next();
+		for (Object value : collection) {
 
 			if (value instanceof boolean[])
 				json.add(new JSONArray((boolean[]) value));

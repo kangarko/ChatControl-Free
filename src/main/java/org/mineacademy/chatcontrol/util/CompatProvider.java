@@ -163,7 +163,7 @@ public final class CompatProvider {
 	 *
 	 * @return
 	 */
-	public static final Class<? extends Event> compatChatEvent() {
+	public static Class<? extends Event> compatChatEvent() {
 		try {
 			return (Class<? extends Event>) Class.forName("org.bukkit.event.player.AsyncPlayerChatEvent");
 		} catch (final ClassNotFoundException ex) {

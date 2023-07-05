@@ -34,13 +34,13 @@ public final class GroupOption {
 
 		OptionType(Class<?> validValue) {
 			this.validValue = validValue;
-			toString = makeString();
+			this.toString = this.makeString();
 		}
 
 		public <T> GroupOption create(T valueRaw) {
 			Object value = valueRaw;
 
-			if (!value.getClass().isAssignableFrom(validValue)) {
+			if (!value.getClass().isAssignableFrom(this.validValue)) {
 				value = null;
 
 				try {
@@ -60,9 +60,9 @@ public final class GroupOption {
 					value = valueRaw;
 			}
 
-			checkValid(value);
+			this.checkValid(value);
 
-			return new GroupOption(this, validValue == ChatMessage.class && valueRaw.getClass() != ChatMessage.class ? new ChatMessage(String.valueOf(value)) : value);
+			return new GroupOption(this, this.validValue == ChatMessage.class && valueRaw.getClass() != ChatMessage.class ? new ChatMessage(String.valueOf(value)) : value);
 		}
 
 		public static OptionType parseOption(String name) {
@@ -74,14 +74,14 @@ public final class GroupOption {
 		}
 
 		private void checkValid(Object value) {
-			if (validValue == ChatMessage.class) {
+			if (this.validValue == ChatMessage.class) {
 				// all valid
 			} else
-				Common.checkBoolean(value.getClass().isAssignableFrom(validValue), this + " has to be " + validValue.getSimpleName() + "! (got " + value + ")");
+				Common.checkBoolean(value.getClass().isAssignableFrom(this.validValue), this + " has to be " + this.validValue.getSimpleName() + "! (got " + value + ")");
 		}
 
 		private String makeString() {
-			final String[] splitted = name().toLowerCase().split("_");
+			final String[] splitted = this.name().toLowerCase().split("_");
 			String nazov = "";
 
 			for (final String part : splitted)
@@ -92,7 +92,7 @@ public final class GroupOption {
 
 		@Override
 		public String toString() {
-			return toString;
+			return this.toString;
 		}
 	}
 }

@@ -96,7 +96,7 @@ public final class Localization extends ConfHelper {
 	public static String RELOAD_COMPLETE;
 	public static String RELOAD_FAILED;
 
-	private static final void init() {
+	private static void init() {
 		pathPrefix("Cannot");
 		CANNOT_BROADCAST_EMPTY_MESSAGE = getString("Broadcast_Empty_Message", "&cMessage on {event} is empty. No broadcast.");
 		CANNOT_CHAT_WHILE_MUTED = getString("Chat_While_Muted", "&7You cannot chat while the chat is muted!");

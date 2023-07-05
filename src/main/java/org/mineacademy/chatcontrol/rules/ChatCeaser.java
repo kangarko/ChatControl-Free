@@ -54,9 +54,9 @@ public final class ChatCeaser {
 	 * Clears rules and load them .
 	 */
 	public void load() {
-		rulesMap.clear();
+		this.rulesMap.clear();
 
-		loadRules(GLOBAL, CHAT, COMMAND, SIGN, PACKET);
+		this.loadRules(GLOBAL, CHAT, COMMAND, SIGN, PACKET);
 	}
 
 	/**
@@ -182,22 +182,22 @@ public final class ChatCeaser {
 				ex.printStackTrace();
 			}
 
-			Common.checkBoolean(!rulesMap.containsKey(ruleType), "Rules map already contains rules from: " + ruleType.getFileName() + "!");
-			rulesMap.put(ruleType, createdRules);
+			Common.checkBoolean(!this.rulesMap.containsKey(ruleType), "Rules map already contains rules from: " + ruleType.getFileName() + "!");
+			this.rulesMap.put(ruleType, createdRules);
 		}
 
 		if (Settings.DEBUG)
-			for (final Rule.Type ruleType : rulesMap.keySet()) {
+			for (final Rule.Type ruleType : this.rulesMap.keySet()) {
 				Common.debug("&e" + Common.consoleLine());
 				Common.debug("&eDisplaying rules from: " + ruleType.getFileName());
 
-				for (final Rule rule : rulesMap.get(ruleType))
+				for (final Rule rule : this.rulesMap.get(ruleType))
 					Common.debug("Loaded rule:\n" + rule);
 			}
 
 		if (!Settings.SILENT_STARTUP)
-			for (final Rule.Type ruleType : rulesMap.keySet())
-				Common.log("&fLoaded " + rulesMap.get(ruleType).size() + " Rules in " + ruleType.getFileName());
+			for (final Rule.Type ruleType : this.rulesMap.keySet())
+				Common.log("&fLoaded " + this.rulesMap.get(ruleType).size() + " Rules in " + ruleType.getFileName());
 	}
 
 	/**
@@ -220,19 +220,19 @@ public final class ChatCeaser {
 		final String origin = message;
 
 		// First iterate over all rules.
-		List<Rule> rules = rulesMap.get(GLOBAL);
+		List<Rule> rules = this.rulesMap.get(GLOBAL);
 
 		Common.debug("Checking " + rules.size() + " global rules");
 
-		message = iterateStandardRules(rules, event, player, message, ruleType, true);
+		message = this.iterateStandardRules(rules, event, player, message, ruleType, true);
 
 		// Then iterate over rules for the given event
-		rules = rulesMap.get(ruleType);
+		rules = this.rulesMap.get(ruleType);
 
 		Common.debug("Checking " + rules.size() + " rules for " + ruleType + " (" + ruleType.getFileName() + ")");
 
 		// Then iterate over specific rules for events.
-		message = iterateStandardRules(rules, event, player, message, ruleType, false);
+		message = this.iterateStandardRules(rules, event, player, message, ruleType, false);
 
 		if (event.isCancelled())
 			Common.verbose("&fOriginal message &ccancelled&f.");
@@ -275,32 +275,32 @@ public final class ChatCeaser {
 
 					for (final Player online : CompatProvider.getOnlinePlayers())
 						if (Common.hasPermission(online, rule.getCustomNotifyPermission()))
-							Common.tellLater(online, 1, replaceVariables(player, rule, rule.getCustomNotifyMessage(), message));
+							Common.tellLater(online, 1, this.replaceVariables(player, rule, rule.getCustomNotifyMessage(), message));
 				}
 
 				if (rule.getHandler() != null)
-					message = handle(event, player, message, rule, type);
+					message = this.handle(event, player, message, rule, type);
 
 				if (event.isCancelled())
 					return message; // The message will not appear in the chat, no need to continue.
 
 				if (rule.getRewrites() != null && rule.getRewrites().length > 0)
-					message = getRandomString(player, rule, rule.getRewrites(), message);
+					message = this.getRandomString(player, rule, rule.getRewrites(), message);
 
 				if (rule.getReplacements() != null && rule.getReplacements().length > 0)
-					message = message.replaceAll("(?i)" + rule.getMatch(), getRandomString(player, rule, rule.getReplacements(), message));
+					message = message.replaceAll("(?i)" + rule.getMatch(), this.getRandomString(player, rule, rule.getReplacements(), message));
 
 				if (rule.getCommandsToExecute() != null)
 					for (String command : rule.getCommandsToExecute()) {
-						command = replaceVariables(player, rule, command, message);
+						command = this.replaceVariables(player, rule, command, message);
 						Common.dispatchConsoleCommand(command);
 					}
 
 				if (rule.getWarnMessage() != null)
 					if (rule.isCancellingEvent()) // if not blocked, display after player's message
-						Common.tell(player, replaceVariables(player, rule, rule.getWarnMessage(), message));
+						Common.tell(player, this.replaceVariables(player, rule, rule.getWarnMessage(), message));
 					else
-						Common.tellLater(player, 1, replaceVariables(player, rule, rule.getWarnMessage(), message));
+						Common.tellLater(player, 1, this.replaceVariables(player, rule, rule.getWarnMessage(), message));
 
 				if (rule.getFine() != null)
 					HookManager.takeMoney(player.getName(), rule.getFine());
@@ -346,9 +346,9 @@ public final class ChatCeaser {
 		if (warnMessage != null && !HandlerCache.lastWarnMessage.equals(warnMessage)) {
 
 			if (handler.isMessageBlocked()) // if not blocked, display after player's message
-				Common.tell(player, replaceVariables(player, handler, warnMessage, message));
+				Common.tell(player, this.replaceVariables(player, handler, warnMessage, message));
 			else
-				Common.tellLater(player, 1, replaceVariables(player, handler, warnMessage, message));
+				Common.tellLater(player, 1, this.replaceVariables(player, handler, warnMessage, message));
 
 			HandlerCache.lastWarnMessage = warnMessage;
 		}
@@ -356,7 +356,7 @@ public final class ChatCeaser {
 		final String broadcastMessage = handler.getBroadcastMessage();
 
 		if (broadcastMessage != null && !HandlerCache.lastBroadcastMessage.equals(broadcastMessage)) {
-			Common.broadcast(replaceVariables(player, handler, broadcastMessage, message));
+			Common.broadcast(this.replaceVariables(player, handler, broadcastMessage, message));
 			HandlerCache.lastBroadcastMessage = broadcastMessage;
 		}
 
@@ -365,18 +365,18 @@ public final class ChatCeaser {
 
 			for (final Player online : CompatProvider.getOnlinePlayers())
 				if (Common.hasPermission(online, handler.getStaffAlertPermission()))
-					Common.tell(online, (type == Rule.Type.SIGN ? "[" + Localization.Parts.SIGN + " - " + Common.getFormattedLocation(player.getLocation()) + "] " : "") + replaceVariables(player, handler, handler.getStaffAlertMessage(), message), player.getName());
+					Common.tell(online, (type == Rule.Type.SIGN ? "[" + Localization.Parts.SIGN + " - " + Common.getFormattedLocation(player.getLocation()) + "] " : "") + this.replaceVariables(player, handler, handler.getStaffAlertMessage(), message), player.getName());
 		}
 
 		if (handler.getConsoleMessage() != null)
-			Common.log(replaceVariables(player, handler, handler.getConsoleMessage(), message));
+			Common.log(this.replaceVariables(player, handler, handler.getConsoleMessage(), message));
 
 		if (handler.getCommandsToExecute() != null)
 			for (final String cmd : handler.getCommandsToExecute())
-				Common.dispatchConsoleCommand(replaceVariables(player, handler, cmd, message));
+				Common.dispatchConsoleCommand(this.replaceVariables(player, handler, cmd, message));
 
 		if (handler.getWriteToFileName() != null)
-			Writer.write(handler.getWriteToFileName(), player.getName(), replaceVariables(player, handler, "[Handler={handler}, Rule ID={ruleID}] ", message) + message);
+			Writer.write(handler.getWriteToFileName(), player.getName(), this.replaceVariables(player, handler, "[Handler={handler}, Rule ID={ruleID}] ", message) + message);
 
 		if (handler.isMessageBlocked() || type == Rule.Type.SIGN && Settings.Signs.BLOCK_WHEN_VIOLATES_RULE)
 			event.setCancelled(true);
@@ -384,10 +384,10 @@ public final class ChatCeaser {
 		else if (handler.getMessageReplacement() != null)
 			// return msg = Common.colorize( Common.replaceMatch(standardrule.getMatch(),
 			// msg, rule.getReplacePacket()));
-			return Common.replaceMatch(rule.getMatch(), message, Common.colorize(replaceVariables(player, handler, handler.getMessageReplacement(), message)));
+			return Common.replaceMatch(rule.getMatch(), message, Common.colorize(this.replaceVariables(player, handler, handler.getMessageReplacement(), message)));
 
 		else if (handler.getRewriteTo() != null)
-			return Common.colorize(replaceVariables(player, handler, handler.getRewriteTo(), message));
+			return Common.colorize(this.replaceVariables(player, handler, handler.getRewriteTo(), message));
 
 		return message;
 	}
@@ -409,13 +409,13 @@ public final class ChatCeaser {
 				final Object value = objects.get(key);
 
 				if (value instanceof JSONObject)
-					parsePacketRules(player, value);
+					this.parsePacketRules(player, value);
 
 				else if (value instanceof JSONArray)
-					parsePacketRules(player, value);
+					this.parsePacketRules(player, value);
 
 				else if (value instanceof String) {
-					final String result = parsePacketRulesRaw(player, value.toString());
+					final String result = this.parsePacketRulesRaw(player, value.toString());
 					objects.put(key, result);
 				}
 			}
@@ -427,13 +427,13 @@ public final class ChatCeaser {
 				final Object value = array.get(i);
 
 				if (value instanceof JSONObject)
-					parsePacketRules(player, value);
+					this.parsePacketRules(player, value);
 
 				else if (value instanceof JSONArray)
-					parsePacketRules(player, value);
+					this.parsePacketRules(player, value);
 
 				else if (value instanceof String) {
-					final String result = parsePacketRulesRaw(player, value.toString());
+					final String result = this.parsePacketRulesRaw(player, value.toString());
 					array.set(i, result);
 				}
 			}
@@ -447,7 +447,7 @@ public final class ChatCeaser {
 
 		Common.debug("Checking packet rules against: " + message);
 
-		for (final Rule standardrule : rulesMap.get(PACKET))
+		for (final Rule standardrule : this.rulesMap.get(PACKET))
 			if (standardrule.matches(Common.stripColors(message.toLowerCase()))) {
 				final PacketRule rule = standardrule.getPacketRule();
 				Objects.requireNonNull(rule, "Malformed rule - must be a packet rule: " + standardrule);
@@ -468,7 +468,7 @@ public final class ChatCeaser {
 				}
 
 				else if (rule.getRewritePerWorld() != null && rule.getRewritePerWorld().get(world) != null) {
-					message = Common.colorize(replaceVariables(player, standardrule, rule.getRewritePerWorld().get(world), message));
+					message = Common.colorize(this.replaceVariables(player, standardrule, rule.getRewritePerWorld().get(world), message));
 
 					if (message.equalsIgnoreCase("none") || message.equalsIgnoreCase("hidden")) {
 						if (!rule.isNotVerbosing())
@@ -478,7 +478,7 @@ public final class ChatCeaser {
 				}
 
 				else if (rule.getRewritePacket() != null)
-					message = Common.colorize(replaceVariables(player, standardrule, rule.getRewritePacket(), message));
+					message = Common.colorize(this.replaceVariables(player, standardrule, rule.getRewritePacket(), message));
 
 				else if (rule.getReplacePacket() != null)
 					message = Common.colorize(Common.replaceMatch(standardrule.getMatch(), message, rule.getReplacePacket()));
@@ -498,14 +498,14 @@ public final class ChatCeaser {
 	 * and world name.
 	 */
 	private String replaceVariables(Player player, Handler handler, String message, String messageReplacement) {
-		return replaceVariables0(player, handler.getRuleId(), message, messageReplacement).replace("{handler}", handler.getName());
+		return this.replaceVariables0(player, handler.getRuleId(), message, messageReplacement).replace("{handler}", handler.getName());
 	}
 
 	/**
 	 * Replaces rule ID (if set) in the message and player and world name.
 	 */
 	private String replaceVariables(Player player, Rule rule, String message, String messageReplacement) {
-		return replaceVariables0(player, rule.getId(), message, messageReplacement);
+		return this.replaceVariables0(player, rule.getId(), message, messageReplacement);
 	}
 
 	private String replaceVariables0(Player player, String ruleId, String message, String messageReplacement) {
@@ -522,8 +522,8 @@ public final class ChatCeaser {
 	private String getRandomString(Player player, Rule rule, String[] messages, String msgReplacement) {
 		Common.checkBoolean(messages.length > 0, "Got empty message '" + String.join(", ", messages) + "'");
 
-		final String randomMsg = messages[random.nextInt(messages.length)];
-		return Common.colorize(replaceVariables(player, rule, randomMsg, msgReplacement));
+		final String randomMsg = messages[this.random.nextInt(messages.length)];
+		return Common.colorize(this.replaceVariables(player, rule, randomMsg, msgReplacement));
 	}
 
 	public static class PacketCancelledException extends Exception {

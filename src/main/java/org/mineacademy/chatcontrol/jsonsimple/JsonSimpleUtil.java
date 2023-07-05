@@ -209,7 +209,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -515,17 +514,14 @@ public final class JsonSimpleUtil {
 		if (collection != null) {
 
 			boolean first = true;
-			final Iterator<?> iterator = collection.iterator();
 			writer.write('[');
 
-			while (iterator.hasNext()) {
+			for (Object value : collection) {
 
 				if (first)
 					first = false;
 				else
 					writer.write(',');
-
-				final Object value = iterator.next();
 
 				if (value == null)
 					writer.write("null");

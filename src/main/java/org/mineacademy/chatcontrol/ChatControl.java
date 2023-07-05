@@ -82,15 +82,15 @@ public final class ChatControl extends JavaPlugin {
 			for (final Player onlinePlayer : CompatProvider.getOnlinePlayers())
 				getCache(onlinePlayer);
 
-			chatCeaser = new ChatCeaser();
-			chatCeaser.load();
+			this.chatCeaser = new ChatCeaser();
+			this.chatCeaser.load();
 
-			formatter = new ChatFormatListener();
+			this.formatter = new ChatFormatListener();
 
-			registerEvent(CompatProvider.compatChatEvent(), new ChatCheckListener(), Settings.ListenerPriority.CHECKER);
+			this.registerEvent(CompatProvider.compatChatEvent(), new ChatCheckListener(), Settings.ListenerPriority.CHECKER);
 
-			getServer().getPluginManager().registerEvents(new PlayerListener(), this);
-			getServer().getPluginManager().registerEvents(new CommandListener(), this);
+			this.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+			this.getServer().getPluginManager().registerEvents(new CommandListener(), this);
 
 			if (Settings.Console.FILTER_ENABLED)
 				try {
@@ -98,7 +98,7 @@ public final class ChatControl extends JavaPlugin {
 					Common.debug("Console filtering now using Log4j Filter.");
 				} catch (final NoClassDefFoundError err) {
 					final Filter filter = new ConsoleFilter();
-					for (final Plugin plugin : getServer().getPluginManager().getPlugins())
+					for (final Plugin plugin : this.getServer().getPluginManager().getPlugins())
 						plugin.getLogger().setFilter(filter);
 
 					Bukkit.getLogger().setFilter(filter);
@@ -118,14 +118,14 @@ public final class ChatControl extends JavaPlugin {
 					else {
 						Common.log("&3Starting &fformatter listener &3with " + Settings.ListenerPriority.FORMATTER + " priority");
 
-						registerEvent(CompatProvider.compatChatEvent(), formatter, Settings.ListenerPriority.FORMATTER);
+						this.registerEvent(CompatProvider.compatChatEvent(), this.formatter, Settings.ListenerPriority.FORMATTER);
 					}
 				} else
 					Common.logInFrame(false, "You need Vault to enable ChatFormatter.");
 
-			scheduleTimedMessages();
+			this.scheduleTimedMessages();
 
-			getCommand("chatcontrol").setExecutor(new CommandsHandler());
+			this.getCommand("chatcontrol").setExecutor(new CommandsHandler());
 
 			Common.addLoggingPrefix();
 
@@ -134,7 +134,7 @@ public final class ChatControl extends JavaPlugin {
 
 			Common.log("&4!----------------------------------------------!");
 			Common.log(" &cError loading ChatControl, plugin is disabled!");
-			Common.log(" &cRunning on " + getServer().getBukkitVersion() + " and Java " + System.getProperty("java.version"));
+			Common.log(" &cRunning on " + this.getServer().getBukkitVersion() + " and Java " + System.getProperty("java.version"));
 			Common.log("&4!----------------------------------------------!");
 
 			if (t instanceof InvalidConfigurationException) {
@@ -147,7 +147,7 @@ public final class ChatControl extends JavaPlugin {
 				Common.log(" &cChatControl doesn't have the locale: " + Settings.LOCALIZATION_SUFFIX);
 
 			else if (t instanceof UnsupportedOperationException || t.getCause() != null && t.getCause() instanceof UnsupportedOperationException) {
-				if (getServer().getBukkitVersion().startsWith("1.2.5"))
+				if (this.getServer().getBukkitVersion().startsWith("1.2.5"))
 					Common.log(" &cSorry but Minecraft 1.2.5 is no longer supported!");
 				else {
 					Common.log(" &cUnable to determine server version!");
@@ -169,7 +169,7 @@ public final class ChatControl extends JavaPlugin {
 			}
 			Common.log("&4!----------------------------------------------!");
 
-			getPluginLoader().disablePlugin(this);
+			this.getPluginLoader().disablePlugin(this);
 		}
 	}
 
@@ -178,19 +178,19 @@ public final class ChatControl extends JavaPlugin {
 		muted = false;
 		playerCacheMap.clear();
 
-		getServer().getScheduler().cancelTasks(this);
+		this.getServer().getScheduler().cancelTasks(this);
 
 		instance = null;
 	}
 
 	public void onReload() {
-		if (getServer().getScheduler().isCurrentlyRunning(timedMessageTask))
-			getServer().getScheduler().cancelTask(timedMessageTask);
+		if (this.getServer().getScheduler().isCurrentlyRunning(this.timedMessageTask))
+			this.getServer().getScheduler().cancelTask(this.timedMessageTask);
 
 		playerCacheMap.clear();
 
-		scheduleTimedMessages();
-		chatCeaser.load();
+		this.scheduleTimedMessages();
+		this.chatCeaser.load();
 	}
 
 	private void scheduleTimedMessages() {
@@ -219,7 +219,7 @@ public final class ChatControl extends JavaPlugin {
 					Common.debug(" - " + msg);
 			}
 
-		timedMessageTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
+		this.timedMessageTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
 			for (final String world : timed.keySet()) {
 				final List<String> msgs = timed.get(world); // messages in world
 
@@ -267,7 +267,7 @@ public final class ChatControl extends JavaPlugin {
 							Common.tell(online, message.replace("{world}", online.getWorld().getName()));
 
 				} else {
-					final World bukkitworld = getServer().getWorld(world);
+					final World bukkitworld = this.getServer().getWorld(world);
 
 					if (bukkitworld == null)
 						Common.warn("World \"" + world + "\" doesn't exist. No timed messages broadcast.");
@@ -281,8 +281,8 @@ public final class ChatControl extends JavaPlugin {
 		}, 20, 20 * Settings.Messages.TIMED_DELAY_SECONDS);
 	}
 
-	private final void registerEvent(Class<? extends org.bukkit.event.Event> eventClass, Object listener, EventPriority priority) {
-		getServer().getPluginManager().registerEvent(eventClass, (Listener) listener, priority, (EventExecutor) listener, this, true);
+	private void registerEvent(Class<? extends org.bukkit.event.Event> eventClass, Object listener, EventPriority priority) {
+		this.getServer().getPluginManager().registerEvent(eventClass, (Listener) listener, priority, (EventExecutor) listener, this, true);
 	}
 
 	public static void removeCache(Player player) {

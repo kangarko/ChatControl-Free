@@ -138,19 +138,19 @@ public final class Rule {
 	 * @return if the message matches the {@link #match} regular expression
 	 */
 	public boolean matches(String message) {
-		if (stripBefore != null)
-			message = message.replaceAll(stripBefore, "");
+		if (this.stripBefore != null)
+			message = message.replaceAll(this.stripBefore, "");
 
-		if (replaceBefore != null)
-			message = message.replaceAll(replaceBefore[0], replaceBefore[1]);
+		if (this.replaceBefore != null)
+			message = message.replaceAll(this.replaceBefore[0], this.replaceBefore[1]);
 
-		if (ignoredMessage != null && Common.isRegexMatch(ignoredMessage, message)) {
-			Common.debug("&fIGNORE&c:&r " + ignoredMessage + ", message \'" + message + "\' ignored");
+		if (this.ignoredMessage != null && Common.isRegexMatch(this.ignoredMessage, message)) {
+			Common.debug("&fIGNORE&c:&r " + this.ignoredMessage + ", message \'" + message + "\' ignored");
 
-			message = Common.replaceMatch(ignoredMessage, message, ""); // prevent bypasses
+			message = Common.replaceMatch(this.ignoredMessage, message, ""); // prevent bypasses
 		}
 
-		return Common.isRegexMatch(match, message);
+		return Common.isRegexMatch(this.match, message);
 	}
 
 	public void setId(String id) {
@@ -166,13 +166,13 @@ public final class Rule {
 	}
 
 	public void parseIgnoreEvent(String ignoreEvent) {
-		Common.checkBoolean(ignoredEvent == null, "Ignored event already set on: " + this);
+		Common.checkBoolean(this.ignoredEvent == null, "Ignored event already set on: " + this);
 
-		ignoredEvent = parseRuleType(ignoreEvent);
+		this.ignoredEvent = this.parseRuleType(ignoreEvent);
 	}
 
 	public void parseIgnoredGamemodes(String line) {
-		Common.checkBoolean(ignoredGamemodes == null, "Ignored gamemodes already set on: " + this);
+		Common.checkBoolean(this.ignoredGamemodes == null, "Ignored gamemodes already set on: " + this);
 
 		final HashSet<GameMode> modes = new HashSet<>();
 
@@ -187,11 +187,11 @@ public final class Rule {
 			modes.add(gm);
 		}
 
-		ignoredGamemodes = modes;
+		this.ignoredGamemodes = modes;
 	}
 
 	public String getBypassPerm() {
-		return bypassPerm;
+		return this.bypassPerm;
 	}
 
 	public void setBypassPerm(String bypassPerm) {
@@ -212,26 +212,26 @@ public final class Rule {
 		final String[] parts = line.split(" with ");
 		Common.checkBoolean(parts.length == 2, "Malformed replace - must specify regex and a replacement in format: replace <regex> with <replacement>");
 
-		Common.checkBoolean(replaceBefore == null, "Replace before already set on " + this);
-		replaceBefore = parts;
+		Common.checkBoolean(this.replaceBefore == null, "Replace before already set on " + this);
+		this.replaceBefore = parts;
 	}
 
 	public void parseReplacements(String line) {
-		Common.checkBoolean(replacements == null, "Replacement already set on: " + this);
+		Common.checkBoolean(this.replacements == null, "Replacement already set on: " + this);
 
-		replacements = line.split("\\|");
+		this.replacements = line.split("\\|");
 	}
 
 	public void parseRewrites(String line) {
-		Common.checkBoolean(rewrites == null, "Rewrite message already set on: " + this);
+		Common.checkBoolean(this.rewrites == null, "Rewrite message already set on: " + this);
 
-		rewrites = line.split("\\|");
+		this.rewrites = line.split("\\|");
 	}
 
 	public void parseCommandsToExecute(String line) {
-		Common.checkBoolean(commandsToExecute == null, "Command to execute already set on: " + this);
+		Common.checkBoolean(this.commandsToExecute == null, "Command to execute already set on: " + this);
 
-		commandsToExecute = line.split("\\|");
+		this.commandsToExecute = line.split("\\|");
 	}
 
 	public void setWarnMessage(String warnMessage) {
@@ -246,9 +246,9 @@ public final class Rule {
 
 		final String permission = parts[0];
 
-		Common.checkBoolean(customNotifyPermission == null, "Custom notify already set on " + this);
-		customNotifyPermission = permission;
-		customNotifyMessage = raw.replace(permission + " ", "");
+		Common.checkBoolean(this.customNotifyPermission == null, "Custom notify already set on " + this);
+		this.customNotifyPermission = permission;
+		this.customNotifyMessage = raw.replace(permission + " ", "");
 	}
 
 	public void setKickMessage(String kickMessage) {
@@ -264,15 +264,15 @@ public final class Rule {
 	}
 
 	public void setCancellingEvent() {
-		Common.checkBoolean(!cancellingEvent, "Message already set to be cancelled on: " + this);
+		Common.checkBoolean(!this.cancellingEvent, "Message already set to be cancelled on: " + this);
 
-		cancellingEvent = true;
+		this.cancellingEvent = true;
 	}
 
 	public void setLoggingEnabled() {
-		Common.checkBoolean(!loggingEnabled, "Rule already being logged on: " + this);
+		Common.checkBoolean(!this.loggingEnabled, "Rule already being logged on: " + this);
 
-		loggingEnabled = true;
+		this.loggingEnabled = true;
 	}
 
 	public void setFine(Double fine) {
@@ -282,17 +282,19 @@ public final class Rule {
 	}
 
 	public void setPacketRule() {
-		Common.checkBoolean(packetRule == null, "Rule is already a packet rule: " + this);
+		Common.checkBoolean(this.packetRule == null, "Rule is already a packet rule: " + this);
 
-		packetRule = new PacketRule();
+		this.packetRule = new PacketRule();
 	}
 
 	@Override
 	public String toString() {
-		return Common.stripColors(getPacketRule() != null ? getPacketRule().toString()
-				: "Rule{\n" + (id != null ? "    Id = " + id + "\n" : "") + "    Match = \'" + match + "\',\n" + (stripBefore != null ? "    Strip Before Match = \'" + stripBefore + "\',\n" : "") + (bypassPerm != null ? "    Bypass With Perm = \'" + bypassPerm + "\',\n" : "") + (ignoredMessage != null ? "    Ignore Message = \'" + ignoredMessage + "\',\n" : "") + (ignoredEvent != null ? "    Ignore Event = \'" + ignoredEvent + "\',\n" : "")
-						+ (replacements != null ? "    Replace With = \'" + String.join(",", replacements) + "\',\n" : "") + (rewrites != null ? "    Rewrite = \'" + rewrites + "\',\n" : "") + (commandsToExecute != null ? "    Execute Command = \'" + String.join(",", commandsToExecute) + "\',\n" : "") + (handler != null ? "    Handler = \'" + handler + "\',\n" : "") + (warnMessage != null ? "    Warn Message = \'" + warnMessage + "\',\n" : "")
-						+ (cancellingEvent ? "    Deny = " + cancellingEvent + "\n" : "") + (loggingEnabled ? "    Log = " + loggingEnabled + "\n" : "") + "}");
+		return Common.stripColors(this.getPacketRule() != null ? this.getPacketRule().toString()
+				: "Rule{\n" + (this.id != null ? "    Id = " + this.id + "\n" : "") + "    Match = \'" + this.match + "\',\n" + (this.stripBefore != null ? "    Strip Before Match = \'" + this.stripBefore + "\',\n" : "") + (this.bypassPerm != null ? "    Bypass With Perm = \'" + this.bypassPerm + "\',\n" : "") + (this.ignoredMessage != null ? "    Ignore Message = \'" + this.ignoredMessage + "\',\n" : "")
+						+ (this.ignoredEvent != null ? "    Ignore Event = \'" + this.ignoredEvent + "\',\n" : "")
+						+ (this.replacements != null ? "    Replace With = \'" + String.join(",", this.replacements) + "\',\n" : "") + (this.rewrites != null ? "    Rewrite = \'" + this.rewrites + "\',\n" : "") + (this.commandsToExecute != null ? "    Execute Command = \'" + String.join(",", this.commandsToExecute) + "\',\n" : "") + (this.handler != null ? "    Handler = \'" + this.handler + "\',\n" : "")
+						+ (this.warnMessage != null ? "    Warn Message = \'" + this.warnMessage + "\',\n" : "")
+						+ (this.cancellingEvent ? "    Deny = " + this.cancellingEvent + "\n" : "") + (this.loggingEnabled ? "    Log = " + this.loggingEnabled + "\n" : "") + "}");
 	}
 
 	/**
@@ -302,7 +304,7 @@ public final class Rule {
 	 * @return rule's regular expression
 	 */
 	public String toShortString() {
-		return (getPacketRule() != null ? "PacketRule" : "Rule") + " {" + (id != null ? "ID=" + id + "," : "") + "Match=\'" + match + "\'}";
+		return (this.getPacketRule() != null ? "PacketRule" : "Rule") + " {" + (this.id != null ? "ID=" + this.id + "," : "") + "Match=\'" + this.match + "\'}";
 	}
 
 	private Type parseRuleType(String str) {
@@ -340,7 +342,7 @@ public final class Rule {
 		private final boolean canBeIgnored;
 
 		public String getFileName() {
-			return fileName;
+			return this.fileName;
 		}
 
 		Type(String file) {
@@ -389,9 +391,9 @@ class PacketRule {
 	private HashMap<String, String> rewritePerWorld;
 
 	public void setDenyingPacket() {
-		Common.checkBoolean(!denyingPacket, "Rule is already denied: " + this);
+		Common.checkBoolean(!this.denyingPacket, "Rule is already denied: " + this);
 
-		denyingPacket = true;
+		this.denyingPacket = true;
 	}
 
 	public void setReplacePacket(String replace) {
@@ -407,25 +409,25 @@ class PacketRule {
 	}
 
 	public void addRewriteIn(String line) {
-		if (rewritePerWorld == null)
-			rewritePerWorld = new HashMap<>();
+		if (this.rewritePerWorld == null)
+			this.rewritePerWorld = new HashMap<>();
 
 		final String[] parts = line.split(" ");
 		Common.checkBoolean(parts.length > 1, "Malformed rule then rewritein, please specify world and message! If you want to hide rule, set the message to \'none\'. Example: then rewritein hardcore &cCommand disabled in Hardcore world.");
 
-		Common.checkBoolean(!rewritePerWorld.containsKey(parts[0]), "Rewrite already set in world: " + parts[0] + " to: " + rewritePerWorld.get(parts[0]) + " on: " + this);
+		Common.checkBoolean(!this.rewritePerWorld.containsKey(parts[0]), "Rewrite already set in world: " + parts[0] + " to: " + this.rewritePerWorld.get(parts[0]) + " on: " + this);
 
-		rewritePerWorld.put(parts[0], line.replace(parts[0] + " ", ""));
+		this.rewritePerWorld.put(parts[0], line.replace(parts[0] + " ", ""));
 	}
 
 	public void setNotVerbosing() {
-		Common.checkBoolean(!notVerbosing, "Rule already being ignored from verbose: " + this);
+		Common.checkBoolean(!this.notVerbosing, "Rule already being ignored from verbose: " + this);
 
-		notVerbosing = true;
+		this.notVerbosing = true;
 	}
 
 	@Override
 	public String toString() {
-		return "PacketRule{\n" + (replacePacket != null ? "    Replace Word: \'" + replacePacket + "\'\n" : "") + (rewritePacket != null ? "    Rewrite With: \'" + rewritePacket + "\'\n" : "") + (rewritePerWorld != null ? "    Rewrite In Worlds: \'" + String.join(", ", rewritePerWorld.keySet()) + "\'\n" : "") + (notVerbosing ? "    Do Not Verbose: \'" + notVerbosing + "\'\n" : "") + "    Then Deny: " + denyingPacket + "\n" + "}";
+		return "PacketRule{\n" + (this.replacePacket != null ? "    Replace Word: \'" + this.replacePacket + "\'\n" : "") + (this.rewritePacket != null ? "    Rewrite With: \'" + this.rewritePacket + "\'\n" : "") + (this.rewritePerWorld != null ? "    Rewrite In Worlds: \'" + String.join(", ", this.rewritePerWorld.keySet()) + "\'\n" : "") + (this.notVerbosing ? "    Do Not Verbose: \'" + this.notVerbosing + "\'\n" : "") + "    Then Deny: " + this.denyingPacket + "\n" + "}";
 	}
 }
