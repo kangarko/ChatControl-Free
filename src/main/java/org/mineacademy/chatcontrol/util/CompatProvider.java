@@ -1,15 +1,11 @@
 package org.mineacademy.chatcontrol.util;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.reflect.Method;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collection;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 
@@ -74,26 +70,6 @@ public final class CompatProvider {
 
 		} catch (final ReflectiveOperationException ex) {
 			throw new UnsupportedOperationException();
-		}
-	}
-
-	/**
-	 * Attempts to load yaml configuration from the given input stream.
-	 *
-	 * @param stream
-	 * @return
-	 */
-	public static YamlConfiguration loadConfiguration(InputStream stream) {
-		try {
-			return YamlConfiguration.loadConfiguration(new InputStreamReader(stream, StandardCharsets.UTF_8));
-
-		} catch (final NoSuchMethodError ex) {
-			try {
-				return (YamlConfiguration) YamlConfiguration.class.getMethod("loadConfiguration", InputStream.class).invoke(null, stream);
-
-			} catch (final ReflectiveOperationException e) {
-				throw new Error("Failed to load configuration from input stream", e);
-			}
 		}
 	}
 

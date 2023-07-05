@@ -1,12 +1,11 @@
 package org.mineacademy.chatcontrol.settings;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.Objects;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.mineacademy.chatcontrol.ChatControl;
-import org.mineacademy.chatcontrol.util.CompatProvider;
+import org.mineacademy.chatcontrol.util.Writer;
 
 /**
  * A simple localization class managing localization/messages_X.yml files.
@@ -18,24 +17,15 @@ public final class Localization extends ConfHelper {
 	}
 
 	protected static void load() throws Exception {
-		// try if the user has his modified version of localization inside the plugin
-		// folder
-		file = new File(ChatControl.getInstance().getDataFolder(), "localization/" + Settings.LOCALIZATION);
 
-		if (file.exists())
-			config = YamlConfiguration.loadConfiguration(file);
-		else {
-			file = null;
+		// Check if the language file exists
+		final InputStream stream = ChatControl.class.getResourceAsStream("/localization/" + Settings.LOCALIZATION);
+		Objects.requireNonNull(stream, "Unknown locale: " + Settings.LOCALIZATION_SUFFIX + " (Possible causes: plugin does not have it or was reloaded, try setting it to 'en')");
 
-			final InputStream is = ChatControl.class.getResourceAsStream("/localization/" + Settings.LOCALIZATION);
-			Objects.requireNonNull(is, "Unknown locale: " + Settings.LOCALIZATION_SUFFIX + " (Possible causes: plugin does not have it or was reloaded)");
+		// Always extract it
+		file = Writer.extract("localization/" + Settings.LOCALIZATION);
+		config = YamlConfiguration.loadConfiguration(file);
 
-			try {
-				config = CompatProvider.loadConfiguration(is);
-			} catch (final NullPointerException ex) {
-				throw new IllegalLocaleException();
-			}
-		}
 		loadValues(Localization.class);
 	}
 
