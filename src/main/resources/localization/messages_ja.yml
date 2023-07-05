@@ -50,9 +50,6 @@ Signs:
 Usage:
   Fake_Command: '{prefix} 使用方法：/chatcontrol fake <&bjoin&f/&aleave&f/&ekick&f>'
 
-Update_Available: '&2新しいバージョンのChatControlが利用可能です。\n&2現在のバージョン：
-  &f{current}&2；新しいバージョン：&f{new}\n&2この通知を無効にするには、設定を変更してください。'
-
 No_Permission: '&c権限が不足しています（{permission}）。'
 Reload_Complete: '{prefix} &2設定が正常にリロードされました。'
 Reload_Failed: '{prefix} &c設定のリロードに失敗しました。コンソールを確認してください。エラーは次のとおりです：&4{error}'

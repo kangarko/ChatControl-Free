@@ -21,7 +21,7 @@ import org.mineacademy.chatcontrol.util.Writer;
 public class ChatListener implements Listener, EventExecutor {
 
 	public ChatListener() {
-		Common.Log("&3Starting &fchecker listener &3with " + Settings.ListenerPriority.CHECKER + " priority");
+		Common.log("&3Starting &fchecker listener &3with " + Settings.ListenerPriority.CHECKER + " priority");
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class ChatListener implements Listener, EventExecutor {
 	}
 
 	private void onPlayerChat(CompatPlayerChatEvent e) {
-		if (CompatProvider.getAllPlayers().size() < Settings.MIN_PLAYERS_TO_ENABLE)
+		if (CompatProvider.getOnlinePlayers().size() < Settings.MIN_PLAYERS_TO_ENABLE)
 			return;
 
 		final Player pl = e.getPlayer();
@@ -41,13 +41,13 @@ public class ChatListener implements Listener, EventExecutor {
 		String message = e.getMessage();
 
 		if (Settings.AntiBot.BLOCK_CHAT_UNTIL_MOVED && plData.loginLocation != null)
-			if (pl.getLocation().equals(plData.loginLocation) && !Common.hasPerm(pl, Permissions.Bypasses.MOVE)) {
+			if (pl.getLocation().equals(plData.loginLocation) && !Common.hasPermission(pl, Permissions.Bypass.MOVE)) {
 				Common.tell(pl, Localization.CANNOT_CHAT_UNTIL_MOVED);
 				e.setCancelled(true);
 				return;
 			}
 
-		if (ChatControl.muted && !Common.hasPerm(pl, Permissions.Bypasses.MUTE)) {
+		if (ChatControl.muted && !Common.hasPermission(pl, Permissions.Bypass.MUTE)) {
 			Common.tell(pl, Localization.CANNOT_CHAT_WHILE_MUTED);
 			e.setCancelled(true);
 			return;
@@ -59,7 +59,7 @@ public class ChatListener implements Listener, EventExecutor {
 			final int messageDelay = Settings.AntiSpam.Messages.DELAY.getFor(plData);
 
 			if (now - plData.lastMessageTime < messageDelay) {
-				if (Common.hasPerm(pl, Permissions.Bypasses.DELAY_CHAT) || isWhitelisted(message, Settings.AntiSpam.Messages.WHITELIST_DELAY))
+				if (Common.hasPermission(pl, Permissions.Bypass.DELAY_CHAT) || isWhitelisted(message, Settings.AntiSpam.Messages.WHITELIST_DELAY))
 					break timeCheck;
 
 				final long time = messageDelay - (now - plData.lastMessageTime);
@@ -73,31 +73,31 @@ public class ChatListener implements Listener, EventExecutor {
 		}
 
 		dupeCheck:
-			if (Settings.AntiSpam.Messages.SIMILARITY > 0 && Settings.AntiSpam.Messages.SIMILARITY < 100) {
-				if (Common.hasPerm(pl, Permissions.Bypasses.SIMILAR_CHAT) || isWhitelisted(message, Settings.AntiSpam.Messages.WHITELIST_SIMILARITY))
-					break dupeCheck;
+		if (Settings.AntiSpam.Messages.SIMILARITY > 0 && Settings.AntiSpam.Messages.SIMILARITY < 100) {
+			if (Common.hasPermission(pl, Permissions.Bypass.SIMILAR_CHAT) || isWhitelisted(message, Settings.AntiSpam.Messages.WHITELIST_SIMILARITY))
+				break dupeCheck;
 
-				final String strippedMsg = Common.prepareForSimilarityCheck(message);
+			final String strippedMsg = Common.stripUnicodeOrDuplicates(message);
 
-				if (Common.similarity(strippedMsg, plData.lastMessage) > Settings.AntiSpam.Messages.SIMILARITY) {
-					Common.tell(pl, Localization.ANTISPAM_SIMILAR_MESSAGE);
-					e.setCancelled(true);
-					return;
-				}
-				plData.lastMessage = strippedMsg;
+			if (Common.getSimilarity(strippedMsg, plData.lastMessage) > Settings.AntiSpam.Messages.SIMILARITY) {
+				Common.tell(pl, Localization.ANTISPAM_SIMILAR_MESSAGE);
+				e.setCancelled(true);
+				return;
 			}
+			plData.lastMessage = strippedMsg;
+		}
 
-		if (Settings.Rules.CHECK_CHAT && !Common.hasPerm(e.getPlayer(), Permissions.Bypasses.RULES))
+		if (Settings.Rules.CHECK_CHAT && !Common.hasPermission(e.getPlayer(), Permissions.Bypass.RULES))
 			message = ChatControl.instance().chatCeaser.parseRules(e, pl, message);
 
 		if (e.isCancelled()) // cancelled from chat ceaser
 			return;
 
-		if (Settings.AntiCaps.ENABLED && !Common.hasPerm(pl, Permissions.Bypasses.CAPS))
+		if (Settings.AntiCaps.ENABLED && !Common.hasPermission(pl, Permissions.Bypass.CAPS))
 			if (message.length() >= Settings.AntiCaps.MIN_MESSAGE_LENGTH) {
 				final String msgBefore = message;
-				final int[] newMessage = Common.checkCaps(message);
-				if (Common.percentageCaps(newMessage) >= Settings.AntiCaps.MIN_CAPS_PERCENTAGE || Common.checkCapsInRow(newMessage) >= Settings.AntiCaps.MIN_CAPS_IN_A_ROW) {
+				final int[] newMessage = Common.getCapsInRows(message);
+				if (Common.getPercentageCaps(newMessage) >= Settings.AntiCaps.MIN_CAPS_PERCENTAGE || Common.getCapsInRowPercentage(newMessage) >= Settings.AntiCaps.MIN_CAPS_IN_A_ROW) {
 
 					final String[] parts = message.split(" ");
 					boolean capsAllowed = false;
@@ -112,7 +112,7 @@ public class ChatListener implements Listener, EventExecutor {
 							}
 
 						if (Settings.AntiCaps.IGNORE_USERNAMES)
-							for (final Player online : CompatProvider.getAllPlayers())
+							for (final Player online : CompatProvider.getOnlinePlayers())
 								if (online.getName().equalsIgnoreCase(parts[i])) {
 									whitelisted = true;
 									capsAllowed = true;
@@ -139,27 +139,27 @@ public class ChatListener implements Listener, EventExecutor {
 				}
 			}
 
-		if (!Common.hasPerm(pl, Permissions.Bypasses.CAPITALIZE))
+		if (!Common.hasPermission(pl, Permissions.Bypass.CAPITALIZE) && Settings.Chat.Grammar.CAPITALIZE && message.length() >= Settings.Chat.Grammar.CAPITALIZE_MSG_LENGTH)
 			message = Common.capitalize(message);
 
-		if (!Common.hasPerm(pl, Permissions.Bypasses.PUNCTUATE))
+		if (!Common.hasPermission(pl, Permissions.Bypass.PUNCTUATE) && Settings.Chat.Grammar.INSERT_DOT && message.length() >= Settings.Chat.Grammar.INSERT_DOT_MSG_LENGTH)
 			message = Common.insertDot(message);
 
 		if (!message.equals(e.getMessage()))
 			e.setMessage(message);
 
 		if (Settings.Writer.ENABLED && !Settings.Writer.WHITELIST_PLAYERS.contains(pl.getName().toLowerCase()))
-			Writer.Write(Writer.CHAT_PATH, pl.getName(), message);
+			Writer.write(Writer.CHAT_PATH, pl.getName(), message);
 
 		if (CompatProvider.hasSounds() && Settings.SoundNotify.ENABLED)
 			if (Settings.SoundNotify.CHAT_PREFIX.equalsIgnoreCase("none")) {
-				for (final Player online : CompatProvider.getAllPlayers())
-					if (message.toLowerCase().contains(online.getName().toLowerCase()) && canSoundNotify(online.getName()) && Common.hasPerm(online, Permissions.Notify.WHEN_MENTIONED))
+				for (final Player online : CompatProvider.getOnlinePlayers())
+					if (message.toLowerCase().contains(online.getName().toLowerCase()) && canSoundNotify(online.getName()) && Common.hasPermission(online, Permissions.Notify.WHEN_MENTIONED))
 						online.playSound(online.getLocation(), Settings.SoundNotify.SOUND.sound, Settings.SoundNotify.SOUND.volume, Settings.SoundNotify.SOUND.pitch);
 
 			} else
-				for (final Player online : CompatProvider.getAllPlayers())
-					if (message.toLowerCase().contains(Settings.SoundNotify.CHAT_PREFIX + online.getName().toLowerCase()) && canSoundNotify(online.getName()) && Common.hasPerm(online, Permissions.Notify.WHEN_MENTIONED))
+				for (final Player online : CompatProvider.getOnlinePlayers())
+					if (message.toLowerCase().contains(Settings.SoundNotify.CHAT_PREFIX + online.getName().toLowerCase()) && canSoundNotify(online.getName()) && Common.hasPermission(online, Permissions.Notify.WHEN_MENTIONED))
 						online.playSound(online.getLocation(), Settings.SoundNotify.SOUND.sound, Settings.SoundNotify.SOUND.volume, Settings.SoundNotify.SOUND.pitch);
 	}
 
@@ -174,7 +174,7 @@ public class ChatListener implements Listener, EventExecutor {
 		final boolean useRegex = Settings.AntiSpam.Messages.REGEX_IN_WHITELIST;
 
 		for (final String whitelisted : whitelist)
-			if (useRegex && Common.regExMatch(whitelisted, message))
+			if (useRegex && Common.isRegexMatch(whitelisted, message))
 				return true;
 			else if (message.startsWith(whitelisted))
 				return true;

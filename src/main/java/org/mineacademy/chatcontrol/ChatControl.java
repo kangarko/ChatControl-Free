@@ -37,9 +37,7 @@ import org.mineacademy.chatcontrol.util.Common;
 import org.mineacademy.chatcontrol.util.CompatProvider;
 import org.mineacademy.chatcontrol.util.GeoAPI;
 import org.mineacademy.chatcontrol.util.GeoAPI.GeoResponse;
-import org.mineacademy.chatcontrol.util.LagCatcher;
 import org.mineacademy.chatcontrol.util.Permissions;
-import org.mineacademy.chatcontrol.util.UpdateCheck;
 
 public final class ChatControl extends JavaPlugin {
 
@@ -86,7 +84,7 @@ public final class ChatControl extends JavaPlugin {
 			HookManager.loadDependencies();
 			ConfHelper.loadAll();
 
-			for (final Player pl : CompatProvider.getAllPlayers())
+			for (final Player pl : CompatProvider.getOnlinePlayers())
 				getDataFor(pl);
 
 			chatCeaser = new ChatCeaser();
@@ -102,80 +100,79 @@ public final class ChatControl extends JavaPlugin {
 			if (Settings.Console.FILTER_ENABLED)
 				try {
 					Log4jFilter.init();
-					Common.Debug("Console filtering now using Log4j Filter.");
+					Common.debug("Console filtering now using Log4j Filter.");
 				} catch (final NoClassDefFoundError err) {
 					final Filter filter = new ConsoleFilter();
 					for (final Plugin plugin : getServer().getPluginManager().getPlugins())
 						plugin.getLogger().setFilter(filter);
 
 					Bukkit.getLogger().setFilter(filter);
-					Common.Debug("Console filtering initiated (MC 1.6.4 and lower).");
+					Common.debug("Console filtering initiated (MC 1.6.4 and lower).");
 				}
 
 			if (Settings.Packets.ENABLED)
 				if (HookManager.isProtocolLibLoaded())
 					HookManager.initPacketListening();
 				else
-					Common.LogInFrame(false, "Cannot enable packet features!", "Required plugin missing: ProtocolLib");
+					Common.logInFrame(false, "Cannot enable packet features!", "Required plugin missing: ProtocolLib");
 
 			if (Settings.Chat.Formatter.ENABLED)
 				if (HookManager.isVaultLoaded()) {
 					if (Common.doesPluginExist("ChatManager"))
-						Common.LogInFrame(true, "Detected &fChatManager&c! Please copy", "settings from it to ChatControl", "and disable the plugin afterwards!");
+						Common.logInFrame(true, "Detected &fChatManager&c! Please copy", "settings from it to ChatControl", "and disable the plugin afterwards!");
 					else {
-						Common.Log("&3Starting &fformatter listener &3with " + Settings.ListenerPriority.FORMATTER + " priority");
+						Common.log("&3Starting &fformatter listener &3with " + Settings.ListenerPriority.FORMATTER + " priority");
 
 						registerEvent(CompatProvider.compatChatEvent(), formatter, Settings.ListenerPriority.FORMATTER);
 					}
 				} else
-					Common.LogInFrame(false, "You need Vault to enable ChatFormatter.");
+					Common.logInFrame(false, "You need Vault to enable ChatFormatter.");
 
 			scheduleTimedMessages();
 
 			getCommand("chatcontrol").setExecutor(new CommandsHandler());
-			getServer().getScheduler().scheduleAsyncDelayedTask(this, new UpdateCheck());
 
 			Common.addLoggingPrefix();
 
 		} catch (final Throwable t) {
 			t.printStackTrace();
 
-			Common.Log("&4!----------------------------------------------!");
-			Common.Log(" &cError loading ChatControl, plugin is disabled!");
-			Common.Log(" &cRunning on " + getServer().getBukkitVersion() + " (" + Common.getServerVersion() + ") and Java " + System.getProperty("java.version"));
-			Common.Log("&4!----------------------------------------------!");
+			Common.log("&4!----------------------------------------------!");
+			Common.log(" &cError loading ChatControl, plugin is disabled!");
+			Common.log(" &cRunning on " + getServer().getBukkitVersion() + " (" + Common.getServerVersion() + ") and Java " + System.getProperty("java.version"));
+			Common.log("&4!----------------------------------------------!");
 
 			if (t instanceof InvalidConfigurationException) {
-				Common.Log(" &cIt seems like your config is not a valid YAML.");
-				Common.Log(" &cUse online services like");
-				Common.Log(" &chttp://yaml-online-parser.appspot.com/");
-				Common.Log(" &cto check for syntax errors!");
+				Common.log(" &cIt seems like your config is not a valid YAML.");
+				Common.log(" &cUse online services like");
+				Common.log(" &chttp://yaml-online-parser.appspot.com/");
+				Common.log(" &cto check for syntax errors!");
 
 			} else if (t instanceof IllegalLocaleException)
-				Common.Log(" &cChatControl doesn't have the locale: " + Settings.LOCALIZATION_SUFFIX);
+				Common.log(" &cChatControl doesn't have the locale: " + Settings.LOCALIZATION_SUFFIX);
 
 			else if (t instanceof UnsupportedOperationException || t.getCause() != null && t.getCause() instanceof UnsupportedOperationException) {
 				if (getServer().getBukkitVersion().startsWith("1.2.5"))
-					Common.Log(" &cSorry but Minecraft 1.2.5 is no longer supported!");
+					Common.log(" &cSorry but Minecraft 1.2.5 is no longer supported!");
 				else {
-					Common.Log(" &cUnable to determine server version!");
-					Common.Log(" &cYour server is either too old or");
-					Common.Log(" &cthe plugin broke on the new version :(");
+					Common.log(" &cUnable to determine server version!");
+					Common.log(" &cYour server is either too old or");
+					Common.log(" &cthe plugin broke on the new version :(");
 				}
 			} else if (t instanceof InBuiltFileMissingException) {
-				Common.Log(" &c" + t.getMessage());
-				Common.Log(" &cTo fix it, create a blank file with");
-				Common.Log(" &cthe name &f" + ((InBuiltFileMissingException) t).file + " &cin plugin folder.");
-				Common.Log(" &cIt will be filled with default values.");
-				Common.Log(" &ePlease inform the developer about this error.");
+				Common.log(" &c" + t.getMessage());
+				Common.log(" &cTo fix it, create a blank file with");
+				Common.log(" &cthe name &f" + ((InBuiltFileMissingException) t).file + " &cin plugin folder.");
+				Common.log(" &cIt will be filled with default values.");
+				Common.log(" &ePlease inform the developer about this error.");
 
 			} else {
 				String error = "Unable to get the error message, search above.";
 				if (t.getMessage() != null && !t.getMessage().isEmpty() && !t.getMessage().equalsIgnoreCase("null"))
 					error = t.getMessage();
-				Common.Log(" &cError: " + error);
+				Common.log(" &cError: " + error);
 			}
-			Common.Log("&4!----------------------------------------------!");
+			Common.log("&4!----------------------------------------------!");
 
 			getPluginLoader().disablePlugin(this);
 		}
@@ -242,7 +239,6 @@ public final class ChatControl extends JavaPlugin {
 		muted = false;
 		playerData.clear();
 
-		UpdateCheck.needsUpdate = false;
 		getServer().getScheduler().cancelTasks(this);
 
 		instance = null;
@@ -278,15 +274,13 @@ public final class ChatControl extends JavaPlugin {
 
 		if (Settings.DEBUG)
 			for (final String world : timed.keySet()) {
-				Common.Debug("&fMessages for: " + world);
+				Common.debug("&fMessages for: " + world);
 
 				for (final String msg : timed.get(world))
-					Common.Debug(" - " + msg);
+					Common.debug(" - " + msg);
 			}
 
 		timedMessageTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
-			LagCatcher.start("timed messages");
-
 			for (final String world : timed.keySet()) {
 				final List<String> msgs = timed.get(world); // messages in world
 
@@ -326,26 +320,25 @@ public final class ChatControl extends JavaPlugin {
 					msg = (!prefix.isEmpty() ? prefix + " " : "") + msg + (!suffix.isEmpty() ? " " + suffix : "");
 				}
 
-				Common.Debug(msg);
+				Common.debug(msg);
 
 				if (world.equalsIgnoreCase("global")) {
-					for (final Player online : CompatProvider.getAllPlayers())
-						if (!timed.containsKey(online.getWorld().getName()) && Common.hasPerm(online, Permissions.VIEW_TIMED_MESSAGES))
+					for (final Player online : CompatProvider.getOnlinePlayers())
+						if (!timed.containsKey(online.getWorld().getName()) && Common.hasPermission(online, Permissions.VIEW_TIMED_MESSAGES))
 							Common.tell(online, msg.replace("{world}", online.getWorld().getName()));
 
 				} else {
 					final World bukkitworld = getServer().getWorld(world);
 
 					if (bukkitworld == null)
-						Common.Warn("World \"" + world + "\" doesn't exist. No timed messages broadcast.");
+						Common.warn("World \"" + world + "\" doesn't exist. No timed messages broadcast.");
 					else
 						for (final Player online : bukkitworld.getPlayers())
-							if (Common.hasPerm(online, Permissions.VIEW_TIMED_MESSAGES))
+							if (Common.hasPermission(online, Permissions.VIEW_TIMED_MESSAGES))
 								Common.tell(online, msg.replace("{world}", world));
 				}
 			}
 
-			LagCatcher.end("timed messages");
 		}, 20, 20 * Settings.Messages.TIMED_DELAY_SECONDS);
 	}
 

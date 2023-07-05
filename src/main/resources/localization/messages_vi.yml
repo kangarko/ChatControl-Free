@@ -50,9 +50,6 @@ Signs:
 Usage:
   Fake_Command: '{prefix} Sử dụng: /chatcontrol fake <&bjoin&f/&aleave&f/&ekick&f>'
 
-Update_Available: '&2Một phiên bản mới của &3ChatControl&2 đang khả dụng.\n&2Phiên bản hiện tại:
-  &f{current}&2; Phiên bản mới: &f{new}\n&2Bạn có thể tắt thông báo này trong config.'
-
 No_Permission: '&cKhông có quyền ({permission}).'
 Reload_Complete: '{prefix} &2Đã tải lại config.'
 Reload_Failed: '{prefix} &cTải lại config thất bại, hãy xem console. Lỗi là: &4{error}'

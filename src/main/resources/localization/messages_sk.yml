@@ -51,9 +51,6 @@ Signs:
 Usage:
   Fake_Command: '{prefix} Pouzitie: /chatcontrol fake <&bjoin&f/&aleave&f/&ekick&f>'
 
-Update_Available: '&2Je dostupna nova verzia &3ChatControlu&2.\n&2Sucasna verzia:
-  &f{current}&2; Nova verzia: &f{new}\n&2Toto hlasenie je mozne vypnut v nastaveniach.'
-
 No_Permission: '&cNedostatocne povolenie ({permission}).'
 Reload_Complete: '{prefix} &2Nastavenia a pravidla boli znovunacitane.'
 Reload_Failed: '{prefix} &cRestart nastaveni a pravidiel zlyhal, pozri konzolu. Chyba: &4{error}'

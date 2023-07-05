@@ -79,7 +79,7 @@ public class HookManager {
 
 		if (Common.doesPluginExist("Factions")) {
 			if (Bukkit.getPluginManager().getPlugin("Factions").getDescription().getVersion().startsWith("1.6")) {
-				Common.Log("ChatControl only supports Factions the free version v2.x");
+				Common.log("ChatControl only supports Factions the free version v2.x");
 				return;
 			}
 
@@ -88,12 +88,12 @@ public class HookManager {
 			try {
 				mplayer = Class.forName("com.massivecraft.factions.entity.MPlayer"); // only support the free version of the plugin
 			} catch (final ClassNotFoundException ex) {
-				Common.LogInFrame(false, "Plugin only support hooking into", "the free version of Factions plugin.");
+				Common.logInFrame(false, "Plugin only support hooking into", "the free version of Factions plugin.");
 			}
 
 			if (mplayer != null) {
 				factions = new FactionsHook();
-				Common.Log("&3Hooked into&8: &fFactions");
+				Common.log("&3Hooked into&8: &fFactions");
 			}
 		}
 
@@ -350,7 +350,7 @@ class ProtocolLibHook {
 
 				@Override
 				public void onPacketReceiving(PacketEvent e) {
-					if (Common.hasPerm(e.getPlayer(), Permissions.Bypasses.TAB_COMPLETE))
+					if (Common.hasPermission(e.getPlayer(), Permissions.Bypass.TAB_COMPLETE))
 						return;
 
 					final String msg = e.getPacket().getStrings().read(0).trim();
@@ -377,7 +377,7 @@ class ProtocolLibHook {
 			}
 
 			if (is_1_19)
-				Common.Log("Parsing packet rules only works on Minecraft 1.18 and lower. Upgrade to mineacademy.org/chatcontrol-red for new MC support.");
+				Common.log("Parsing packet rules only works on Minecraft 1.18 and lower. Upgrade to mineacademy.org/chatcontrol-red for new MC support.");
 
 			else
 				manager.addPacketListener(new PacketAdapter(ChatControl.instance(), PacketType.Play.Server.CHAT) {
@@ -462,14 +462,14 @@ class VaultHook {
 		if (economyProvider != null)
 			economy = economyProvider.getProvider();
 		else
-			Common.Log("&cEconomy plugin not found");
+			Common.log("&cEconomy plugin not found");
 
 		final RegisteredServiceProvider<Chat> chatProvider = services.getRegistration(Chat.class);
 
 		if (chatProvider != null)
 			chat = chatProvider.getProvider();
 		else if (Settings.Chat.Formatter.ENABLED)
-			Common.LogInFrame(true, "You have enabled chat formatter", "but no permissions and chat", "plugin was found!", "Run /vault-info and check what is missing");
+			Common.logInFrame(true, "You have enabled chat formatter", "but no permissions and chat", "plugin was found!", "Run /vault-info and check what is missing");
 	}
 
 	String getPlayerPrefix(Player pl) {
@@ -512,7 +512,7 @@ class PlaceholderAPIHook {
 			return setBracketPlaceholders(pl, msg);
 
 		} catch (final Throwable t) {
-			Common.Log(
+			Common.log(
 					"PlaceholderAPI failed to replace variables!", "Player: " + pl.getName(), "Message: " + msg, "Error: {error}");
 			t.printStackTrace();
 
@@ -572,7 +572,7 @@ class PlaceholderAPIHook {
 
 					@Override
 					public void run() {
-						Common.LogInFrame(false,
+						Common.logInFrame(false,
 								"IMPORTANT: PREVENTED SERVER CRASH FROM PLACEHOLDERAPI",
 								"",
 								"Replacing PlaceholderAPI variable took over " + (main ? "1.5" : "4") + " sec",

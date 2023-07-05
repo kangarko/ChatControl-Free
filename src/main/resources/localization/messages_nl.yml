@@ -52,9 +52,6 @@ Signs:
 Usage:
   Fake_Command: '{prefix} Gebruik: /chatcontrol fake <&bjoin&f/&aleave&f/&ekick&f>'
 
-Update_Available: '&2Er is een nieuwe versie van &3ChatControl&2 beschikbaar.\n&2actuele versie:
-  &f{current}&2; Nieuwe versie: &f{new}\n&2Je kan in de config instellen of je dit bericht wil verbergen.'
-
 No_Permission: '&cNiet genoeg toestemming ({permission}).'
 Reload_Complete: '{prefix} &2Confugiratie succesvol herladen.'
 Reload_Failed: '{prefix} &cHet herladen van de confugiratie ging fout, kijk in de console. De fout was: &4{error}'

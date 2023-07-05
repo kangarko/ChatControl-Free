@@ -49,7 +49,7 @@ public class ChatFormatter implements Listener, EventExecutor {
 		String format = Settings.Chat.Formatter.FORMAT;
 		boolean rangedChat = Settings.Chat.Formatter.RANGED_MODE;
 
-		if (rangedChat && msg.startsWith("!") && Common.hasPerm(pl, Permissions.Formatter.GLOBAL_CHAT)) {
+		if (rangedChat && msg.startsWith("!") && Common.hasPermission(pl, Permissions.Formatter.GLOBAL_CHAT)) {
 			rangedChat = false;
 			msg = msg.substring(1);
 
@@ -65,7 +65,7 @@ public class ChatFormatter implements Listener, EventExecutor {
 		try {
 			e.setFormat(format.replace("%", "%%"));
 		} catch (final UnknownFormatConversionException ex) {
-			Common.LogInFrame(false, "Chat format contains illegal characters!", "Applied format: " + format, "Correct it at &eChat.Formatter.Message_Format &cin settings.yml", "Error: " + ex);
+			Common.logInFrame(false, "Chat format contains illegal characters!", "Applied format: " + format, "Correct it at &eChat.Formatter.Message_Format &cin settings.yml", "Error: " + ex);
 
 			ex.printStackTrace();
 		}
@@ -145,32 +145,32 @@ public class ChatFormatter implements Listener, EventExecutor {
 
 		boolean canReset = false;
 
-		if (Common.hasPerm(pl, Permissions.Formatter.COLOR)) {
+		if (Common.hasPermission(pl, Permissions.Formatter.COLOR)) {
 			msg = COLOR_REGEX.matcher(msg).replaceAll("\u00A7$1");
 			canReset = true;
 		}
 
-		if (Common.hasPerm(pl, Permissions.Formatter.MAGIC)) {
+		if (Common.hasPermission(pl, Permissions.Formatter.MAGIC)) {
 			msg = MAGIC_REGEN.matcher(msg).replaceAll("\u00A7$1");
 			canReset = true;
 		}
 
-		if (Common.hasPerm(pl, Permissions.Formatter.BOLD)) {
+		if (Common.hasPermission(pl, Permissions.Formatter.BOLD)) {
 			msg = BOLD_REGEX.matcher(msg).replaceAll("\u00A7$1");
 			canReset = true;
 		}
 
-		if (Common.hasPerm(pl, Permissions.Formatter.STRIKETHROUGH)) {
+		if (Common.hasPermission(pl, Permissions.Formatter.STRIKETHROUGH)) {
 			msg = STRIKETHROUGH_REGEX.matcher(msg).replaceAll("\u00A7$1");
 			canReset = true;
 		}
 
-		if (Common.hasPerm(pl, Permissions.Formatter.UNDERLINE)) {
+		if (Common.hasPermission(pl, Permissions.Formatter.UNDERLINE)) {
 			msg = UNDERLINE_REGEX.matcher(msg).replaceAll("\u00A7$1");
 			canReset = true;
 		}
 
-		if (Common.hasPerm(pl, Permissions.Formatter.ITALIC)) {
+		if (Common.hasPermission(pl, Permissions.Formatter.ITALIC)) {
 			msg = ITALIC_REGEX.matcher(msg).replaceAll("\u00A7$1");
 			canReset = true;
 		}
@@ -195,24 +195,24 @@ public class ChatFormatter implements Listener, EventExecutor {
 			final Location playerLocation = pl.getLocation();
 			final double squaredDistance = Math.pow(range, 2.0D);
 
-			for (final Player receiver : CompatProvider.getAllPlayers()) {
+			for (final Player receiver : CompatProvider.getOnlinePlayers()) {
 				if (receiver.getWorld().getName().equals(pl.getWorld().getName()))
-					if (Common.hasPerm(pl, Permissions.Formatter.OVERRIDE_RANGED_WORLD) || playerLocation.distanceSquared(receiver.getLocation()) <= squaredDistance) {
+					if (Common.hasPermission(pl, Permissions.Formatter.OVERRIDE_RANGED_WORLD) || playerLocation.distanceSquared(receiver.getLocation()) <= squaredDistance) {
 						recipients.add(receiver);
 						continue;
 					}
 
-				if (Common.hasPerm(receiver, Permissions.Formatter.SPY))
+				if (Common.hasPermission(receiver, Permissions.Formatter.SPY))
 					Common.tell(receiver, replaceAllVariables(pl, Settings.Chat.Formatter.SPY_FORMAT.replace("{message}", msg)));
 			}
 
 			return recipients;
 		} catch (final ArrayIndexOutOfBoundsException ex) {
-			Common.Log("(Range Chat) Got " + ex.getMessage() + ", trying (limited) backup.");
-			Writer.Write(Writer.ERROR_PATH, "Range Chat", pl.getName() + ": \'" + msg + "\' Resulted in error: " + ex.getMessage());
+			Common.log("(Range Chat) Got " + ex.getMessage() + ", trying (limited) backup.");
+			Writer.write(Writer.ERROR_PATH, "Range Chat", pl.getName() + ": \'" + msg + "\' Resulted in error: " + ex.getMessage());
 
-			if (Common.hasPerm(pl, Permissions.Formatter.OVERRIDE_RANGED_WORLD)) {
-				for (final Player recipient : CompatProvider.getAllPlayers())
+			if (Common.hasPermission(pl, Permissions.Formatter.OVERRIDE_RANGED_WORLD)) {
+				for (final Player recipient : CompatProvider.getOnlinePlayers())
 					if (recipient.getWorld().equals(pl.getWorld()))
 						recipients.add(recipient);
 

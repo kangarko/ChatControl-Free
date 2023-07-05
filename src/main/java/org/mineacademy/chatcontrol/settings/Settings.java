@@ -213,7 +213,7 @@ public class Settings extends ConfHelper {
 					final List<String> worldToInclude = TIMED.get(firstArgument.replace("includeFrom ", ""));
 
 					if (worldToInclude == null || worldToInclude.size() == 0)
-						Common.Warn("Cannot include messages from " + firstArgument.replace("includeFrom ", " ") + " as the world does not exist or is empty");
+						Common.warn("Cannot include messages from " + firstArgument.replace("includeFrom ", " ") + " as the world does not exist or is empty");
 
 					worldMessages.addAll(worldToInclude);
 				}
@@ -384,21 +384,6 @@ public class Settings extends ConfHelper {
 			STRIP_COLORS = getBoolean("Strip_Colors", true);
 			WHITELIST_PLAYERS = new HashSet<>(getStringList("Ignore_Players", Arrays.asList("ignoredAdmin")));
 			INCLUDE_COMMANDS = new HashSet<>(getStringList("Write_Commands", Arrays.asList("tell")));
-		}
-	}
-
-	public static class Updater {
-		public static boolean ENABLED;
-		public static boolean NOTIFY;
-		public static boolean DOWNLOAD, CHECK_NOTES;
-
-		private static void init() {
-			pathPrefix("Updater");
-
-			ENABLED = getBoolean("Enabled", true);
-			NOTIFY = getBoolean("Notify", true);
-			DOWNLOAD = getBoolean("Download", true);
-			CHECK_NOTES = getBoolean("Check_Notes", true);
 		}
 	}
 

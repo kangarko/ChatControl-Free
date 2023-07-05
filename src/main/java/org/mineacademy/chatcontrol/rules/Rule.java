@@ -7,7 +7,6 @@ import java.util.Set;
 
 import org.bukkit.GameMode;
 import org.mineacademy.chatcontrol.util.Common;
-import org.mineacademy.chatcontrol.util.Valid;
 
 /**
  * Represents a single rule
@@ -172,13 +171,13 @@ public class Rule {
 		if (replaceBefore != null)
 			message = message.replaceAll(replaceBefore[0], replaceBefore[1]);
 
-		if (ignoredMessage != null && Common.regExMatch(ignoredMessage, message)) {
-			Common.Debug("&fIGNORE&c:&r " + ignoredMessage + ", message \'" + message + "\' ignored");
+		if (ignoredMessage != null && Common.isRegexMatch(ignoredMessage, message)) {
+			Common.debug("&fIGNORE&c:&r " + ignoredMessage + ", message \'" + message + "\' ignored");
 
 			message = Common.replaceMatch(ignoredMessage, message, ""); // prevent bypasses
 		}
 
-		return Common.regExMatch(match, message);
+		return Common.isRegexMatch(match, message);
 	}
 
 	public String getMatch() {
@@ -190,13 +189,13 @@ public class Rule {
 	}
 
 	public void setId(String id) {
-		Valid.checkBoolean(this.id == null, "ID already set on: " + this);
+		Common.checkBoolean(this.id == null, "ID already set on: " + this);
 
 		this.id = id;
 	}
 
 	public void setIgnoredMessage(String ignoredMessage) {
-		Valid.checkBoolean(this.ignoredMessage == null, "Ignored message already set on: " + this);
+		Common.checkBoolean(this.ignoredMessage == null, "Ignored message already set on: " + this);
 
 		this.ignoredMessage = ignoredMessage;
 	}
@@ -206,7 +205,7 @@ public class Rule {
 	}
 
 	public void parseIgnoreEvent(String ignoreEvent) {
-		Valid.checkBoolean(ignoredEvent == null, "Ignored event already set on: " + this);
+		Common.checkBoolean(ignoredEvent == null, "Ignored event already set on: " + this);
 
 		ignoredEvent = parseRuleType(ignoreEvent);
 	}
@@ -216,7 +215,7 @@ public class Rule {
 	}
 
 	public void parseIgnoredGamemodes(String line) {
-		Valid.checkBoolean(ignoredGamemodes == null, "Ignored gamemodes already set on: " + this);
+		Common.checkBoolean(ignoredGamemodes == null, "Ignored gamemodes already set on: " + this);
 
 		final HashSet<GameMode> modes = new HashSet<>();
 
@@ -239,13 +238,13 @@ public class Rule {
 	}
 
 	public void setBypassPerm(String bypassPerm) {
-		Valid.checkBoolean(this.bypassPerm == null, "Bypass permission already set on: " + this);
+		Common.checkBoolean(this.bypassPerm == null, "Bypass permission already set on: " + this);
 
 		this.bypassPerm = bypassPerm;
 	}
 
 	public void setStripBefore(String stripBefore) {
-		Valid.checkBoolean(this.stripBefore == null, "Strip before already set on: " + this);
+		Common.checkBoolean(this.stripBefore == null, "Strip before already set on: " + this);
 
 		this.stripBefore = stripBefore;
 	}
@@ -254,9 +253,9 @@ public class Rule {
 	// [aZ-01 ] with Hello World
 	public void parseReplaceBefore(String line) {
 		final String[] parts = line.split(" with ");
-		Valid.checkBoolean(parts.length == 2, "Malformed replace - must specify regex and a replacement in format: replace <regex> with <replacement>");
+		Common.checkBoolean(parts.length == 2, "Malformed replace - must specify regex and a replacement in format: replace <regex> with <replacement>");
 
-		Valid.checkBoolean(replaceBefore == null, "Replace before already set on " + this);
+		Common.checkBoolean(replaceBefore == null, "Replace before already set on " + this);
 		replaceBefore = parts;
 	}
 
@@ -265,7 +264,7 @@ public class Rule {
 	}
 
 	public void parseReplacements(String line) {
-		Valid.checkBoolean(replacements == null, "Replacement already set on: " + this);
+		Common.checkBoolean(replacements == null, "Replacement already set on: " + this);
 
 		replacements = line.split("\\|");
 	}
@@ -275,7 +274,7 @@ public class Rule {
 	}
 
 	public void parseRewrites(String line) {
-		Valid.checkBoolean(rewrites == null, "Rewrite message already set on: " + this);
+		Common.checkBoolean(rewrites == null, "Rewrite message already set on: " + this);
 
 		rewrites = line.split("\\|");
 	}
@@ -285,7 +284,7 @@ public class Rule {
 	}
 
 	public void parseCommandsToExecute(String line) {
-		Valid.checkBoolean(commandToExecute == null, "Command to execute already set on: " + this);
+		Common.checkBoolean(commandToExecute == null, "Command to execute already set on: " + this);
 
 		commandToExecute = line.split("\\|");
 	}
@@ -295,18 +294,18 @@ public class Rule {
 	}
 
 	public void setWarnMessage(String warnMessage) {
-		Valid.checkBoolean(this.warnMessage == null, "Warn message already set on: " + this);
+		Common.checkBoolean(this.warnMessage == null, "Warn message already set on: " + this);
 
 		this.warnMessage = warnMessage;
 	}
 
 	public void parseCustomNotify(String raw) {
 		final String[] parts = raw.split(" ");
-		Valid.checkBoolean(parts.length > 0, "Malformed then notify - must specify permission and a message.");
+		Common.checkBoolean(parts.length > 0, "Malformed then notify - must specify permission and a message.");
 
 		final String permission = parts[0];
 
-		Valid.checkBoolean(customNotifyPermission == null, "Custom notify already set on " + this);
+		Common.checkBoolean(customNotifyPermission == null, "Custom notify already set on " + this);
 		customNotifyPermission = permission;
 		customNotifyMessage = raw.replace(permission + " ", "");
 	}
@@ -324,7 +323,7 @@ public class Rule {
 	}
 
 	public void setKickMessage(String kickMessage) {
-		Valid.checkBoolean(this.kickMessage == null, "Kick message already set on: " + this);
+		Common.checkBoolean(this.kickMessage == null, "Kick message already set on: " + this);
 
 		this.kickMessage = kickMessage.isEmpty() ? "Kicked from the server" : kickMessage;
 	}
@@ -334,7 +333,7 @@ public class Rule {
 	}
 
 	public void setHandler(Handler handler) {
-		Valid.checkBoolean(this.handler == null, "Handler already set on: " + this);
+		Common.checkBoolean(this.handler == null, "Handler already set on: " + this);
 
 		this.handler = handler;
 	}
@@ -344,7 +343,7 @@ public class Rule {
 	}
 
 	public void setCancelEvent() {
-		Valid.checkBoolean(!cancel, "Message already set to be cancelled on: " + this);
+		Common.checkBoolean(!cancel, "Message already set to be cancelled on: " + this);
 
 		cancel = true;
 	}
@@ -354,7 +353,7 @@ public class Rule {
 	}
 
 	public void setLog() {
-		Valid.checkBoolean(!log, "Rule already being logged on: " + this);
+		Common.checkBoolean(!log, "Rule already being logged on: " + this);
 
 		log = true;
 	}
@@ -364,13 +363,13 @@ public class Rule {
 	}
 
 	public void setFine(Double fine) {
-		Valid.checkBoolean(this.fine == null, "Fine already set on: " + this);
+		Common.checkBoolean(this.fine == null, "Fine already set on: " + this);
 
 		this.fine = fine;
 	}
 
 	public void setPacketRule() {
-		Valid.checkBoolean(packetRule == null, "Rule is already a packet rule: " + this);
+		Common.checkBoolean(packetRule == null, "Rule is already a packet rule: " + this);
 
 		packetRule = new PacketRule();
 	}
@@ -411,7 +410,7 @@ public class Rule {
 				break;
 		}
 
-		Valid.checkBoolean(ruleType != null && ruleType.canBeIgnored, "Unknown ignore event: " + str, " Valid: " + Arrays.asList(Type.values()));
+		Common.checkBoolean(ruleType != null && ruleType.canBeIgnored, "Unknown ignore event: " + str, " Valid: " + Arrays.asList(Type.values()));
 		return ruleType;
 	}
 }
@@ -450,7 +449,7 @@ class PacketRule {
 	private HashMap<String, String> rewritePerWorld;
 
 	public void setDeny() {
-		Valid.checkBoolean(!deny, "Rule is already denied: " + this);
+		Common.checkBoolean(!deny, "Rule is already denied: " + this);
 
 		deny = true;
 	}
@@ -460,7 +459,7 @@ class PacketRule {
 	}
 
 	public void setReplacePacket(String replace) {
-		Valid.checkBoolean(this.replace == null, "Replace already set on: " + this);
+		Common.checkBoolean(this.replace == null, "Replace already set on: " + this);
 
 		this.replace = replace;
 	}
@@ -470,7 +469,7 @@ class PacketRule {
 	}
 
 	public void setRewritePacket(String rewrite) {
-		Valid.checkBoolean(this.rewrite == null, "Rewrite already set on: " + this);
+		Common.checkBoolean(this.rewrite == null, "Rewrite already set on: " + this);
 
 		this.rewrite = rewrite;
 	}
@@ -484,9 +483,9 @@ class PacketRule {
 			rewritePerWorld = new HashMap<>();
 
 		final String[] parts = line.split(" ");
-		Valid.checkBoolean(parts.length > 1, "Malformed rule then rewritein, please specify world and message! If you want to hide rule, set the message to \'none\'. Example: then rewritein hardcore &cCommand disabled in Hardcore world.");
+		Common.checkBoolean(parts.length > 1, "Malformed rule then rewritein, please specify world and message! If you want to hide rule, set the message to \'none\'. Example: then rewritein hardcore &cCommand disabled in Hardcore world.");
 
-		Valid.checkBoolean(!rewritePerWorld.containsKey(parts[0]), "Rewrite already set in world: " + parts[0] + " to: " + rewritePerWorld.get(parts[0]) + " on: " + this);
+		Common.checkBoolean(!rewritePerWorld.containsKey(parts[0]), "Rewrite already set in world: " + parts[0] + " to: " + rewritePerWorld.get(parts[0]) + " on: " + this);
 
 		rewritePerWorld.put(parts[0], line.replace(parts[0] + " ", ""));
 	}
@@ -500,7 +499,7 @@ class PacketRule {
 	}
 
 	public void setDoNotVerbose() {
-		Valid.checkBoolean(!doNotVerbose, "Rule already being ignored from verbose: " + this);
+		Common.checkBoolean(!doNotVerbose, "Rule already being ignored from verbose: " + this);
 
 		doNotVerbose = true;
 	}

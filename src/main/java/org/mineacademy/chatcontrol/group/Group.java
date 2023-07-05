@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 import org.mineacademy.chatcontrol.group.GroupOption.OptionType;
 import org.mineacademy.chatcontrol.settings.Settings;
 import org.mineacademy.chatcontrol.util.Common;
-import org.mineacademy.chatcontrol.util.Valid;
 
 /**
  * A group with settings. A player can be associated with one or more groups
@@ -61,7 +60,7 @@ public class Group {
 	}
 
 	public void addSetting(OptionType type, Object value) {
-		Valid.checkBoolean(!settings.containsKey(type), "Duplicate setting: " + type + " for: " + name);
+		Common.checkBoolean(!settings.containsKey(type), "Duplicate setting: " + type + " for: " + name);
 
 		settings.put(type, type.create(value));
 	}
@@ -70,8 +69,8 @@ public class Group {
 		final Set<Group> playerGroups = new HashSet<>();
 
 		for (final Group group : Settings.Groups.LOADED_GROUPS)
-			if (Common.hasPerm(pl, "chatcontrol.group." + group.name)) {
-				Common.Debug("Adding " + pl.getName() + " to group " + group.name);
+			if (Common.hasPermission(pl, "chatcontrol.group." + group.name)) {
+				Common.debug("Adding " + pl.getName() + " to group " + group.name);
 				playerGroups.add(group);
 			}
 

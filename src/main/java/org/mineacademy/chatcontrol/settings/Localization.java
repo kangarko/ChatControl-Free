@@ -99,7 +99,6 @@ public class Localization extends ConfHelper {
 	public static String SIGNS_BROKE;
 
 	public static String USAGE_FAKE_CMD;
-	public static String UPDATE_AVAILABLE;
 	public static String NO_PERMISSION;
 	public static String RELOAD_COMPLETE;
 	public static String RELOAD_FAILED;
@@ -146,7 +145,6 @@ public class Localization extends ConfHelper {
 		USAGE_FAKE_CMD = getString("Fake_Command", "{prefix} Usage: /chatcontrol fake <&bjoin&f/&aleave&f/&ekick&f>");
 
 		pathPrefix(null);
-		UPDATE_AVAILABLE = getString("Update_Available", "&2A new version of &3ChatControl&2 is available.\\n&2Current version: &f{current}&2; New version: &f{new}\\n&2You can disable this notification in the config.");
 		NO_PERMISSION = getString("No_Permission", "&cInsufficient permission ({permission}).");
 		RELOAD_COMPLETE = getString("Reload_Complete", "{prefix} &2Configuration reloaded successfuly.");
 		RELOAD_FAILED = getString("Reload_Failed", "{prefix} &cReloading configuration failed, check console. The error was: &4{error}");

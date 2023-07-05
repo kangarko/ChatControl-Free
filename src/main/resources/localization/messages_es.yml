@@ -50,9 +50,6 @@ Signs:
 Usage:
   Fake_Command: '{prefix} Usa: /chatcontrol fake <&bjoin&f/&aleave&f/&ekick&f>'
 
-Update_Available: '&2Nueva versión de &3ChatControl&2 está disponible.\n&2Current versión:
-  &f{current}&2; Nueva versión: &f{new}\n&2Puedes desactivar esta notificación en la config.'
-
 No_Permission: '&cNo tienes permisos ({permission}).'
 Reload_Complete: '{prefix} &2Configuración cargado con exito.'
 Reload_Failed: '{prefix} &cFallo en cargar, mira la consola. El error fue: &4{error}'

@@ -335,16 +335,9 @@ Groups:
       Leave_Message: "&6[VIP] &e{player} has left the game"
       Kick_Message: none
 
-Updater:
-  Enabled: true
-  Notify: true
-  Download: true
-  
-  # Disable important announcements after the plugin has been loaded
-  Check_Notes: true
-
+# Save chat communication to a file?
 Writer:
-  # Save chat to file?
+  # Enabled?
   Write_Chat_Communication: true
   Strip_Colors: true
 

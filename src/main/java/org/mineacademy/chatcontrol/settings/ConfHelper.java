@@ -20,7 +20,6 @@ import org.mineacademy.chatcontrol.group.Group;
 import org.mineacademy.chatcontrol.group.GroupOption;
 import org.mineacademy.chatcontrol.util.Common;
 import org.mineacademy.chatcontrol.util.CompatProvider;
-import org.mineacademy.chatcontrol.util.Valid;
 import org.mineacademy.chatcontrol.util.Writer;
 
 /**
@@ -44,7 +43,7 @@ public abstract class ConfHelper {
 		if (oldconfig.exists()) {
 			final String version = YamlConfiguration.loadConfiguration(oldconfig).getString("Do_Not_Change_Version_Number");
 
-			Common.LogInFrame(false, "&bDetected old &fconfiguration &bfrom version " + version, "&bThis is &cnot &bcompatible with the new version", "&bEntire folder renamed to ChatControl_Old");
+			Common.logInFrame(false, "&bDetected old &fconfiguration &bfrom version " + version, "&bThis is &cnot &bcompatible with the new version", "&bEntire folder renamed to ChatControl_Old");
 			datafolder.renameTo(new File(datafolder.getParent(), "ChatControl_Old"));
 			datafolder.delete();
 		}
@@ -77,7 +76,7 @@ public abstract class ConfHelper {
 			final int modifier = m.getModifiers();
 
 			if (Modifier.isPrivate(modifier) && Modifier.isStatic(modifier) && m.getReturnType() == Void.TYPE && m.getParameterTypes().length == 0) {
-				Valid.checkBoolean(m.getName().equals("init") || m.getName().startsWith("lambda"), "Method must be called init() not " + m.getName());
+				Common.checkBoolean(m.getName().equals("init") || m.getName().startsWith("lambda"), "Method must be called init() not " + m.getName());
 
 				m.setAccessible(true);
 				m.invoke(null);
@@ -99,7 +98,7 @@ public abstract class ConfHelper {
 					+ "! https://github.com/kangarko/chatcontrol\n" + "!---------------------------------------------------------!\n");
 			cfg.save(file);
 
-			Common.Log("&eSaved updated file: " + file.getName() + " (# Comments removed)");
+			Common.log("&eSaved updated file: " + file.getName() + " (# Comments removed)");
 			save = false;
 		}
 	}
@@ -107,7 +106,7 @@ public abstract class ConfHelper {
 	protected static void createFileAndLoad(String path, Class<?> loadFrom) throws Exception {
 		Objects.requireNonNull(path, "File path cannot be null!");
 
-		file = Writer.Extract(path);
+		file = Writer.extract(path);
 
 		cfg = new YamlConfiguration();
 		cfg.load(file);
@@ -129,7 +128,7 @@ public abstract class ConfHelper {
 		path = addPathPrefix(path);
 		addDefault(path, def);
 
-		Valid.checkBoolean(cfg.isBoolean(path), "Malformed config value, expected boolean at: " + path);
+		Common.checkBoolean(cfg.isBoolean(path), "Malformed config value, expected boolean at: " + path);
 		return cfg.getBoolean(path);
 	}
 
@@ -137,7 +136,7 @@ public abstract class ConfHelper {
 		path = addPathPrefix(path);
 		addDefault(path, def);
 
-		Valid.checkBoolean(cfg.isString(path), "Malformed config value, expected string at: " + path);
+		Common.checkBoolean(cfg.isString(path), "Malformed config value, expected string at: " + path);
 		return cfg.getString(path);
 	}
 
@@ -145,7 +144,7 @@ public abstract class ConfHelper {
 		path = addPathPrefix(path);
 		addDefault(path, def);
 
-		Valid.checkBoolean(cfg.isInt(path), "Malformed config value, expected integer at: " + path);
+		Common.checkBoolean(cfg.isInt(path), "Malformed config value, expected integer at: " + path);
 		return cfg.getInt(path);
 	}
 
@@ -153,7 +152,7 @@ public abstract class ConfHelper {
 		path = addPathPrefix(path);
 		addDefault(path, def);
 
-		Valid.checkBoolean(cfg.isDouble(path), "Malformed config value, expected double at: " + path);
+		Common.checkBoolean(cfg.isDouble(path), "Malformed config value, expected double at: " + path);
 		return cfg.getDouble(path);
 	}
 
@@ -168,12 +167,12 @@ public abstract class ConfHelper {
 				cfg.set(path + "." + str, def.get(str));
 		}
 
-		Valid.checkBoolean(cfg.isConfigurationSection(path), "Malformed config value, expected configuration section at: " + path);
+		Common.checkBoolean(cfg.isConfigurationSection(path), "Malformed config value, expected configuration section at: " + path);
 		final HashMap<String, List<String>> keys = new HashMap<>();
 
 		for (final String key : cfg.getConfigurationSection(path).getKeys(true)) {
 			if (keys.containsKey(key))
-				Common.Warn("Duplicate key: " + key + " in " + path);
+				Common.warn("Duplicate key: " + key + " in " + path);
 			keys.put(key, getStringList(path + "." + key, Arrays.asList(""), false));
 		}
 
@@ -192,12 +191,12 @@ public abstract class ConfHelper {
 				cfg.set(path + "." + str, def.get(str));
 		}
 
-		Valid.checkBoolean(cfg.isConfigurationSection(path), "Malformed config value, expected configuration section at: " + path);
+		Common.checkBoolean(cfg.isConfigurationSection(path), "Malformed config value, expected configuration section at: " + path);
 		final HashMap<String, Object> keys = new HashMap<>();
 
 		for (final String key : cfg.getConfigurationSection(path).getKeys(deep)) {
 			if (keys.containsKey(key))
-				Common.Warn("Duplicate key: " + key + " in " + path);
+				Common.warn("Duplicate key: " + key + " in " + path);
 			keys.put(key, getObject(path + "." + key, "", false));
 		}
 
@@ -209,7 +208,7 @@ public abstract class ConfHelper {
 			path = addPathPrefix(path);
 		addDefault(path, def);
 
-		Valid.checkBoolean(cfg.isList(path), "Malformed config value, expected list at: " + path);
+		Common.checkBoolean(cfg.isList(path), "Malformed config value, expected list at: " + path);
 		return cfg.getStringList(path);
 	}
 
@@ -273,7 +272,7 @@ public abstract class ConfHelper {
 			throw new IllegalStateException("Inbuilt config doesn't contain " + def.getClass().getTypeName() + " at \"" + path + "\". Is it outdated?");
 
 		save = true;
-		Common.Log("&fUpdating " + file.getName() + " with &b\'&f" + path + "&b\' &f-> &b\'&f" + def + "&b\'&r");
+		Common.log("&fUpdating " + file.getName() + " with &b\'&f" + path + "&b\' &f-> &b\'&f" + def + "&b\'&r");
 	}
 
 	// --------------- Lazy helpers ---------------
@@ -308,7 +307,7 @@ public abstract class ConfHelper {
 		}
 
 		protected ChatMessage(Type type) {
-			Valid.checkBoolean(type != Type.CUSTOM, "Type cannot be custom.");
+			Common.checkBoolean(type != Type.CUSTOM, "Type cannot be custom.");
 
 			this.type = type;
 			message = type == Type.DEFAULT ? "default" : type == Type.HIDDEN ? "hidden" : null;
@@ -392,7 +391,7 @@ public abstract class ConfHelper {
 				return;
 			}
 
-			Valid.checkBoolean(values.length == 3, "Malformed sound type, use format: 'sound' OR 'sound, volume, pitch'");
+			Common.checkBoolean(values.length == 3, "Malformed sound type, use format: 'sound' OR 'sound, volume, pitch'");
 			sound = CompatProvider.parseSound(mapSomeSounds(values[0].toUpperCase()));
 			volume = Float.parseFloat(values[1]);
 			pitch = Float.parseFloat(values[2]);

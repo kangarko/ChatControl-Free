@@ -10,7 +10,7 @@ package org.mineacademy.chatcontrol.util;
  *
  * Here the permission is: chatcontrol.commands.mute
  */
-public class Permissions {
+public final class Permissions {
 
 	private Permissions() {
 	}
@@ -50,7 +50,7 @@ public class Permissions {
 		public static final String FAKE = "chatcontrol.commands.fake";
 	}
 
-	public class Bypasses {
+	public class Bypass {
 		// Allow player to chat while the chat is muted.
 		public static final String MUTE = "chatcontrol.bypass.mute";
 
@@ -108,9 +108,6 @@ public class Permissions {
 		// Receive a warning when a player makes multiple signs with the same text.
 		public static final String SIGN_DUPLICATION = "chatcontrol.notify.signduplication";
 
-		// Receive a warning when a new version of plugin is available.
-		public static final String UPDATE_AVAILABLE = "chatcontrol.notify.update";
-
 		// Receive a sound warning when somebody mentions you in the chat. (Highly
 		// configurable.)
 		public static final String WHEN_MENTIONED = "chatcontrol.notify.whenmentioned";
@@ -142,10 +139,10 @@ public class Permissions {
 		// Permission to receive everyone's messages when ranged mode is enabled.
 		public static final String SPY = "chatcontrol.chat.spy";
 
-		// Permission speak for all players in the entire world when ranged mode is
-		// enabled.
+		// Permission speak for all players in the entire world when ranged mode is enabled.
 		public static final String OVERRIDE_RANGED_WORLD = "chatcontrol.chat.overrideranged";
 	}
 
+	// Permission to view timed messages broadcaster.
 	public static final String VIEW_TIMED_MESSAGES = "chatcontrol.broadcaster.view";
 }

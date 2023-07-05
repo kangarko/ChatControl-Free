@@ -50,9 +50,6 @@ Signs:
 Usage:
   Fake_Command: '{prefix} Используйте: /chatcontrol fake <&bjoin&f/&aleave&f/&ekick&f>'
 
-Update_Available: '&2Доступна новая версия &3ChatControl&2.\n&2Текущая версия:
-  &f{current}&2; Новая версия: &f{new}\n&2Вы можете отключить это уведомление в конфиге.'
-
 No_Permission: '&cНедостаточно разрешения ({permission}).'
 Reload_Complete: '{prefix} &2Конфигурация перезагружена.'
 Reload_Failed: '{prefix} &cПерезагрузка конфигурации не удалась, проверьте консоль. Ошибка: &4{error}'

@@ -50,9 +50,6 @@ Signs:
 Usage:
   Fake_Command: '{prefix} Használat: /chatcontrol fake <&bjoin&f/&aleave&f/&ekick&f>'
 
-Update_Available: '&2Új verziója a &3ChatControl&2 pluginnak elérhető.\n&2Jelenlegi verzió:
-  &f{current}&2; Új verzó: &f{new}\n&2Ezt az értesítést letilthatod a konfigurációban.'
-
 No_Permission: '&4Nincs jogosultságod a használatára! ({permission})'
 Reload_Complete: '{prefix} &2A konfiguráció sikeresen újratöltve.'
 Reload_Failed: '{prefix} &cA konfiguráció újratöltése sikertelen, ellenőrizd a konzolt. A hiba: &4{error}'

@@ -31,8 +31,6 @@ import org.mineacademy.chatcontrol.settings.Localization;
 import org.mineacademy.chatcontrol.settings.Settings;
 import org.mineacademy.chatcontrol.util.Common;
 import org.mineacademy.chatcontrol.util.CompatProvider;
-import org.mineacademy.chatcontrol.util.LagCatcher;
-import org.mineacademy.chatcontrol.util.Valid;
 import org.mineacademy.chatcontrol.util.Writer;
 
 /**
@@ -67,7 +65,7 @@ public final class ChatCeaser {
 	 */
 	private void loadRules(Rule.Type... filePaths) {
 		for (final Rule.Type ruleType : filePaths) {
-			final File file = Writer.Extract("rules/" + ruleType.getFileName());
+			final File file = Writer.extract("rules/" + ruleType.getFileName());
 			final List<Rule> createdRules = new ArrayList<>();
 
 			try {
@@ -85,7 +83,7 @@ public final class ChatCeaser {
 						// creating it. This makes a new instance of 'rule' variable.
 						if (line.startsWith("match ")) {
 							if (rule != null) { // Found another match, assuming previous rule is finished creating.
-								Valid.checkBoolean(!createdRules.contains(rule), ruleType.getFileName() + " already contains rule where match is: " + line);
+								Common.checkBoolean(!createdRules.contains(rule), ruleType.getFileName() + " already contains rule where match is: " + line);
 								createdRules.add(rule);
 							}
 
@@ -119,7 +117,7 @@ public final class ChatCeaser {
 
 							// TODO remove
 							else if (line.startsWith("strip ")) {
-								Common.Warn("Operator 'strip' was deprecated and replaced by 'before strip'. Please edit rule '" + rule + "' in " + ruleType.getFileName());
+								Common.warn("Operator 'strip' was deprecated and replaced by 'before strip'. Please edit rule '" + rule + "' in " + ruleType.getFileName());
 								rule.setStripBefore(line.replaceFirst("strip ", ""));
 							}
 
@@ -189,22 +187,22 @@ public final class ChatCeaser {
 				ex.printStackTrace();
 			}
 
-			Valid.checkBoolean(!rulesMap.containsKey(ruleType), "Rules map already contains rules from: " + ruleType.getFileName() + "!");
+			Common.checkBoolean(!rulesMap.containsKey(ruleType), "Rules map already contains rules from: " + ruleType.getFileName() + "!");
 			rulesMap.put(ruleType, createdRules);
 		}
 
 		if (Settings.DEBUG)
 			for (final Rule.Type ruleType : rulesMap.keySet()) {
-				Common.Debug("&e" + Common.consoleLine());
-				Common.Debug("&eDisplaying rules from: " + ruleType.getFileName());
+				Common.debug("&e" + Common.consoleLine());
+				Common.debug("&eDisplaying rules from: " + ruleType.getFileName());
 
 				for (final Rule rule : rulesMap.get(ruleType))
-					Common.Debug("Loaded rule:\n" + rule);
+					Common.debug("Loaded rule:\n" + rule);
 			}
 
 		if (!Settings.SILENT_STARTUP)
 			for (final Rule.Type ruleType : rulesMap.keySet())
-				Common.Log("&fLoaded " + rulesMap.get(ruleType).size() + " Rules in " + ruleType.getFileName());
+				Common.log("&fLoaded " + rulesMap.get(ruleType).size() + " Rules in " + ruleType.getFileName());
 	}
 
 	/**
@@ -227,35 +225,27 @@ public final class ChatCeaser {
 		else if (event instanceof SignChangeEvent)
 			ruleType = Rule.Type.SIGN;
 
-		LagCatcher.start("Rule parse");
-
 		final String origin = msg;
 
 		// First iterate over all rules.
 		List<Rule> rules = rulesMap.get(GLOBAL);
 
-		Common.Debug("Checking " + rules.size() + " global rules");
+		Common.debug("Checking " + rules.size() + " global rules");
 
-		LagCatcher.start("Rule parse: global");
 		msg = iterateStandardRules(rules, event, pl, msg, ruleType, true);
-		LagCatcher.end("Rule parse: global");
 
 		// Then iterate over rules for the given event
 		rules = rulesMap.get(ruleType);
 
-		Common.Debug("Checking " + rules.size() + " rules for " + ruleType + " (" + ruleType.getFileName() + ")");
+		Common.debug("Checking " + rules.size() + " rules for " + ruleType + " (" + ruleType.getFileName() + ")");
 
 		// Then iterate over specific rules for events.
-		LagCatcher.start("Rule parse from: " + event.getClass().getSimpleName());
 		msg = iterateStandardRules(rules, event, pl, msg, ruleType, false);
-		LagCatcher.end("Rule parse from: " + event.getClass().getSimpleName());
 
 		if (event.isCancelled())
-			Common.Verbose("&fOriginal message &ccancelled&f.");
+			Common.verbose("&fOriginal message &ccancelled&f.");
 		else if (!origin.equals(msg))
-			Common.Verbose("&fFINAL&a: &r" + msg);
-
-		LagCatcher.end("Rule parse");
+			Common.verbose("&fFINAL&a: &r" + msg);
 
 		return msg;
 	}
@@ -272,27 +262,27 @@ public final class ChatCeaser {
 				continue;
 
 			if (rule.getBypassPerm() != null)
-				if (Common.hasPerm(pl, rule.getBypassPerm()))
+				if (Common.hasPermission(pl, rule.getBypassPerm()))
 					continue;
 
 			if (rule.matches(msg)) {
 
-				Common.Verbose("&f*--------- ChatControl rule match on " + pl.getName() + " --------- ID " + (rule.getId() != null ? rule.getId() : "UNSET"));
-				Common.Verbose("&fMATCH&b: &r" + (Settings.DEBUG ? rule : rule.getMatch()));
-				Common.Verbose("&fCATCH&b: &r" + msg);
+				Common.verbose("&f*--------- ChatControl rule match on " + pl.getName() + " --------- ID " + (rule.getId() != null ? rule.getId() : "UNSET"));
+				Common.verbose("&fMATCH&b: &r" + (Settings.DEBUG ? rule : rule.getMatch()));
+				Common.verbose("&fCATCH&b: &r" + msg);
 
 				if (rule.log()) {
 					if (!Settings.VERBOSE_RULES)
-						Common.Log("&4" + (type == Rule.Type.SIGN ? "[" + Localization.Parts.SIGN + " - " + Common.shortLocation(pl.getLocation()) + "] " : "") + pl.getName() + " violated " + rule.toShortString() + " with message: &f" + msg);
+						Common.log("&4" + (type == Rule.Type.SIGN ? "[" + Localization.Parts.SIGN + " - " + Common.getFormattedLocation(pl.getLocation()) + "] " : "") + pl.getName() + " violated " + rule.toShortString() + " with message: &f" + msg);
 
-					Writer.Write(Writer.RULES_PATH, pl.getName(), (type == Rule.Type.SIGN ? "[" + Localization.Parts.SIGN + " - " + Common.shortLocation(pl.getLocation()) + "] " : "") + rule.toShortString() + " caught message: " + msg);
+					Writer.write(Writer.RULES_PATH, pl.getName(), (type == Rule.Type.SIGN ? "[" + Localization.Parts.SIGN + " - " + Common.getFormattedLocation(pl.getLocation()) + "] " : "") + rule.toShortString() + " caught message: " + msg);
 				}
 
 				if (rule.getCustomNotifyMessage() != null) {
 					Objects.requireNonNull(rule.getCustomNotifyPermission(), "Custom alert permission cannot be null!");
 
-					for (final Player online : CompatProvider.getAllPlayers())
-						if (Common.hasPerm(online, rule.getCustomNotifyPermission()))
+					for (final Player online : CompatProvider.getOnlinePlayers())
+						if (Common.hasPermission(online, rule.getCustomNotifyPermission()))
 							Common.tellLater(online, 1, replaceVariables(pl, rule, rule.getCustomNotifyMessage(), msg));
 				}
 
@@ -311,7 +301,7 @@ public final class ChatCeaser {
 				if (rule.getCommandsToExecute() != null)
 					for (String command : rule.getCommandsToExecute()) {
 						command = replaceVariables(pl, rule, command, msg);
-						Common.customAction(pl, command, msg);
+						Common.dispatchConsoleCommand(command);
 					}
 
 				if (rule.getWarnMessage() != null)
@@ -351,7 +341,7 @@ public final class ChatCeaser {
 	private <T extends Cancellable> String handle(T e, Player pl, String msg, Rule rule, Rule.Type type) {
 		final Handler handler = rule.getHandler();
 
-		if (handler.getBypassPermission() != null && Common.hasPerm(pl, handler.getBypassPermission()))
+		if (handler.getBypassPermission() != null && Common.hasPermission(pl, handler.getBypassPermission()))
 			return msg;
 
 		if (type == Rule.Type.COMMAND && handler.getIgnoredInCommands() != null)
@@ -374,27 +364,27 @@ public final class ChatCeaser {
 		final String broadcastMessage = handler.getBroadcastMsg();
 
 		if (broadcastMessage != null && !HandlerCache.lastBroadcastMsg.equals(broadcastMessage)) {
-			Common.broadcastWithPlayer(replaceVariables(pl, handler, broadcastMessage, msg), pl.getName());
+			Common.broadcast(replaceVariables(pl, handler, broadcastMessage, msg));
 			HandlerCache.lastBroadcastMsg = broadcastMessage;
 		}
 
 		if (handler.getStaffAlertMsg() != null) {
 			Objects.requireNonNull(handler.getStaffAlertPermission(), "Staff alert permission is null for: " + this);
 
-			for (final Player online : CompatProvider.getAllPlayers())
-				if (Common.hasPerm(online, handler.getStaffAlertPermission()))
-					Common.tell(online, (type == Rule.Type.SIGN ? "[" + Localization.Parts.SIGN + " - " + Common.shortLocation(pl.getLocation()) + "] " : "") + replaceVariables(pl, handler, handler.getStaffAlertMsg(), msg), pl.getName());
+			for (final Player online : CompatProvider.getOnlinePlayers())
+				if (Common.hasPermission(online, handler.getStaffAlertPermission()))
+					Common.tell(online, (type == Rule.Type.SIGN ? "[" + Localization.Parts.SIGN + " - " + Common.getFormattedLocation(pl.getLocation()) + "] " : "") + replaceVariables(pl, handler, handler.getStaffAlertMsg(), msg), pl.getName());
 		}
 
 		if (handler.getConsoleMsg() != null)
-			Common.Log(replaceVariables(pl, handler, handler.getConsoleMsg(), msg));
+			Common.log(replaceVariables(pl, handler, handler.getConsoleMsg(), msg));
 
 		if (handler.getCommandsToExecute() != null)
 			for (final String cmd : handler.getCommandsToExecute())
-				Common.customAction(pl, replaceVariables(pl, handler, cmd, msg), msg);
+				Common.dispatchConsoleCommand(replaceVariables(pl, handler, cmd, msg));
 
 		if (handler.getWriteToFileName() != null)
-			Writer.Write(handler.getWriteToFileName(), pl.getName(), replaceVariables(pl, handler, "[Handler={handler}, Rule ID={ruleID}] ", msg) + msg);
+			Writer.write(handler.getWriteToFileName(), pl.getName(), replaceVariables(pl, handler, "[Handler={handler}, Rule ID={ruleID}] ", msg) + msg);
 
 		if (handler.blockMessage() || type == Rule.Type.SIGN && Settings.Signs.BLOCK_WHEN_VIOLATES_RULE)
 			e.setCancelled(true);
@@ -457,14 +447,14 @@ public final class ChatCeaser {
 				}
 			}
 		} else
-			Common.Debug("Skipping unknown object: " + input.getClass().getTypeName());
+			Common.debug("Skipping unknown object: " + input.getClass().getTypeName());
 	}
 
 	public String parsePacketRulesRaw(Player player, String msg) throws PacketCancelledException {
 		if (msg == null || msg.isEmpty())
 			return "";
 
-		Common.Debug("Checking Packet rules against: " + msg);
+		Common.debug("Checking Packet rules against: " + msg);
 
 		for (final Rule standardrule : rulesMap.get(PACKET))
 			if (standardrule.matches(Common.stripColors(msg.toLowerCase()))) {
@@ -472,9 +462,9 @@ public final class ChatCeaser {
 				Objects.requireNonNull(rule, "Malformed rule - must be a packet rule: " + standardrule);
 
 				if (!rule.doNotVerboe()) {
-					Common.Verbose("&f*--------- ChatControl rule match: chat packet ---------");
-					Common.Verbose("&fMATCH&b: &r" + (Settings.DEBUG ? rule : standardrule.getMatch()));
-					Common.Verbose("&fCATCH&b: &r" + msg);
+					Common.verbose("&f*--------- ChatControl rule match: chat packet ---------");
+					Common.verbose("&fMATCH&b: &r" + (Settings.DEBUG ? rule : standardrule.getMatch()));
+					Common.verbose("&fCATCH&b: &r" + msg);
 				}
 
 				final String origin = msg;
@@ -482,7 +472,7 @@ public final class ChatCeaser {
 
 				if (rule.deny()) {
 					if (!rule.doNotVerboe())
-						Common.Verbose("&fPacket sending &ccancelled&f.");
+						Common.verbose("&fPacket sending &ccancelled&f.");
 					throw new PacketCancelledException();
 				}
 
@@ -491,7 +481,7 @@ public final class ChatCeaser {
 
 					if (msg.equalsIgnoreCase("none") || msg.equalsIgnoreCase("hidden")) {
 						if (!rule.doNotVerboe())
-							Common.Verbose("&fPacket sending &ccancelled&f.");
+							Common.verbose("&fPacket sending &ccancelled&f.");
 						throw new PacketCancelledException();
 					}
 				}
@@ -506,7 +496,7 @@ public final class ChatCeaser {
 				// Common.colorize(rule.getReplacePacket()));
 
 				if (!origin.equals(msg) && !rule.doNotVerboe())
-					Common.Verbose("&fFINAL&a: &r" + msg);
+					Common.verbose("&fFINAL&a: &r" + msg);
 			}
 
 		return msg;
@@ -542,7 +532,7 @@ public final class ChatCeaser {
 	 *         strings
 	 */
 	private String getRandomString(Player player, Rule rule, String[] messages, String msgReplacement) {
-		Valid.checkBoolean(messages.length > 0, "Got empty message '" + String.join(", ", messages) + "'");
+		Common.checkBoolean(messages.length > 0, "Got empty message '" + String.join(", ", messages) + "'");
 
 		final String randomMsg = messages[rand.nextInt(messages.length)];
 		return Common.colorize(replaceVariables(player, rule, randomMsg, msgReplacement));
@@ -559,7 +549,7 @@ class HandlerLoader {
 	private static String sectionName;
 
 	static Handler loadHandler(String name, String ruleID) {
-		final File file = Writer.Extract("handlers.yml");
+		final File file = Writer.extract("handlers.yml");
 		cfg = YamlConfiguration.loadConfiguration(file);
 
 		if (!cfg.isConfigurationSection(name))

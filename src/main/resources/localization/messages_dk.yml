@@ -49,10 +49,7 @@ Signs:
   
 Usage:
   Fake_Command: '{prefix} Brug: /chatcontrol fake <&bjoin&f/&aleave&f/&ekick&f>'
-  
-Update_Available: '&2Ny version af &3ChatControl&2 er tilgængelig.\n&2nuværende version:
-  &f{current}&2; Ny version: &f{new}\n&2Du kan slå denne besked fra i configen.'
-  
+    
 No_Permission: '&4Ingen adgang ({permission}).'
 Reload_Complete: '{prefix} &2Konfiguration reloaded med succes.'
 Reload_Failed: '{prefix} &4Reloading Konfiguration fejlede, tjek console. Fejlen er: &4{error}'

@@ -3,7 +3,7 @@ package org.mineacademy.chatcontrol.group;
 import java.util.Arrays;
 
 import org.mineacademy.chatcontrol.settings.ConfHelper.ChatMessage;
-import org.mineacademy.chatcontrol.util.Valid;
+import org.mineacademy.chatcontrol.util.Common;
 
 public class GroupOption {
 
@@ -79,7 +79,7 @@ public class GroupOption {
 			if (validValue == ChatMessage.class) {
 				// all valid
 			} else
-				Valid.checkBoolean(value.getClass().isAssignableFrom(validValue), this + " has to be " + validValue.getSimpleName() + "! (got " + value + ")");
+				Common.checkBoolean(value.getClass().isAssignableFrom(validValue), this + " has to be " + validValue.getSimpleName() + "! (got " + value + ")");
 		}
 
 		private String makeString() {

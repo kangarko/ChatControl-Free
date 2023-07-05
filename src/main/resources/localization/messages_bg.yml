@@ -50,9 +50,6 @@ Signs:
 Usage:
   Fake_Command: '{prefix} Използване: /chatcontrol fake <&bjoin&f/&aleave&f/&ekick&f>'
 
-Update_Available: '&2Достъпна е нома версия на &3ChatControl&2.\n&2Текуща версия:
-  &f{current}&2; Нова версия: &f{new}\n&2Можете да изключите това съобщение от конфигурацията.'
-
 No_Permission: '&cНедостатъчни права ({permission}).'
 Reload_Complete: '{prefix} &2Конфигурацията презаредена успешно.'
 Reload_Failed: '{prefix} &cПрезареждането на конфигурацията се провали, проверете конзолата. Грешката е: &4{error}'

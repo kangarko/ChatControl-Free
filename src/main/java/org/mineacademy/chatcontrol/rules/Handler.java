@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Objects;
 
 import org.mineacademy.chatcontrol.util.Common;
-import org.mineacademy.chatcontrol.util.Valid;
 
 /**
  * Custom handler that handles message caught by {@link Rule}
@@ -117,7 +116,7 @@ public class Handler {
 	}
 
 	public void setBypassPermission(String bypassPermission) {
-		Valid.checkBoolean(this.bypassPermission == null, "Bypass permission already set for: " + this);
+		Common.checkBoolean(this.bypassPermission == null, "Bypass permission already set for: " + this);
 
 		this.bypassPermission = bypassPermission;
 	}
@@ -131,13 +130,13 @@ public class Handler {
 	}
 
 	public void setIgnoredInCommands(List<String> ignoredInCommands) {
-		Valid.checkBoolean(this.ignoredInCommands == null, "Ignored commands already set for: " + this);
+		Common.checkBoolean(this.ignoredInCommands == null, "Ignored commands already set for: " + this);
 
 		this.ignoredInCommands = ignoredInCommands;
 	}
 
 	public void setPlayerWarnMsg(String playerWarnMsg) {
-		Valid.checkBoolean(this.playerWarnMsg == null, "Player warn message already set for: " + this);
+		Common.checkBoolean(this.playerWarnMsg == null, "Player warn message already set for: " + this);
 
 		this.playerWarnMsg = playerWarnMsg;
 	}
@@ -147,7 +146,7 @@ public class Handler {
 	}
 
 	public void setBroadcastMsg(String broadcastMsg) {
-		Valid.checkBoolean(this.broadcastMsg == null, "Broadcast message already set for: " + this);
+		Common.checkBoolean(this.broadcastMsg == null, "Broadcast message already set for: " + this);
 
 		this.broadcastMsg = broadcastMsg;
 	}
@@ -157,7 +156,7 @@ public class Handler {
 	}
 
 	public void setStaffAlertMsg(String staffAlertMsg) {
-		Valid.checkBoolean(this.staffAlertMsg == null, "Staff alert message already set for: " + this);
+		Common.checkBoolean(this.staffAlertMsg == null, "Staff alert message already set for: " + this);
 
 		this.staffAlertMsg = staffAlertMsg;
 	}
@@ -177,7 +176,7 @@ public class Handler {
 	}
 
 	public void setConsoleMsg(String consoleMsg) {
-		Valid.checkBoolean(this.consoleMsg == null, "Console message already set for: " + this);
+		Common.checkBoolean(this.consoleMsg == null, "Console message already set for: " + this);
 
 		this.consoleMsg = consoleMsg;
 	}
@@ -187,7 +186,7 @@ public class Handler {
 	}
 
 	public void setCommandsToExecute(List<String> commandsToExecute) {
-		Valid.checkBoolean(this.commandsToExecute == null, "Commands to execute already set for: " + this);
+		Common.checkBoolean(this.commandsToExecute == null, "Commands to execute already set for: " + this);
 
 		this.commandsToExecute = commandsToExecute;
 	}
@@ -197,7 +196,7 @@ public class Handler {
 	}
 
 	public void setWriteToFileName(String writeToFileName) {
-		Valid.checkBoolean(this.writeToFileName == null, "Write to file path already set for: " + this);
+		Common.checkBoolean(this.writeToFileName == null, "Write to file path already set for: " + this);
 
 		this.writeToFileName = writeToFileName;
 	}
@@ -207,7 +206,7 @@ public class Handler {
 	}
 
 	public void setBlockMessage() {
-		Valid.checkBoolean(!blockMessage, "Message is already blocked for: " + this);
+		Common.checkBoolean(!blockMessage, "Message is already blocked for: " + this);
 
 		blockMessage = true;
 	}
@@ -221,7 +220,7 @@ public class Handler {
 	}
 
 	public void parseFine(String line) {
-		Valid.checkBoolean(fine == null, "Fine already set on: " + this);
+		Common.checkBoolean(fine == null, "Fine already set on: " + this);
 
 		try {
 			final double fine = Double.parseDouble(line);
@@ -232,8 +231,8 @@ public class Handler {
 	}
 
 	public void setMsgReplacement(String msgReplacement) {
-		Valid.checkBoolean(!blockMessage, "Replacement cannot be defined when the message is blocked: " + this);
-		Valid.checkBoolean(rewriteTo == null, "Whole message replacement already defined for: " + this);
+		Common.checkBoolean(!blockMessage, "Replacement cannot be defined when the message is blocked: " + this);
+		Common.checkBoolean(rewriteTo == null, "Whole message replacement already defined for: " + this);
 
 		this.msgReplacement = msgReplacement;
 	}
@@ -243,8 +242,8 @@ public class Handler {
 	}
 
 	public void setRewriteTo(String wholeMsgReplacement) {
-		Valid.checkBoolean(!blockMessage, "Whole replacement cannot be defined when the message is blocked: " + this);
-		Valid.checkBoolean(msgReplacement == null, "Part message replacement already defined for: " + this);
+		Common.checkBoolean(!blockMessage, "Whole replacement cannot be defined when the message is blocked: " + this);
+		Common.checkBoolean(msgReplacement == null, "Part message replacement already defined for: " + this);
 
 		rewriteTo = wholeMsgReplacement;
 	}

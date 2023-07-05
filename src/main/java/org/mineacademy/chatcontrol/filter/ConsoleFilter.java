@@ -18,7 +18,7 @@ public class ConsoleFilter implements Filter {
 		for (final String ignored : Settings.Console.FILTER_MESSAGES)
 			if (msg.equalsIgnoreCase(ignored) || msg.toLowerCase().contains(ignored.toLowerCase()))
 				return false;
-			else if (Common.regExMatch(ignored, msg))
+			else if (Common.isRegexMatch(ignored, msg))
 				return false;
 
 		return true;

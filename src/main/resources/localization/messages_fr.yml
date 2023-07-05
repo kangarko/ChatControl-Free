@@ -64,9 +64,6 @@ Usage:
   Calc_Command: '/chatcontrol calc <expression> (ex. : 4 + 4 / 2)'
 Invalid:
   Handler: '&cLe gestionnaire d''événements (handler) ''{handler}'' n''existe pas !'
-Update_Available: |-
-  &2Une mise à jour de &3ChatControl&2 est disponible.
-  &2Version actuelle : &f{current}&2; Nouvelle : &f{new}
 No_Permission: '&cPermissions insuffisantes ({permission}).'
 No_Console: '&cCette commande n''est pas accessible depuis la console !'
 Reload_Complete: '{prefix} &2Configuration rechargée avec succès.'

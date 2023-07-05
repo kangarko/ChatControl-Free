@@ -9,13 +9,29 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 
+import javax.annotation.Nullable;
+
 import org.mineacademy.chatcontrol.ChatControl;
 import org.mineacademy.chatcontrol.settings.Settings;
 
-public class Writer {
+/**
+ * A utility class capable of extracting, or writing to files.
+ */
+public final class Writer {
 
+	/**
+	 * The path to the file where errors are logged.
+	 */
 	public static final String ERROR_PATH = "errors/errors.txt";
+
+	/**
+	 * The path to the file where chat message are logged.
+	 */
 	public static final String CHAT_PATH = "logs/chat.txt";
+
+	/**
+	 * The path to the file where rule output is logged.
+	 */
 	public static final String RULES_PATH = "logs/rules.txt";
 
 	private Writer() {
@@ -24,78 +40,78 @@ public class Writer {
 	/**
 	 * Write a line to file with optional prefix which can be null.
 	 *
-	 * @param to
-	 *            path to the file inside the plugin folder
-	 * @param prefix
-	 *            optional prefix, can be null
-	 * @param msg
-	 *            line, is split by \n
+	 * @param toPath path to the file inside the plugin folder
+	 * @param prefix optional prefix, can be null
+	 * @param message line, is split by \n
 	 */
-	public static void Write(String to, String prefix, String msg) {
-		final int lastIndex = to.lastIndexOf('/');
-		final File dir = new File(ChatControl.instance().getDataFolder(), to.substring(0, lastIndex >= 0 ? lastIndex : 0));
+	public static void write(String toPath, @Nullable String prefix, String message) {
+		final int lastIndex = toPath.lastIndexOf('/');
+		final File dir = new File(ChatControl.instance().getDataFolder(), toPath.substring(0, lastIndex >= 0 ? lastIndex : 0));
+
 		if (!dir.exists())
 			dir.mkdirs();
 
-		final File file = new File(ChatControl.instance().getDataFolder(), to);
+		final File file = new File(ChatControl.instance().getDataFolder(), toPath);
 
 		if (Settings.Writer.STRIP_COLORS)
-			msg = Common.stripColors(msg);
+			message = Common.stripColors(message);
 
-		try (FileWriter bw = new FileWriter(file, true)) {
-			for (final String line : msg.trim().split("\n"))
-				bw.write("[" + Common.getFormattedDate() + "] " + (prefix != null ? prefix + ": " : "") + line + System.lineSeparator());
+		try (FileWriter writer = new FileWriter(file, true)) {
+			for (final String line : message.trim().split("\n"))
+				writer.write("[" + Common.getFormattedDate() + "] " + (prefix != null ? prefix + ": " : "") + line + System.lineSeparator());
+
 		} catch (final Exception ex) {
 			ex.printStackTrace();
-			Common.LogInFrame(false, "Error writing to: " + to, "Error: " + ex.getMessage());
+
+			Common.logInFrame(false,
+					"Error writing to: " + toPath,
+					"Error: " + ex.getMessage());
 		}
 	}
 
 	/**
 	 * Copy file from plugins jar to destination.
 	 *
-	 * @param path
-	 *            the path to the file inside the plugin
+	 * @param internalPath the path to the file inside the plugin
 	 * @return the extracted file
 	 */
-	public static File Extract(String path) {
-		return Extract(path, path);
+	public static File extract(String internalPath) {
+		return extract(internalPath, internalPath);
 	}
 
 	/**
 	 * Copy file from plugins jar to destination - customizable destination file
 	 * name.
 	 *
-	 * @param from
-	 *            the path to the file inside the plugin
-	 * @param to
-	 *            the path where the file will be copyed inside the plugin folder
+	 * @param internalPath the path to the file inside the plugin
+	 * @param diskPath the path where the file will be copyed inside the plugin folder
+	 *
 	 * @return the extracted file
 	 */
-	
-	public static File Extract(String from, String to) {
+	public static File extract(String internalPath, String diskPath) {
 		final File datafolder = ChatControl.instance().getDataFolder();
-		final File destination = new File(datafolder, to);
+		final File destination = new File(datafolder, diskPath);
 
 		if (destination.exists())
 			return destination;
 
-		final int lastIndex = to.lastIndexOf('/');
-		final File dir = new File(datafolder, to.substring(0, lastIndex >= 0 ? lastIndex : 0));
+		final int lastIndex = diskPath.lastIndexOf('/');
+		final File dir = new File(datafolder, diskPath.substring(0, lastIndex >= 0 ? lastIndex : 0));
 
 		if (!dir.exists())
 			dir.mkdirs();
 
-		final InputStream is = ChatControl.class.getResourceAsStream("/" + from);
-		Objects.requireNonNull(is, "Inbuilt resource not found: " + from);
+		final InputStream input = ChatControl.class.getResourceAsStream("/" + internalPath);
+		Objects.requireNonNull(input, "Inbuilt resource not found: " + internalPath);
 
 		try {
-			Files.copy(is, Paths.get(destination.toURI()), StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(input, Paths.get(destination.toURI()), StandardCopyOption.REPLACE_EXISTING);
+
 		} catch (final IOException ex) {
-			throw new RuntimeException("Error copying: " + from + " to: " + to, ex);
+			throw new RuntimeException("Error copying: " + internalPath + " to: " + diskPath, ex);
 		}
 
-		Common.Log("&fCreated default file: " + destination.getName());
+		Common.log("&fCreated default file: " + destination.getName());
 		return destination;
 	}
 }

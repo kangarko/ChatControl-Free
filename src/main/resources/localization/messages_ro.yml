@@ -50,9 +50,6 @@ Signs:
 Usage:
   Fake_Command: '{prefix} Usage: /chatcontrol fake <&bjoin&f/&aleave&f/&ekick&f>'
 
-Update_Available: '&2O noua versiune a plugin-ului &3ChatControl&2 este disponibila.\n&2Versiune curenta:
-  &f{current}&2; Versiune noua: &f{new}\n&2Poti opri notificarea din config.'
-
 No_Permission: '&cNu ai permisiunea ({permission}).'
 Reload_Complete: '{prefix} &2Configuratie reincarcata cu succes.'
 Reload_Failed: '{prefix} &cReincarcarea configuratiei a esuat, verifica consola. Eroarea a fost: &4{error}'

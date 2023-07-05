@@ -10,10 +10,24 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
 
-public class GeoAPI {
+import lombok.Data;
 
+/**
+ * A simple helper to retrieve geographical information from IP address.
+ */
+public final class GeoAPI {
+
+	/*
+	 * Cache to minimize the amount of blocking requests
+	 */
 	private static final HashMap<String, GeoResponse> cache = new HashMap<>();
 
+	/**
+	 * Retrieve geographical information about the IP address.
+	 *
+	 * @param ip
+	 * @return
+	 */
 	public static final GeoResponse track(InetAddress ip) {
 		GeoResponse response = new GeoResponse("", "", "", "");
 
@@ -23,8 +37,10 @@ public class GeoAPI {
 		if (ip.getHostAddress().equals("127.0.0.1") || ip.getHostAddress().equals("0.0.0.0"))
 			return new GeoResponse("local", "-", "local", "-");
 
-		if (cache.containsKey(ip.toString()))
-			return cache.get(ip.toString());
+		synchronized (cache) {
+			if (cache.containsKey(ip.toString()))
+				return cache.get(ip.toString());
+		}
 
 		try {
 			final URL url = new URL("http://ip-api.com/json/" + ip.getHostAddress() + "?fields=country,countryCode,regionName,isp");
@@ -33,61 +49,59 @@ public class GeoAPI {
 			con.setConnectTimeout(2000);
 			con.setReadTimeout(2000);
 
-			try (final BufferedReader r = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
-				String page = "";
+			BufferedReader reader = null;
+
+			try {
+				reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+				StringBuilder page = new StringBuilder();
 				String input;
 
-				while ((input = r.readLine()) != null)
-					page += input;
+				while ((input = reader.readLine()) != null)
+					page.append(input);
 
-				response = new GeoResponse(getJson(page, "country"), getJson(page, "countryCode"), getJson(page, "regionName"), getJson(page, "isp"));
-				cache.put(ip.toString(), response);
+				response = new GeoResponse(getJson(page.toString(), "country"), getJson(page.toString(), "countryCode"), getJson(page.toString(), "regionName"), getJson(page.toString(), "isp"));
+
+				synchronized (cache) {
+					cache.put(ip.toString(), response);
+				}
+
+			} finally {
+				if (reader != null) {
+					try {
+						reader.close();
+					} catch (IOException ex) {
+						ex.printStackTrace();
+					}
+				}
 			}
 
-		} catch (final NoRouteToHostException ex) {
+		} catch (NoRouteToHostException ex) {
 			// Firewall or internet access denied
 
-		} catch (final SocketTimeoutException ex) {
-		} catch (final IOException ex) {
+		} catch (SocketTimeoutException ex) {
+		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
 
 		return response;
 	}
 
+	/*
+	 * A primitive helper method to get data from json response
+	 */
 	private static final String getJson(String page, String element) {
 		return page.contains("\"" + element + "\":\"") ? page.split("\"" + element + "\":\"")[1].split("\",")[0] : "";
 	}
 
+	/**
+	 * A class storing the geo response from the track() method above.
+	 */
+	@Data
 	public static final class GeoResponse {
-		private final String countryName, countryCode, regionName, isp;
-
-		public GeoResponse(String countryName, String countryCode, String regionName, String isp) {
-			this.countryName = countryName;
-			this.countryCode = countryCode;
-			this.regionName = regionName;
-			this.isp = isp;
-		}
-
-		public String getCountryName() {
-			return countryName;
-		}
-
-		public String getCountryCode() {
-			return countryCode;
-		}
-
-		public String getRegionName() {
-			return regionName;
-		}
-
-		public String getIsp() {
-			return isp;
-		}
-
-		@Override
-		public String toString() {
-			return "GeoResponse{country=" + countryName + ", isp=" + isp + "}";
-		}
+		private final String countryName;
+		private final String countryCode;
+		private final String regionName;
+		private final String isp;
 	}
 }

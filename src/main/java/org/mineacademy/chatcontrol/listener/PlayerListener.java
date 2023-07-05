@@ -18,9 +18,7 @@ import org.mineacademy.chatcontrol.settings.Localization;
 import org.mineacademy.chatcontrol.settings.Settings;
 import org.mineacademy.chatcontrol.util.Common;
 import org.mineacademy.chatcontrol.util.CompatProvider;
-import org.mineacademy.chatcontrol.util.LagCatcher;
 import org.mineacademy.chatcontrol.util.Permissions;
-import org.mineacademy.chatcontrol.util.UpdateCheck;
 
 public class PlayerListener implements Listener {
 
@@ -45,29 +43,18 @@ public class PlayerListener implements Listener {
 
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
-		LagCatcher.start("Join event");
-
 		final Player player = e.getPlayer();
 		final long now = System.currentTimeMillis() / 1000L;
 		final PlayerCache plData = ChatControl.getDataFor(player);
 
-		if (!Common.hasPerm(player, Permissions.Bypasses.REJOIN))
+		if (!Common.hasPermission(player, Permissions.Bypass.REJOIN))
 			plData.lastLogin = now;
 
 		plData.loginLocation = player.getLocation();
 
+		// Developer easter egg
 		if (player.getName().equals("kangarko"))
 			Common.tellLater(player, 30, Common.consoleLine(), "&e Na serveri je nainstalovany ChatControl v" + ChatControl.instance().getDescription().getVersion() + "!", Common.consoleLine());
-
-		if (UpdateCheck.needsUpdate && Settings.Updater.NOTIFY)
-			for (final Player other : CompatProvider.getAllPlayers())
-				if (Common.hasPerm(other, Permissions.Notify.UPDATE_AVAILABLE)) {
-					final String sprava = Common.colorize(Localization.UPDATE_AVAILABLE).replace("{current}", ChatControl.instance().getDescription().getVersion()).replace("{new}", UpdateCheck.newVersion);
-					sprava.split("\n");
-					Common.tellLater(other, 4 * 20, sprava);
-				}
-
-		LagCatcher.end("Join event");
 
 		if (Common.isVanishedMeta(player) || ChatControl.muted && Settings.Mute.SILENT_JOIN) {
 			e.setJoinMessage(null);
@@ -130,7 +117,7 @@ public class PlayerListener implements Listener {
 		final Player pl = e.getPlayer();
 		final String reason = e.getReason();
 
-		if (Common.hasPerm(pl, Permissions.Bypasses.SPAM_KICK) && (reason.equals("disconnect.spam") || reason.equals("Kicked for spamming"))) {
+		if (Common.hasPermission(pl, Permissions.Bypass.SPAM_KICK) && (reason.equals("disconnect.spam") || reason.equals("Kicked for spamming"))) {
 			e.setCancelled(true);
 			return;
 		}
@@ -171,10 +158,8 @@ public class PlayerListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onSignChange(SignChangeEvent e) {
-		if (CompatProvider.getAllPlayers().size() < Settings.MIN_PLAYERS_TO_ENABLE)
+		if (CompatProvider.getOnlinePlayers().size() < Settings.MIN_PLAYERS_TO_ENABLE)
 			return;
-
-		LagCatcher.start("Sign event");
 
 		final Player pl = e.getPlayer();
 		final PlayerCache plData = ChatControl.getDataFor(pl);
@@ -182,10 +167,10 @@ public class PlayerListener implements Listener {
 
 		msg = msg.trim();
 
-		if (Settings.Signs.DUPLICATION_CHECK && plData.lastSignText.equalsIgnoreCase(msg) && !Common.hasPerm(pl, Permissions.Bypasses.SIGN_DUPLICATION)) {
+		if (Settings.Signs.DUPLICATION_CHECK && plData.lastSignText.equalsIgnoreCase(msg) && !Common.hasPermission(pl, Permissions.Bypass.SIGN_DUPLICATION)) {
 			if (Settings.Signs.DUPLICATION_ALERT_STAFF)
-				for (final Player online : CompatProvider.getAllPlayers())
-					if (!online.getName().equals(pl.getName()) && Common.hasPerm(online, Permissions.Notify.SIGN_DUPLICATION))
+				for (final Player online : CompatProvider.getOnlinePlayers())
+					if (!online.getName().equals(pl.getName()) && Common.hasPermission(online, Permissions.Notify.SIGN_DUPLICATION))
 						Common.tell(online, Localization.SIGNS_DUPLICATION_STAFF.replace("{message}", msg), pl.getName());
 
 			Common.tell(pl, Localization.SIGNS_DUPLICATION);
@@ -194,11 +179,10 @@ public class PlayerListener implements Listener {
 			if (Settings.Signs.DROP_SIGN)
 				e.getBlock().breakNaturally();
 
-			LagCatcher.end("Sign event");
 			return;
 		}
 
-		if (Settings.Rules.CHECK_SIGNS && !Common.hasPerm(e.getPlayer(), Permissions.Bypasses.RULES)) {
+		if (Settings.Rules.CHECK_SIGNS && !Common.hasPermission(e.getPlayer(), Permissions.Bypass.RULES)) {
 			ChatControl.instance().chatCeaser.parseRules(e, pl, msg);
 
 			if (e.isCancelled()) {
@@ -209,8 +193,6 @@ public class PlayerListener implements Listener {
 					e.getBlock().breakNaturally();
 			}
 		}
-
-		LagCatcher.end("Sign event");
 	}
 
 	private String replacePlayerVariables(String msg, Player pl) {

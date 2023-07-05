@@ -33,7 +33,7 @@ public class PlayerCache {
 			return;
 
 		if (groups == null || Settings.Groups.ALWAYS_CHECK_UPDATES) {
-			Common.Debug("&bLoading group for &f" + pl.getName() + "&b ...");
+			Common.debug("&bLoading group for &f" + pl.getName() + "&b ...");
 			groups = Group.loadFor(pl);
 		}
 	}

@@ -42,9 +42,6 @@ Signs:
 Usage:
   Fake_Command: '{prefix} Användning: /chatcontrol fake <&bjoin&f/&aleave&f/&ekick&f>'
   
-Update_Available: '&2En ny version av &3ChatControl&2 är tillgänglig.\n&2Nuvarande version:
-  &f{current}&2; New version: &f{new}\n&2Du kan stänga av den här notifikationen i konfigurationen.'
-  
 No_Permission: '&cOtillräcklig tillåtelse ({permission}).'
 Reload_Complete: '{prefix} &2Konfiguration uppdaterades.'
 Reload_Failed: '{prefix} &cKonfigurationsuppdateringen misslyckades, kolla konsollen. Felet var: &4{error}'

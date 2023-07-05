@@ -56,9 +56,9 @@ public class CommandsHandler implements CommandExecutor {
 
 			if (param.isEmpty())
 				Common.broadcastIfEnabled(Settings.Mute.BROADCAST, sender, ChatControl.muted ? Localization.MUTE_UNMUTE_BROADCAST : Localization.MUTE_BROADCAST, reason);
-			else if ((param.equals("-silent") || param.equals("-s")) && Common.hasPerm(sender, Permissions.Commands.MUTE_SILENT)) {
+			else if ((param.equals("-silent") || param.equals("-s")) && Common.hasPermission(sender, Permissions.Commands.MUTE_SILENT)) {
 				// do nothing
-			} else if ((param.equals("-anonymous") || param.equals("-a")) && Common.hasPerm(sender, Permissions.Commands.MUTE_ANONYMOUS))
+			} else if ((param.equals("-anonymous") || param.equals("-a")) && Common.hasPermission(sender, Permissions.Commands.MUTE_ANONYMOUS))
 				Common.broadcastIfEnabled(Settings.Mute.BROADCAST, sender, ChatControl.muted ? Localization.MUTE_ANON_UNMUTE_BROADCAST : Localization.MUTE_ANON_BROADCAST, reason);
 			else if (param.startsWith("-")) {
 				Common.tell(sender, Localization.WRONG_PARAMETERS);
@@ -75,12 +75,12 @@ public class CommandsHandler implements CommandExecutor {
 		else if ("clear".equals(argument) || "c".equals(argument)) {
 			checkPerm(sender, Permissions.Commands.CLEAR);
 
-			if ((param.equals("-console") || param.equals("-c")) && Common.hasPerm(sender, Permissions.Commands.CLEAR_CONSOLE)) {
+			if ((param.equals("-console") || param.equals("-c")) && Common.hasPermission(sender, Permissions.Commands.CLEAR_CONSOLE)) {
 				for (int i = 0; i < Settings.Clear.CONSOLE_LINES; i++)
 					System.out.println("           ");
 
 				if (sender instanceof Player)
-					Common.Log(Localization.CLEAR_CONSOLE_MSG.replace("{player}", sender.getName()));
+					Common.log(Localization.CLEAR_CONSOLE_MSG.replace("{player}", sender.getName()));
 
 				Common.tell(sender, Localization.CLEAR_CONSOLE);
 				return;
@@ -94,9 +94,9 @@ public class CommandsHandler implements CommandExecutor {
 					Common.broadcastIfEnabled(Settings.Clear.BROADCAST, Sender, Localization.CLEAR_BROADCAST, Reason);
 				}, 2);
 
-			else if ((param.equals("-silent") || param.equals("-s")) && Common.hasPerm(sender, Permissions.Commands.CLEAR_SILENT)) {
+			else if ((param.equals("-silent") || param.equals("-s")) && Common.hasPermission(sender, Permissions.Commands.CLEAR_SILENT)) {
 				// broadcast nothing
-			} else if ((param.equals("-anonymous") || param.equals("-a")) && Common.hasPerm(sender, Permissions.Commands.CLEAR_ANONYMOUS))
+			} else if ((param.equals("-anonymous") || param.equals("-a")) && Common.hasPermission(sender, Permissions.Commands.CLEAR_ANONYMOUS))
 				Bukkit.getScheduler().scheduleSyncDelayedTask(ChatControl.instance(), () -> {
 					Common.broadcastIfEnabled(Settings.Clear.BROADCAST, Sender, Localization.CLEAR_ANON_BROADCAST, Reason);
 				}, 2);
@@ -106,8 +106,8 @@ public class CommandsHandler implements CommandExecutor {
 				return;
 			}
 
-			for (final Player pl : CompatProvider.getAllPlayers()) {
-				if (Settings.Clear.IGNORE_STAFF && Common.hasPerm(pl, Permissions.Bypasses.CHAT_CLEARING)) {
+			for (final Player pl : CompatProvider.getOnlinePlayers()) {
+				if (Settings.Clear.IGNORE_STAFF && Common.hasPermission(pl, Permissions.Bypass.CHAT_CLEARING)) {
 					Common.tell(pl, Localization.CLEAR_STAFF, sender.getName());
 					continue;
 				}
@@ -147,7 +147,7 @@ public class CommandsHandler implements CommandExecutor {
 					Common.tell(sender, Localization.CANNOT_BROADCAST_EMPTY_MESSAGE.replace("{event}", Localization.Parts.JOIN));
 
 				else
-					Common.broadcastWithPlayer(replacePlayerVariables(fakeMessage.getMessage(), onlineFakePlayer), fakePlayer);
+					Common.broadcast(replacePlayerVariables(fakeMessage.getMessage(), onlineFakePlayer, fakePlayer));
 
 			} else if (param.equals("quit") || param.equals("q") || param.equals("leave") || param.equals("l")) {
 				messageHelper = Settings.Messages.QUIT;
@@ -160,7 +160,7 @@ public class CommandsHandler implements CommandExecutor {
 					Common.tell(sender, Localization.CANNOT_BROADCAST_EMPTY_MESSAGE.replace("{event}", Localization.Parts.QUIT));
 
 				else
-					Common.broadcastWithPlayer(replacePlayerVariables(fakeMessage.getMessage(), onlineFakePlayer), fakePlayer);
+					Common.broadcast(replacePlayerVariables(fakeMessage.getMessage(), onlineFakePlayer, fakePlayer));
 
 			} else if (param.equals("kick") || param.equals("k")) {
 				messageHelper = Settings.Messages.KICK;
@@ -173,7 +173,7 @@ public class CommandsHandler implements CommandExecutor {
 					Common.tell(sender, Localization.CANNOT_BROADCAST_EMPTY_MESSAGE.replace("{event}", Localization.Parts.QUIT));
 
 				else
-					Common.broadcastWithPlayer(replacePlayerVariables(fakeMessage.getMessage(), onlineFakePlayer), fakePlayer);
+					Common.broadcast(replacePlayerVariables(fakeMessage.getMessage(), onlineFakePlayer, fakePlayer));
 
 			} else
 				Common.tell(sender, Localization.USAGE_FAKE_CMD);
@@ -222,18 +222,19 @@ public class CommandsHandler implements CommandExecutor {
 	}
 
 	private void checkPerm(CommandSender sender, String perm) {
-		if (sender instanceof Player && !Common.hasPerm(sender, perm))
+		if (sender instanceof Player && !Common.hasPermission(sender, perm))
 			throw new MissingPermissionException(perm);
 	}
 
-	private String replacePlayerVariables(String msg, Player pl) {
-		if (pl != null && pl.isOnline()) {
-			msg = msg.replace("{player}", pl.getName());
+	private String replacePlayerVariables(String message, Player onlinePlayer, String fallbackPlayer) {
+		if (onlinePlayer != null && onlinePlayer.isOnline()) {
+			message = message.replace("{player}", onlinePlayer.getName());
 
 			if (ChatControl.instance().formatter != null)
-				msg = ChatControl.instance().formatter.replacePlayerVariables(pl, msg);
+				message = ChatControl.instance().formatter.replacePlayerVariables(onlinePlayer, message);
 		}
-		return Common.colorize(msg);
+
+		return Common.colorize(message).replace("{player}", fallbackPlayer);
 	}
 }
 
