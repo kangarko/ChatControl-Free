@@ -37,6 +37,7 @@ public class Common {
 
 	/**
 	 * DAY.MONTH.YEAR HOUR:MINUTES:SECONDS
+	 * @return
 	 */
 	public static String getFormattedDate() {
 		return dateFormat.format(System.currentTimeMillis());
@@ -44,6 +45,8 @@ public class Common {
 
 	/**
 	 * #.###
+	 * @param value
+	 * @return
 	 */
 	public static String threeDigits(double value) {
 		return digitsFormat.format(value);
@@ -52,6 +55,8 @@ public class Common {
 	/**
 	 * Basic, colorizes msg and handles {prefix}. every other method to tell player
 	 * should extend this
+	 * @param sender
+	 * @param msg
 	 */
 	public static void tellColored(CommandSender sender, String msg) {
 		if (!msg.isEmpty() && !msg.equalsIgnoreCase("none"))
@@ -61,6 +66,8 @@ public class Common {
 
 	/**
 	 * Sends sendColoredMsg with resolved {player}.
+	 * @param sender
+	 * @param messages
 	 */
 	public static void tell(CommandSender sender, String... messages) {
 		for (final String msg : messages)
@@ -69,6 +76,9 @@ public class Common {
 
 	/**
 	 * Sends sendColoredMsg with known specified {player} in last argument.
+	 * @param pl
+	 * @param msg
+	 * @param plReplacement
 	 */
 	public static void tell(CommandSender pl, String msg, String plReplacement) {
 		tellColored(pl, msg.replace("{player}", plReplacement));
@@ -349,7 +359,7 @@ public class Common {
 		try {
 			return matcher.find();
 		} catch (final RuntimeException ex) {
-			Writer.Write(Writer.ERROR_PATH, null, "Regex check timed out (bad regex?) (plugin ver. " + ChatControl.instance().getDescription().getVersion() + ")!\nString checked: " + plain_msg + "\nRegex: " + regex + "");
+			Writer.write(Writer.ERROR_PATH, null, "Regex check timed out (bad regex?) (plugin ver. " + ChatControl.instance().getDescription().getVersion() + ")!\nString checked: " + plain_msg + "\nRegex: " + regex + "");
 			LogInFrame(false, "Regex timed out after " + Settings.REGEX_TIMEOUT + "ms! ", "&fREG EX&c: &7" + regex, "&fSTRING&c: &7" + plain_msg);
 
 			return false;
@@ -370,6 +380,9 @@ public class Common {
 	/**
 	 * Calculates the similarity (a percentage within 0% and 100%) between two
 	 * strings.
+	 * @param s1
+	 * @param s2
+	 * @return
 	 */
 	public static int similarity(String s1, String s2) {
 		String longer = s1, shorter = s2;
@@ -401,7 +414,7 @@ public class Common {
 	}
 
 	public static String lastColor(String msg) {
-		return msg.substring(msg.lastIndexOf('&'), msg.length());
+		return msg.substring(msg.lastIndexOf('&'));
 	}
 
 	private static String[] splitNewline(String innocentMessage) {

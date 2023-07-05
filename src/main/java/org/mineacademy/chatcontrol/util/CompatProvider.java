@@ -92,6 +92,7 @@ public class CompatProvider {
 	 *
 	 * @param json
 	 * @param denyEvents if an exception should be thrown if hover/click event is found.
+	 * @return
 	 *
 	 * @throws InteractiveTextFoundException
 	 *             if click/hover event are found. Such events would be removed, and
@@ -118,6 +119,8 @@ public class CompatProvider {
 	/**
 	 * Converts chat message with color codes to Json chat components e.g. &6Hello
 	 * world converts to {text:"Hello world",color="gold"}
+	 * @param message
+	 * @return
 	 */
 	public static String packMessage(String message) {
 		Valid.checkBoolean(bungeeApiPresent, "(Un)packing chat requires Spigot 1.7.10 or newer");

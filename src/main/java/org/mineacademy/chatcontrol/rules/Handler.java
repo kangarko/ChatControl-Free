@@ -99,6 +99,7 @@ public class Handler {
 	 *
 	 * @param name
 	 *            the name of this handler
+	 * @param ruleID
 	 */
 	public Handler(String name, String ruleID) {
 		this.name = name;

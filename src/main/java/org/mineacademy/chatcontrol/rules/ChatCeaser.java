@@ -412,6 +412,7 @@ public final class ChatCeaser {
 
 	/**
 	 * Parses the JSON chat message and check it against packet rules
+	 * @param player
 	 *
 	 * @param input
 	 *            the JSON chat message object

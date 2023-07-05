@@ -52,6 +52,9 @@ public class Group {
 
 	/**
 	 * Call be null.
+	 *
+	 * @param type
+	 * @return
 	 */
 	public GroupOption getSetting(OptionType type) {
 		return settings.get(type);
