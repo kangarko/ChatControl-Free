@@ -10,7 +10,6 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
 		<author>kangarko</author>
 		<plugin.name>chatcontrol</plugin.name>
 		<main.class>${project.groupId}.${plugin.name}.ChatControl</main.class>
@@ -32,25 +31,25 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.19.2-R0.1-SNAPSHOT</version>
+			<version>1.20.1-R0.1-SNAPSHOT</version>
 		</dependency>
 		<!-- This is NOT used anywhere in ChatControl, only here to prevent compile 
 			errors from missing the log4j dependency that is shipped in the server jar -->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			<version>2.13.3</version>
+			<version>2.20.0</version>
 		</dependency>
 		<!-- MineAcademy guaranteed availability repos for plugins -->
 		<dependency>
 			<groupId>org.mineacademy.plugin</groupId>
 			<artifactId>AuthMe</artifactId>
-			<version>5.6.0-SNAPSHOT-2530</version>
+			<version>5.6.0-SNAPSHOT-2599</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mineacademy.plugin</groupId>
 			<artifactId>EssentialsX</artifactId>
-			<version>2.20.0-SNAPSHOT-1375</version>
+			<version>2.20.1-SNAPSHOT-1492</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mineacademy.plugin</groupId>
@@ -64,8 +63,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.mineacademy.plugin</groupId>
-			<artifactId>Multiverse-Core</artifactId>
-			<version>4.3.2-SNAPSHOT-870</version>
+			<artifactId>MultiverseCore</artifactId>
+			<version>4.3.9</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mineacademy.plugin</groupId>
@@ -75,12 +74,12 @@
 		<dependency>
 			<groupId>org.mineacademy.plugin</groupId>
 			<artifactId>ProtocolLib</artifactId>
-			<version>5.0.0-SNAPSHOT-586</version>
+			<version>5.1.0-SNAPSHOT-653</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mineacademy.plugin</groupId>
 			<artifactId>Towny</artifactId>
-			<version>0.98.1.12</version>
+			<version>0.99.1.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mineacademy.plugin</groupId>
@@ -94,12 +93,12 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.2.0</version>
+				<version>3.3.0</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.1</version>
+				<version>3.11.0</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
