@@ -371,7 +371,7 @@ class ProtocolLibHook {
 			boolean is_1_19 = false;
 
 			try {
-				is_1_19 = MinecraftVersion.atOrAbove(MinecraftVersion.WILD_UPDATE);
+				is_1_19 = MinecraftVersion.getCurrentVersion().isAtLeast(MinecraftVersion.WILD_UPDATE);
 			} catch (final Throwable t) {
 				// not
 			}
