@@ -8,8 +8,11 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.mineacademy.chatcontrol.ChatControl;
 import org.mineacademy.chatcontrol.util.CompatProvider;
 
+/**
+ * A simple localization class managing localization/messages_X.yml files.
+ */
 @SuppressWarnings("unused")
-public class Localization extends ConfHelper {
+public final class Localization extends ConfHelper {
 
 	private Localization() {
 	}
@@ -17,10 +20,10 @@ public class Localization extends ConfHelper {
 	protected static void load() throws Exception {
 		// try if the user has his modified version of localization inside the plugin
 		// folder
-		file = new File(ChatControl.instance().getDataFolder(), "localization/" + Settings.LOCALIZATION);
+		file = new File(ChatControl.getInstance().getDataFolder(), "localization/" + Settings.LOCALIZATION);
 
 		if (file.exists())
-			cfg = YamlConfiguration.loadConfiguration(file);
+			config = YamlConfiguration.loadConfiguration(file);
 		else {
 			file = null;
 
@@ -28,7 +31,7 @@ public class Localization extends ConfHelper {
 			Objects.requireNonNull(is, "Unknown locale: " + Settings.LOCALIZATION_SUFFIX + " (Possible causes: plugin does not have it or was reloaded)");
 
 			try {
-				cfg = CompatProvider.loadConfiguration(is);
+				config = CompatProvider.loadConfiguration(is);
 			} catch (final NullPointerException ex) {
 				throw new IllegalLocaleException();
 			}

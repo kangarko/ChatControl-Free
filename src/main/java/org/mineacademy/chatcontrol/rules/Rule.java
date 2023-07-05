@@ -8,40 +8,13 @@ import java.util.Set;
 import org.bukkit.GameMode;
 import org.mineacademy.chatcontrol.util.Common;
 
+import lombok.Getter;
+
 /**
- * Represents a single rule
- *
- * @author kangarko
+ * Represents a single rule.
  */
-public class Rule {
-
-	/**
-	 * Flags
-	 */
-	public enum Type {
-		GLOBAL("rules.txt", false),
-		PACKET("packets.txt", false),
-
-		CHAT("chat.txt"),
-		COMMAND("commands.txt"),
-		SIGN("sign.txt");
-
-		private final String fileName;
-		private final boolean canBeIgnored;
-
-		public String getFileName() {
-			return fileName;
-		}
-
-		Type(String file) {
-			this(file, true);
-		}
-
-		Type(String fileName, boolean canBeIgnored) {
-			this.fileName = fileName;
-			this.canBeIgnored = canBeIgnored;
-		}
-	}
+@Getter
+public final class Rule {
 
 	/**
 	 * Required regular expression used against the checked message
@@ -100,7 +73,7 @@ public class Rule {
 	/**
 	 * Optional commands executed as the server console divided by |
 	 */
-	private String[] commandToExecute;
+	private String[] commandsToExecute;
 
 	/**
 	 * A message to the player
@@ -130,12 +103,12 @@ public class Rule {
 	/**
 	 * Whenever the message should be cancelled from appearing
 	 */
-	private boolean cancel = false;
+	private boolean cancellingEvent = false;
 
 	/**
 	 * Whenever the message should be logged and saved into a file.
 	 */
-	private boolean log = false;
+	private boolean loggingEnabled = false;
 
 	/**
 	 * How much money to take from the player (Vault must be loaded)
@@ -180,14 +153,6 @@ public class Rule {
 		return Common.isRegexMatch(match, message);
 	}
 
-	public String getMatch() {
-		return match;
-	}
-
-	public String getId() {
-		return id;
-	}
-
 	public void setId(String id) {
 		Common.checkBoolean(this.id == null, "ID already set on: " + this);
 
@@ -200,18 +165,10 @@ public class Rule {
 		this.ignoredMessage = ignoredMessage;
 	}
 
-	public Type getIgnoredEvent() {
-		return ignoredEvent;
-	}
-
 	public void parseIgnoreEvent(String ignoreEvent) {
 		Common.checkBoolean(ignoredEvent == null, "Ignored event already set on: " + this);
 
 		ignoredEvent = parseRuleType(ignoreEvent);
-	}
-
-	public Set<GameMode> getIgnoredGamemodes() {
-		return ignoredGamemodes;
 	}
 
 	public void parseIgnoredGamemodes(String line) {
@@ -259,18 +216,10 @@ public class Rule {
 		replaceBefore = parts;
 	}
 
-	public String[] getReplacements() {
-		return replacements;
-	}
-
 	public void parseReplacements(String line) {
 		Common.checkBoolean(replacements == null, "Replacement already set on: " + this);
 
 		replacements = line.split("\\|");
-	}
-
-	public String[] getRewrites() {
-		return rewrites;
 	}
 
 	public void parseRewrites(String line) {
@@ -279,18 +228,10 @@ public class Rule {
 		rewrites = line.split("\\|");
 	}
 
-	public String[] getCommandsToExecute() {
-		return commandToExecute;
-	}
-
 	public void parseCommandsToExecute(String line) {
-		Common.checkBoolean(commandToExecute == null, "Command to execute already set on: " + this);
+		Common.checkBoolean(commandsToExecute == null, "Command to execute already set on: " + this);
 
-		commandToExecute = line.split("\\|");
-	}
-
-	public String getWarnMessage() {
-		return warnMessage;
+		commandsToExecute = line.split("\\|");
 	}
 
 	public void setWarnMessage(String warnMessage) {
@@ -310,26 +251,10 @@ public class Rule {
 		customNotifyMessage = raw.replace(permission + " ", "");
 	}
 
-	public String getCustomNotifyMessage() {
-		return customNotifyMessage;
-	}
-
-	public String getCustomNotifyPermission() {
-		return customNotifyPermission;
-	}
-
-	public String getKickMessage() {
-		return kickMessage;
-	}
-
 	public void setKickMessage(String kickMessage) {
 		Common.checkBoolean(this.kickMessage == null, "Kick message already set on: " + this);
 
 		this.kickMessage = kickMessage.isEmpty() ? "Kicked from the server" : kickMessage;
-	}
-
-	public Handler getHandler() {
-		return handler;
 	}
 
 	public void setHandler(Handler handler) {
@@ -338,28 +263,16 @@ public class Rule {
 		this.handler = handler;
 	}
 
-	public boolean cancelEvent() {
-		return cancel;
+	public void setCancellingEvent() {
+		Common.checkBoolean(!cancellingEvent, "Message already set to be cancelled on: " + this);
+
+		cancellingEvent = true;
 	}
 
-	public void setCancelEvent() {
-		Common.checkBoolean(!cancel, "Message already set to be cancelled on: " + this);
+	public void setLoggingEnabled() {
+		Common.checkBoolean(!loggingEnabled, "Rule already being logged on: " + this);
 
-		cancel = true;
-	}
-
-	public boolean log() {
-		return log;
-	}
-
-	public void setLog() {
-		Common.checkBoolean(!log, "Rule already being logged on: " + this);
-
-		log = true;
-	}
-
-	public Double getFine() {
-		return fine;
+		loggingEnabled = true;
 	}
 
 	public void setFine(Double fine) {
@@ -374,13 +287,12 @@ public class Rule {
 		packetRule = new PacketRule();
 	}
 
-	public PacketRule getPacketRule() {
-		return packetRule;
-	}
-
 	@Override
 	public String toString() {
-		return Common.stripColors(getPacketRule() != null ? getPacketRule().toString() : "Rule{\n" + (id != null ? "    Id = " + id + "\n" : "") + "    Match = \'" + match + "\',\n" + (stripBefore != null ? "    Strip Before Match = \'" + stripBefore + "\',\n" : "") + (bypassPerm != null ? "    Bypass With Perm = \'" + bypassPerm + "\',\n" : "") + (ignoredMessage != null ? "    Ignore Message = \'" + ignoredMessage + "\',\n" : "") + (ignoredEvent != null ? "    Ignore Event = \'" + ignoredEvent + "\',\n" : "") + (replacements != null ? "    Replace With = \'" + String.join(",", replacements) + "\',\n" : "") + (rewrites != null ? "    Rewrite = \'" + rewrites + "\',\n" : "") + (commandToExecute != null ? "    Execute Command = \'" + String.join(",", commandToExecute) + "\',\n" : "") + (handler != null ? "    Handler = \'" + handler + "\',\n" : "") + (warnMessage != null ? "    Warn Message = \'" + warnMessage + "\',\n" : "") + (cancel ? "    Deny = " + cancel + "\n" : "") + (log ? "    Log = " + log + "\n" : "") + "}");
+		return Common.stripColors(getPacketRule() != null ? getPacketRule().toString()
+				: "Rule{\n" + (id != null ? "    Id = " + id + "\n" : "") + "    Match = \'" + match + "\',\n" + (stripBefore != null ? "    Strip Before Match = \'" + stripBefore + "\',\n" : "") + (bypassPerm != null ? "    Bypass With Perm = \'" + bypassPerm + "\',\n" : "") + (ignoredMessage != null ? "    Ignore Message = \'" + ignoredMessage + "\',\n" : "") + (ignoredEvent != null ? "    Ignore Event = \'" + ignoredEvent + "\',\n" : "")
+						+ (replacements != null ? "    Replace With = \'" + String.join(",", replacements) + "\',\n" : "") + (rewrites != null ? "    Rewrite = \'" + rewrites + "\',\n" : "") + (commandsToExecute != null ? "    Execute Command = \'" + String.join(",", commandsToExecute) + "\',\n" : "") + (handler != null ? "    Handler = \'" + handler + "\',\n" : "") + (warnMessage != null ? "    Warn Message = \'" + warnMessage + "\',\n" : "")
+						+ (cancellingEvent ? "    Deny = " + cancellingEvent + "\n" : "") + (loggingEnabled ? "    Log = " + loggingEnabled + "\n" : "") + "}");
 	}
 
 	/**
@@ -413,34 +325,62 @@ public class Rule {
 		Common.checkBoolean(ruleType != null && ruleType.canBeIgnored, "Unknown ignore event: " + str, " Valid: " + Arrays.asList(Type.values()));
 		return ruleType;
 	}
+
+	/**
+	 * Flags
+	 */
+	public enum Type {
+		GLOBAL("rules.txt", false),
+		PACKET("packets.txt", false),
+		CHAT("chat.txt"),
+		COMMAND("commands.txt"),
+		SIGN("sign.txt");
+
+		private final String fileName;
+		private final boolean canBeIgnored;
+
+		public String getFileName() {
+			return fileName;
+		}
+
+		Type(String file) {
+			this(file, true);
+		}
+
+		Type(String fileName, boolean canBeIgnored) {
+			this.fileName = fileName;
+			this.canBeIgnored = canBeIgnored;
+		}
+	}
 }
 
 /**
  * A special case rule used against chat packet. From normal rule uses only
  * {@link #match}
  */
+@Getter
 class PacketRule {
 
 	/**
 	 * Whenever the message should be cancelled from appearing.
 	 */
-	private boolean deny = false;
+	private boolean denyingPacket = false;
 
 	/**
 	 * A string used to replace matched part of the checked message.
 	 */
-	private String replace;
+	private String replacePacket;
 
 	/**
 	 * A message to replace the entire checked message.
 	 */
-	private String rewrite;
+	private String rewritePacket;
 
 	/**
 	 * Whenever the rule should not be logged into console even if Verbose is
 	 * enabled.
 	 */
-	private boolean doNotVerbose = false;
+	private boolean notVerbosing = false;
 
 	/**
 	 * A message to replace the entire checked message (custom per world).
@@ -448,34 +388,22 @@ class PacketRule {
 	 */
 	private HashMap<String, String> rewritePerWorld;
 
-	public void setDeny() {
-		Common.checkBoolean(!deny, "Rule is already denied: " + this);
+	public void setDenyingPacket() {
+		Common.checkBoolean(!denyingPacket, "Rule is already denied: " + this);
 
-		deny = true;
-	}
-
-	public boolean deny() {
-		return deny;
+		denyingPacket = true;
 	}
 
 	public void setReplacePacket(String replace) {
-		Common.checkBoolean(this.replace == null, "Replace already set on: " + this);
+		Common.checkBoolean(this.replacePacket == null, "Replace already set on: " + this);
 
-		this.replace = replace;
-	}
-
-	public String getReplacePacket() {
-		return replace;
+		this.replacePacket = replace;
 	}
 
 	public void setRewritePacket(String rewrite) {
-		Common.checkBoolean(this.rewrite == null, "Rewrite already set on: " + this);
+		Common.checkBoolean(this.rewritePacket == null, "Rewrite already set on: " + this);
 
-		this.rewrite = rewrite;
-	}
-
-	public String getRewritePacket() {
-		return rewrite;
+		this.rewritePacket = rewrite;
 	}
 
 	public void addRewriteIn(String line) {
@@ -490,22 +418,14 @@ class PacketRule {
 		rewritePerWorld.put(parts[0], line.replace(parts[0] + " ", ""));
 	}
 
-	public HashMap<String, String> getRewritePerWorld() {
-		return rewritePerWorld;
-	}
+	public void setNotVerbosing() {
+		Common.checkBoolean(!notVerbosing, "Rule already being ignored from verbose: " + this);
 
-	public boolean doNotVerboe() {
-		return doNotVerbose;
-	}
-
-	public void setDoNotVerbose() {
-		Common.checkBoolean(!doNotVerbose, "Rule already being ignored from verbose: " + this);
-
-		doNotVerbose = true;
+		notVerbosing = true;
 	}
 
 	@Override
 	public String toString() {
-		return "PacketRule{\n" + (replace != null ? "    Replace Word: \'" + replace + "\'\n" : "") + (rewrite != null ? "    Rewrite With: \'" + rewrite + "\'\n" : "") + (rewritePerWorld != null ? "    Rewrite In Worlds: \'" + String.join(", ", rewritePerWorld.keySet()) + "\'\n" : "") + (doNotVerbose ? "    Do Not Verbose: \'" + doNotVerbose + "\'\n" : "") + "    Then Deny: " + deny + "\n" + "}";
+		return "PacketRule{\n" + (replacePacket != null ? "    Replace Word: \'" + replacePacket + "\'\n" : "") + (rewritePacket != null ? "    Rewrite With: \'" + rewritePacket + "\'\n" : "") + (rewritePerWorld != null ? "    Rewrite In Worlds: \'" + String.join(", ", rewritePerWorld.keySet()) + "\'\n" : "") + (notVerbosing ? "    Do Not Verbose: \'" + notVerbosing + "\'\n" : "") + "    Then Deny: " + denyingPacket + "\n" + "}";
 	}
 }

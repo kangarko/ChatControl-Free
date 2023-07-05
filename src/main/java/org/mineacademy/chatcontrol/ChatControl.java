@@ -1,17 +1,10 @@
 package org.mineacademy.chatcontrol;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Filter;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -25,7 +18,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.mineacademy.chatcontrol.filter.ConsoleFilter;
 import org.mineacademy.chatcontrol.filter.Log4jFilter;
 import org.mineacademy.chatcontrol.hook.HookManager;
-import org.mineacademy.chatcontrol.listener.ChatListener;
+import org.mineacademy.chatcontrol.listener.ChatCheckListener;
+import org.mineacademy.chatcontrol.listener.ChatFormatListener;
 import org.mineacademy.chatcontrol.listener.CommandListener;
 import org.mineacademy.chatcontrol.listener.PlayerListener;
 import org.mineacademy.chatcontrol.rules.ChatCeaser;
@@ -35,38 +29,45 @@ import org.mineacademy.chatcontrol.settings.ConfHelper.InBuiltFileMissingExcepti
 import org.mineacademy.chatcontrol.settings.Settings;
 import org.mineacademy.chatcontrol.util.Common;
 import org.mineacademy.chatcontrol.util.CompatProvider;
-import org.mineacademy.chatcontrol.util.GeoAPI;
-import org.mineacademy.chatcontrol.util.GeoAPI.GeoResponse;
 import org.mineacademy.chatcontrol.util.Permissions;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public final class ChatControl extends JavaPlugin {
-
-	/**
-	 * Variable indicating if the chat is globally muted.
-	 */
-	public static boolean muted = false;
-
-	/**
-	 * Instance for formatting the chat.
-	 */
-	public ChatFormatter formatter;
-
-	/**
-	 * Instance for checking the chat against rules.
-	 */
-	public ChatCeaser chatCeaser;
 
 	/**
 	 * Instance of this class for easy access from other parts of the plugin.
 	 */
 	private static ChatControl instance;
 
-	// Player Name, Player Cache
-	private static HashMap<String, PlayerCache> playerData = new HashMap<>();
+	/**
+	 * Stores player related data
+	 */
+	private static HashMap<String, PlayerCache> playerCacheMap = new HashMap<>();
 
-	// Player IP, GeoResponse
-	private static HashMap<String, GeoResponse> geoData = new HashMap<>();
+	/**
+	 * Variable indicating if the chat is globally muted.
+	 */
+	@Getter
+	@Setter
+	private static boolean muted = false;
 
+	/**
+	 * Instance for formatting the chat.
+	 */
+	@Getter
+	private ChatFormatListener formatter;
+
+	/**
+	 * Instance for checking the chat against rules.
+	 */
+	@Getter
+	private ChatCeaser chatCeaser;
+
+	/**
+	 * The timed message task ID.
+	 */
 	private int timedMessageTask;
 
 	@Override
@@ -74,25 +75,19 @@ public final class ChatControl extends JavaPlugin {
 		try {
 			instance = this;
 
-			if (scanLegacyPackages()) {
-				setEnabled(false);
-
-				return;
-			}
-
 			CompatProvider.setupReflection();
 			HookManager.loadDependencies();
 			ConfHelper.loadAll();
 
-			for (final Player pl : CompatProvider.getOnlinePlayers())
-				getDataFor(pl);
+			for (final Player onlinePlayer : CompatProvider.getOnlinePlayers())
+				getCache(onlinePlayer);
 
 			chatCeaser = new ChatCeaser();
 			chatCeaser.load();
 
-			formatter = new ChatFormatter();
+			formatter = new ChatFormatListener();
 
-			registerEvent(CompatProvider.compatChatEvent(), new ChatListener(), Settings.ListenerPriority.CHECKER);
+			registerEvent(CompatProvider.compatChatEvent(), new ChatCheckListener(), Settings.ListenerPriority.CHECKER);
 
 			getServer().getPluginManager().registerEvents(new PlayerListener(), this);
 			getServer().getPluginManager().registerEvents(new CommandListener(), this);
@@ -139,7 +134,7 @@ public final class ChatControl extends JavaPlugin {
 
 			Common.log("&4!----------------------------------------------!");
 			Common.log(" &cError loading ChatControl, plugin is disabled!");
-			Common.log(" &cRunning on " + getServer().getBukkitVersion() + " (" + Common.getServerVersion() + ") and Java " + System.getProperty("java.version"));
+			Common.log(" &cRunning on " + getServer().getBukkitVersion() + " and Java " + System.getProperty("java.version"));
 			Common.log("&4!----------------------------------------------!");
 
 			if (t instanceof InvalidConfigurationException) {
@@ -178,66 +173,10 @@ public final class ChatControl extends JavaPlugin {
 		}
 	}
 
-	private final boolean scanLegacyPackages() {
-		if (!getDataFolder().exists())
-			return false;
-
-		boolean found = false;
-
-		try (Stream<Path> stream = Files.walk(getDataFolder().toPath())) {
-			final List<Path> paths = stream.filter(Files::isRegularFile).collect(Collectors.toList());
-
-			for (final Path path : paths) {
-				if (path.toString().endsWith(".log"))
-					continue;
-
-				if (path.toString().contains("DS_Store"))
-					continue;
-
-				List<String> lines;
-
-				try {
-					lines = Files.readAllLines(path, StandardCharsets.UTF_8);
-				} catch (final Throwable t) {
-					System.out.println("**ERROR** Could not check " + path.toFile() + " for errors. It appears you saved it in the wrong encoding, see https://github.com/kangarko/chatcontrol-pro/wiki/Use-Right-Encoding");
-
-					continue;
-				}
-
-				for (final String line : lines)
-					if (line.contains("kangarko.chatcontrol")) {
-						if (!found)
-							System.out.println("************ WARNING ************");
-
-						System.out.println("* Detected outdated reference to 'kangarko.chatcontrol' in " + path);
-						System.out.println("* Please change the line below to contain 'org.mineacademy':");
-						System.out.println("* " + line);
-						System.out.println("*********************************");
-
-						found = true;
-					}
-			}
-
-		} catch (final IOException ex) {
-			ex.printStackTrace();
-		}
-
-		if (found) {
-			System.out.println("** Legacy packages found. Until you update them this plugin will not function. **");
-			System.out.println("*********************************");
-		}
-
-		return found;
-	}
-
-	private final void registerEvent(Class<? extends org.bukkit.event.Event> eventClass, Object listener, EventPriority priority) {
-		getServer().getPluginManager().registerEvent(eventClass, (Listener) listener, priority, (EventExecutor) listener, this, true);
-	}
-
 	@Override
 	public void onDisable() {
 		muted = false;
-		playerData.clear();
+		playerCacheMap.clear();
 
 		getServer().getScheduler().cancelTasks(this);
 
@@ -248,7 +187,7 @@ public final class ChatControl extends JavaPlugin {
 		if (getServer().getScheduler().isCurrentlyRunning(timedMessageTask))
 			getServer().getScheduler().cancelTask(timedMessageTask);
 
-		playerData.clear();
+		playerCacheMap.clear();
 
 		scheduleTimedMessages();
 		chatCeaser.load();
@@ -260,7 +199,7 @@ public final class ChatControl extends JavaPlugin {
 
 		final HashMap<String, Integer> broadcasterIndexes = new HashMap<>();
 		final HashMap<String, List<String>> broadcasterCache = new HashMap<>();
-		final Random rand = new Random();
+		final Random random = new Random();
 
 		final HashMap<String, List<String>> timed = Settings.Messages.TIMED;
 
@@ -287,7 +226,7 @@ public final class ChatControl extends JavaPlugin {
 				if (msgs.size() == 0) // no messages there, pass through
 					continue;
 
-				String msg;
+				String message;
 
 				if (Settings.Messages.TIMED_RANDOM_ORDER) {
 					if (Settings.Messages.TIMED_RANDOM_NO_REPEAT) {
@@ -297,35 +236,35 @@ public final class ChatControl extends JavaPlugin {
 							worldCache.addAll(msgs);
 
 						// Pull the message randomly from the cache
-						msg = worldCache.remove(rand.nextInt(worldCache.size()));
+						message = worldCache.remove(random.nextInt(worldCache.size()));
 					} else
-						msg = msgs.get(rand.nextInt(msgs.size()));
+						message = msgs.get(random.nextInt(msgs.size()));
 				} else {
 					int last = broadcasterIndexes.get(world);
 
 					if (msgs.size() < last + 1)
 						last = 0;
 
-					msg = msgs.get(last);
+					message = msgs.get(last);
 
 					broadcasterIndexes.put(world, last + 1);
 				}
 
-				if (msg == null)
+				if (message == null)
 					continue;
 				else {
 					final String prefix = Settings.Messages.TIMED_PREFIX;
 					final String suffix = Settings.Messages.TIMED_SUFFIX;
 
-					msg = (!prefix.isEmpty() ? prefix + " " : "") + msg + (!suffix.isEmpty() ? " " + suffix : "");
+					message = (!prefix.isEmpty() ? prefix + " " : "") + message + (!suffix.isEmpty() ? " " + suffix : "");
 				}
 
-				Common.debug(msg);
+				Common.debug(message);
 
 				if (world.equalsIgnoreCase("global")) {
 					for (final Player online : CompatProvider.getOnlinePlayers())
 						if (!timed.containsKey(online.getWorld().getName()) && Common.hasPermission(online, Permissions.VIEW_TIMED_MESSAGES))
-							Common.tell(online, msg.replace("{world}", online.getWorld().getName()));
+							Common.tell(online, message.replace("{world}", online.getWorld().getName()));
 
 				} else {
 					final World bukkitworld = getServer().getWorld(world);
@@ -335,53 +274,36 @@ public final class ChatControl extends JavaPlugin {
 					else
 						for (final Player online : bukkitworld.getPlayers())
 							if (Common.hasPermission(online, Permissions.VIEW_TIMED_MESSAGES))
-								Common.tell(online, msg.replace("{world}", world));
+								Common.tell(online, message.replace("{world}", world));
 				}
 			}
 
 		}, 20, 20 * Settings.Messages.TIMED_DELAY_SECONDS);
 	}
 
-	// ------------------------ static ------------------------
-
-	public static GeoResponse getGeoFor(InetAddress ip) {
-		if (!Settings.GEO_DATA || ip == null || ip.getHostAddress() == null)
-			return null;
-
-		final String host = ip.getHostAddress();
-		GeoResponse geo = geoData.get(host);
-
-		if (geo == null) {
-			geo = GeoAPI.track(ip);
-
-			geoData.put(host, geo);
-		}
-
-		return geo;
+	private final void registerEvent(Class<? extends org.bukkit.event.Event> eventClass, Object listener, EventPriority priority) {
+		getServer().getPluginManager().registerEvent(eventClass, (Listener) listener, priority, (EventExecutor) listener, this, true);
 	}
 
-	public static void removeDataFor(Player player) {
-		playerData.remove(player.getName());
+	public static void removeCache(Player player) {
+		playerCacheMap.remove(player.getName());
 	}
 
-	public static PlayerCache getDataFor(Player player) {
+	public static PlayerCache getCache(Player player) {
 		final String name = player.getName();
-		PlayerCache cache = playerData.get(name);
+		PlayerCache cache = playerCacheMap.get(name);
 
 		if (cache == null) {
 			cache = new PlayerCache();
-			playerData.put(name, cache);
+			playerCacheMap.put(name, cache);
 		}
 
-		cache.onCall(player);
+		cache.assignGroups(player);
 
 		return cache;
 	}
 
-	public static ChatControl instance() {
-		if (instance == null)
-			instance = new ChatControl();
-
+	public static ChatControl getInstance() {
 		return instance;
 	}
 }

@@ -46,12 +46,12 @@ public final class Writer {
 	 */
 	public static void write(String toPath, @Nullable String prefix, String message) {
 		final int lastIndex = toPath.lastIndexOf('/');
-		final File dir = new File(ChatControl.instance().getDataFolder(), toPath.substring(0, lastIndex >= 0 ? lastIndex : 0));
+		final File dir = new File(ChatControl.getInstance().getDataFolder(), toPath.substring(0, lastIndex >= 0 ? lastIndex : 0));
 
 		if (!dir.exists())
 			dir.mkdirs();
 
-		final File file = new File(ChatControl.instance().getDataFolder(), toPath);
+		final File file = new File(ChatControl.getInstance().getDataFolder(), toPath);
 
 		if (Settings.Writer.STRIP_COLORS)
 			message = Common.stripColors(message);
@@ -89,7 +89,7 @@ public final class Writer {
 	 * @return the extracted file
 	 */
 	public static File extract(String internalPath, String diskPath) {
-		final File datafolder = ChatControl.instance().getDataFolder();
+		final File datafolder = ChatControl.getInstance().getDataFolder();
 		final File destination = new File(datafolder, diskPath);
 
 		if (destination.exists())

@@ -10,6 +10,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
 
+import org.mineacademy.chatcontrol.settings.Settings;
+
 import lombok.Data;
 
 /**
@@ -28,10 +30,10 @@ public final class GeoAPI {
 	 * @param ip
 	 * @return
 	 */
-	public static final GeoResponse track(InetAddress ip) {
+	public static final GeoResponse getResponse(InetAddress ip) {
 		GeoResponse response = new GeoResponse("", "", "", "");
 
-		if (ip == null)
+		if (!Settings.GEO_DATA || ip == null || ip.getHostAddress() == null)
 			return response;
 
 		if (ip.getHostAddress().equals("127.0.0.1") || ip.getHostAddress().equals("0.0.0.0"))

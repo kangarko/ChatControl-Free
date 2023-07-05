@@ -43,7 +43,10 @@ import me.clip.placeholderapi.PlaceholderHook;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 
-public class HookManager {
+/**
+ * Class managing third-party integrations.
+ */
+public final class HookManager {
 
 	private static AuthMeHook authMe;
 	private static EssentialsHook essentials;
@@ -133,33 +136,22 @@ public class HookManager {
 		return papi != null;
 	}
 
-	// ------------------ delegate methods, reason it's here = prevent errors when
-	// class loads but plugin is missing
-
-	/*
-	 * public static String getCountryCode(Player pl) { return isAuthMeLoaded() ?
-	 * authMe.getCountryCode(pl) : ""; }
-	 *
-	 * public static String getCountryName(Player pl) { return isAuthMeLoaded() ?
-	 * authMe.getCountryName(pl) : ""; }
-	 */
-
-	public static boolean isLogged(Player pl) {
-		return isAuthMeLoaded() ? authMe.isLogged(pl) : true;
+	public static boolean isLogged(Player player) {
+		return isAuthMeLoaded() ? authMe.isLogged(player) : true;
 	}
 
-	public static boolean isAfk(String pl) {
-		return isEssentialsLoaded() ? essentials.isAfk(pl) : false;
+	public static boolean isAfk(String playerName) {
+		return isEssentialsLoaded() ? essentials.isAfk(playerName) : false;
 	}
 
-	public static Player getReplyTo(String pl) {
-		return isEssentialsLoaded() ? essentials.getReplyTo(pl) : null;
+	public static Player getReplyTo(String playerName) {
+		return isEssentialsLoaded() ? essentials.getReplyTo(playerName) : null;
 	}
 
-	public static String getNick(Player pl) {
-		final String nick = isEssentialsLoaded() ? essentials.getNick(pl.getName()) : "";
+	public static String getNick(Player player) {
+		final String nick = isEssentialsLoaded() ? essentials.getNick(player.getName()) : "";
 
-		return nick.isEmpty() ? pl.getName() : nick;
+		return nick.isEmpty() ? player.getName() : nick;
 	}
 
 	public static String getWorldAlias(String world) {
@@ -171,51 +163,51 @@ public class HookManager {
 			protocolLib.initPacketListening();
 	}
 
-	public static String getNation(Player pl) {
-		return isTownyLoaded() ? towny.getNation(pl) : "";
+	public static String getNation(Player player) {
+		return isTownyLoaded() ? towny.getNation(player) : "";
 	}
 
-	public static String getTownName(Player pl) {
-		return isTownyLoaded() ? towny.getTownName(pl) : "";
+	public static String getTownName(Player player) {
+		return isTownyLoaded() ? towny.getTownName(player) : "";
 	}
 
-	public static String getFaction(Player pl) {
-		return isFactionsLoaded() ? factions.getFaction(pl) : "";
+	public static String getFaction(Player player) {
+		return isFactionsLoaded() ? factions.getFaction(player) : "";
 	}
 
-	public static String getPlayerPrefix(Player pl) {
-		return isVaultLoaded() ? vault.getPlayerPrefix(pl) : "";
+	public static String getPlayerPrefix(Player player) {
+		return isVaultLoaded() ? vault.getPlayerPrefix(player) : "";
 	}
 
-	public static String getPlayerSuffix(Player pl) {
-		return isVaultLoaded() ? vault.getPlayerSuffix(pl) : "";
+	public static String getPlayerSuffix(Player player) {
+		return isVaultLoaded() ? vault.getPlayerSuffix(player) : "";
 	}
 
-	public static void takeMoney(String player, double amount) {
+	public static void takeMoney(String playerName, double amount) {
 		if (isVaultLoaded())
-			vault.takeMoney(player, amount);
+			vault.takeMoney(playerName, amount);
 	}
 
-	public static String replacePAPIPlaceholders(Player pl, String msg) {
-		return isPlaceholderAPILoaded() ? papi.replacePlaceholders(pl, msg) : msg;
+	public static String replacePAPIPlaceholders(Player player, String msg) {
+		return isPlaceholderAPILoaded() ? papi.replacePlaceholders(player, msg) : msg;
 	}
 }
 
 class AuthMeHook {
 
-	boolean isLogged(Player pl) {
+	boolean isLogged(Player player) {
 		try {
-			return fr.xephi.authme.api.v3.AuthMeApi.getInstance().isAuthenticated(pl);
+			return fr.xephi.authme.api.v3.AuthMeApi.getInstance().isAuthenticated(player);
 
 		} catch (final Throwable t) {
 
 			try {
-				return ((PlayerCache) fr.xephi.authme.data.auth.PlayerCache.class.getMethod("getInstance").invoke(null)).isAuthenticated(pl.getName());
+				return ((PlayerCache) fr.xephi.authme.data.auth.PlayerCache.class.getMethod("getInstance").invoke(null)).isAuthenticated(player.getName());
 
 			} catch (final Throwable tt) {
 
 				try {
-					return (Boolean) Class.forName("fr.xephi.authme.api.API").getMethod("isAuthenticated", Player.class).invoke(null, pl);
+					return (Boolean) Class.forName("fr.xephi.authme.api.API").getMethod("isAuthenticated", Player.class).invoke(null, player);
 
 				} catch (final Throwable ttt) {
 					return true;
@@ -227,20 +219,20 @@ class AuthMeHook {
 
 class EssentialsHook {
 
-	private final Essentials ess;
+	private final Essentials essentialsApi;
 
 	EssentialsHook() {
-		ess = (Essentials) Bukkit.getPluginManager().getPlugin("Essentials");
+		essentialsApi = (Essentials) Bukkit.getPluginManager().getPlugin("Essentials");
 	}
 
-	boolean isAfk(String pl) {
-		final User user = getUser(pl);
+	boolean isAfk(String playerName) {
+		final User user = getUser(playerName);
 
 		return user != null ? user.isAfk() : false;
 	}
 
-	Player getReplyTo(String pl) {
-		final User user = getUser(pl);
+	Player getReplyTo(String playerName) {
+		final User user = getUser(playerName);
 		if (user == null)
 			return null;
 
@@ -274,17 +266,17 @@ class EssentialsHook {
 		return null;
 	}
 
-	String getNick(String pl) {
-		final User user = getUser(pl);
+	String getNick(String playerName) {
+		final User user = getUser(playerName);
 		if (user == null)
-			return pl;
+			return playerName;
 
 		final String nick = user.getNickname();
 		return nick != null ? nick : "";
 	}
 
-	private User getUser(String pl) {
-		return ess.getUserMap().getUser(pl);
+	private User getUser(String playerName) {
+		return essentialsApi.getUserMap().getUser(playerName);
 	}
 
 }
@@ -309,28 +301,28 @@ class MultiverseHook {
 
 class TownyHook {
 
-	String getNation(Player pl) {
+	String getNation(Player player) {
 		try {
-			final Town t = getTown(pl);
+			final Town town = getTown(player);
 
-			return t != null ? t.getNation().getName() : "";
+			return town != null ? town.getNation().getName() : "";
 		} catch (final Exception e) {
 			return "";
 		}
 	}
 
-	String getTownName(Player pl) {
-		final Town t = getTown(pl);
+	String getTownName(Player player) {
+		final Town town = getTown(player);
 
-		return t != null ? t.getName() : "";
+		return town != null ? town.getName() : "";
 	}
 
-	private Town getTown(Player pl) {
+	private Town getTown(Player player) {
 		try {
-			final Resident res = com.palmergames.bukkit.towny.TownyUniverse.getInstance().getResident(pl.getName());
+			final Resident resident = com.palmergames.bukkit.towny.TownyUniverse.getInstance().getResident(player.getName());
 
-			if (res != null)
-				return res.getTown();
+			if (resident != null)
+				return resident.getTown();
 		} catch (final Throwable e) {
 		}
 
@@ -346,23 +338,23 @@ class ProtocolLibHook {
 	void initPacketListening() {
 
 		if (Settings.Packets.TabComplete.DISABLE)
-			manager.addPacketListener(new PacketAdapter(ChatControl.instance(), PacketType.Play.Client.TAB_COMPLETE) {
+			manager.addPacketListener(new PacketAdapter(ChatControl.getInstance(), PacketType.Play.Client.TAB_COMPLETE) {
 
 				@Override
-				public void onPacketReceiving(PacketEvent e) {
-					if (Common.hasPermission(e.getPlayer(), Permissions.Bypass.TAB_COMPLETE))
+				public void onPacketReceiving(PacketEvent event) {
+					if (Common.hasPermission(event.getPlayer(), Permissions.Bypass.TAB_COMPLETE))
 						return;
 
-					final String msg = e.getPacket().getStrings().read(0).trim();
+					final String message = event.getPacket().getStrings().read(0).trim();
 
-					if (Settings.Packets.TabComplete.DISABLE_ONLY_IN_CMDS && !msg.startsWith("/"))
+					if (Settings.Packets.TabComplete.DISABLE_ONLY_IN_CMDS && !message.startsWith("/"))
 						return;
 
-					if (Settings.Packets.TabComplete.ALLOW_IF_SPACE && msg.contains(" "))
+					if (Settings.Packets.TabComplete.ALLOW_IF_SPACE && message.contains(" "))
 						return;
 
-					if (msg.length() > Settings.Packets.TabComplete.IGNORE_ABOVE_LENGTH)
-						e.setCancelled(true);
+					if (message.length() > Settings.Packets.TabComplete.IGNORE_ABOVE_LENGTH)
+						event.setCancelled(true);
 				}
 			});
 
@@ -380,24 +372,24 @@ class ProtocolLibHook {
 				Common.log("Parsing packet rules only works on Minecraft 1.18 and lower. Upgrade to mineacademy.org/chatcontrol-red for new MC support.");
 
 			else
-				manager.addPacketListener(new PacketAdapter(ChatControl.instance(), PacketType.Play.Server.CHAT) {
+				manager.addPacketListener(new PacketAdapter(ChatControl.getInstance(), PacketType.Play.Server.CHAT) {
 
 					@Override
-					public void onPacketSending(PacketEvent e) {
-						if (e.getPlayer() == null || !e.getPlayer().isOnline())
+					public void onPacketSending(PacketEvent event) {
+						if (event.getPlayer() == null || !event.getPlayer().isOnline())
 							return;
 
-						final StructureModifier<WrappedChatComponent> chat = e.getPacket().getChatComponents();
+						final StructureModifier<WrappedChatComponent> chat = event.getPacket().getChatComponents();
 
-						final WrappedChatComponent comp = chat.read(0);
-						if (comp == null)
+						final WrappedChatComponent component = chat.read(0);
+						if (component == null)
 							return;
 
-						final String raw = comp.getJson();
+						final String raw = component.getJson();
 						if (raw == null || raw.isEmpty())
 							return;
 
-						if (Settings.Rules.UNPACK_PACKET_MESSAGE)
+						if (CompatProvider.isBungeeApiPresent())
 							try {
 								String unpacked = CompatProvider.unpackMessage(raw, true);
 								if (unpacked == null || unpacked.isEmpty())
@@ -406,9 +398,9 @@ class ProtocolLibHook {
 								final String oldUnpacked = unpacked;
 
 								try {
-									unpacked = ChatControl.instance().chatCeaser.parsePacketRulesRaw(e.getPlayer(), unpacked);
+									unpacked = ChatControl.getInstance().getChatCeaser().parsePacketRulesRaw(event.getPlayer(), unpacked);
 								} catch (final PacketCancelledException ex) {
-									e.setCancelled(true);
+									event.setCancelled(true);
 									return;
 								}
 
@@ -435,9 +427,9 @@ class ProtocolLibHook {
 						final String origin = json.toString();
 
 						try {
-							ChatControl.instance().chatCeaser.parsePacketRules(e.getPlayer(), json);
+							ChatControl.getInstance().getChatCeaser().parsePacketRules(event.getPlayer(), json);
 						} catch (final PacketCancelledException ex) {
-							e.setCancelled(true);
+							event.setCancelled(true);
 							return;
 						}
 
@@ -461,29 +453,31 @@ class VaultHook {
 
 		if (economyProvider != null)
 			economy = economyProvider.getProvider();
-		else
-			Common.log("&cEconomy plugin not found");
 
 		final RegisteredServiceProvider<Chat> chatProvider = services.getRegistration(Chat.class);
 
 		if (chatProvider != null)
 			chat = chatProvider.getProvider();
+
 		else if (Settings.Chat.Formatter.ENABLED)
-			Common.logInFrame(true, "You have enabled chat formatter", "but no permissions and chat", "plugin was found!", "Run /vault-info and check what is missing");
+			Common.logInFrame(true,
+					"You have enabled chat formatter, but no",
+					"permissions nor chat plugins were found.",
+					"Run /vault-info and check what is missing");
 	}
 
-	String getPlayerPrefix(Player pl) {
+	String getPlayerPrefix(Player player) {
 		if (chat == null)
 			return "";
 
-		return chat.getPlayerPrefix(pl);
+		return chat.getPlayerPrefix(player);
 	}
 
-	String getPlayerSuffix(Player pl) {
+	String getPlayerSuffix(Player player) {
 		if (chat == null)
 			return "";
 
-		return chat.getPlayerSuffix(pl);
+		return chat.getPlayerSuffix(player);
 	}
 
 	void takeMoney(String player, double amount) {
@@ -497,8 +491,8 @@ class FactionsHook {
 	FactionsHook() {
 	}
 
-	String getFaction(Player pl) {
-		return MPlayer.get(pl.getUniqueId()).getFactionName();
+	String getFaction(Player player) {
+		return MPlayer.get(player.getUniqueId()).getFactionName();
 	}
 }
 
@@ -507,13 +501,13 @@ class PlaceholderAPIHook {
 	private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("[%]([^%]+)[%]");
 	private static final Pattern BRACKET_PLACEHOLDER_PATTERN = Pattern.compile("[{]([^{}]+)[}]");
 
-	String replacePlaceholders(Player pl, String msg) {
+	String replacePlaceholders(Player player, String msg) {
 		try {
-			return setBracketPlaceholders(pl, msg);
+			return setBracketPlaceholders(player, msg);
 
 		} catch (final Throwable t) {
 			Common.log(
-					"PlaceholderAPI failed to replace variables!", "Player: " + pl.getName(), "Message: " + msg, "Error: {error}");
+					"PlaceholderAPI failed to replace variables!", "Player: " + player.getName(), "Message: " + msg, "Error: {error}");
 			t.printStackTrace();
 
 			return msg;
@@ -590,7 +584,7 @@ class PlaceholderAPIHook {
 
 						currentThread.stop();
 					}
-				}.runTaskLater(ChatControl.instance(), main ? 30 : 80);
+				}.runTaskLater(ChatControl.getInstance(), main ? 30 : 80);
 
 				String value = hooks.get(identifier).onRequest(player, params);
 

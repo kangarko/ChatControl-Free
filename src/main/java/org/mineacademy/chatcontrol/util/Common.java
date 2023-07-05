@@ -128,7 +128,7 @@ public final class Common {
 	 * @param messages
 	 */
 	public static void tellLater(final CommandSender sender, int delayTicks, final String... messages) {
-		Bukkit.getScheduler().scheduleSyncDelayedTask(ChatControl.instance(), () -> {
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ChatControl.getInstance(), () -> {
 			tell(sender, messages);
 
 		}, delayTicks);
@@ -177,7 +177,7 @@ public final class Common {
 		if (command.isEmpty() || command.equalsIgnoreCase("none"))
 			return;
 
-		Bukkit.getScheduler().scheduleSyncDelayedTask(ChatControl.instance(), () -> {
+		Bukkit.getScheduler().scheduleSyncDelayedTask(ChatControl.getInstance(), () -> {
 			Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), colorize(command));
 		});
 	}
@@ -303,7 +303,7 @@ public final class Common {
 			log(" &c" + msg);
 
 		if (disable) {
-			Bukkit.getPluginManager().disablePlugin(ChatControl.instance());
+			Bukkit.getPluginManager().disablePlugin(ChatControl.getInstance());
 			log(" &cPlugin is now disabled.");
 		}
 
@@ -461,7 +461,7 @@ public final class Common {
 			return matcher.find();
 
 		} catch (final RuntimeException ex) {
-			Writer.write(Writer.ERROR_PATH, null, "Regex check timed out (bad regex?) (plugin ver. " + ChatControl.instance().getDescription().getVersion() + ")!\nString checked: " + message + "\nRegex: " + pattern + "");
+			Writer.write(Writer.ERROR_PATH, null, "Regex check timed out (bad regex?) (plugin ver. " + ChatControl.getInstance().getDescription().getVersion() + ")!\nString checked: " + message + "\nRegex: " + pattern + "");
 			logInFrame(false, "Regex timed out after " + Settings.REGEX_TIMEOUT + "ms! ", "&fREG EX&c: &7" + pattern, "&fSTRING&c: &7" + message);
 
 			return false;

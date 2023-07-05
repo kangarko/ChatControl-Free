@@ -23,11 +23,11 @@ import org.mineacademy.chatcontrol.util.CompatProvider;
 import org.mineacademy.chatcontrol.util.Writer;
 
 /**
- * Update 1.
+ * A helper managing settings and localization classes
  */
 public abstract class ConfHelper {
 
-	protected static YamlConfiguration cfg;
+	protected static YamlConfiguration config;
 	protected static File file;
 
 	private static String pathPrefix = null;
@@ -37,7 +37,7 @@ public abstract class ConfHelper {
 	}
 
 	public static void loadAll() throws Exception {
-		final File datafolder = ChatControl.instance().getDataFolder();
+		final File datafolder = ChatControl.getInstance().getDataFolder();
 		final File oldconfig = new File(datafolder, "config.yml");
 
 		if (oldconfig.exists()) {
@@ -54,7 +54,7 @@ public abstract class ConfHelper {
 	}
 
 	protected static void loadValues(Class<?> clazz) throws Exception {
-		Objects.requireNonNull(cfg, "YamlConfiguration is null!");
+		Objects.requireNonNull(config, "YamlConfiguration is null!");
 
 		// The class itself.
 		invokeMethods(clazz);
@@ -94,9 +94,10 @@ public abstract class ConfHelper {
 
 	private static void save() throws IOException {
 		if (file != null && save) {
-			cfg.options().header("!---------------------------------------------------------!\n" + "! File automatically updated at " + Common.getFormattedDate() + "\n" + "! to plugin version v" + ChatControl.instance().getDescription().getVersion() + "\n" + "!---------------------------------------------------------!\n" + "! Unfortunatelly due to how Bukkit handles YAML\n" + "! configurations, all comments (#) were wiped. \n" + "! For reference values and comments visit\n"
-					+ "! https://github.com/kangarko/chatcontrol\n" + "!---------------------------------------------------------!\n");
-			cfg.save(file);
+			config.options()
+					.header("!---------------------------------------------------------!\n" + "! File automatically updated at " + Common.getFormattedDate() + "\n" + "! to plugin version v" + ChatControl.getInstance().getDescription().getVersion() + "\n" + "!---------------------------------------------------------!\n" + "! Unfortunatelly due to how Bukkit handles YAML\n" + "! configurations, all comments (#) were wiped. \n" + "! For reference values and comments visit\n"
+							+ "! https://github.com/kangarko/chatcontrol\n" + "!---------------------------------------------------------!\n");
+			config.save(file);
 
 			Common.log("&eSaved updated file: " + file.getName() + " (# Comments removed)");
 			save = false;
@@ -108,8 +109,8 @@ public abstract class ConfHelper {
 
 		file = Writer.extract(path);
 
-		cfg = new YamlConfiguration();
-		cfg.load(file);
+		config = new YamlConfiguration();
+		config.load(file);
 
 		loadValues(loadFrom);
 	}
@@ -121,56 +122,56 @@ public abstract class ConfHelper {
 			path = addPathPrefix(path);
 		addDefault(path, def);
 
-		return cfg.get(path);
+		return config.get(path);
 	}
 
 	protected static boolean getBoolean(String path, boolean def) {
 		path = addPathPrefix(path);
 		addDefault(path, def);
 
-		Common.checkBoolean(cfg.isBoolean(path), "Malformed config value, expected boolean at: " + path);
-		return cfg.getBoolean(path);
+		Common.checkBoolean(config.isBoolean(path), "Malformed config value, expected boolean at: " + path);
+		return config.getBoolean(path);
 	}
 
 	protected static String getString(String path, String def) {
 		path = addPathPrefix(path);
 		addDefault(path, def);
 
-		Common.checkBoolean(cfg.isString(path), "Malformed config value, expected string at: " + path);
-		return cfg.getString(path);
+		Common.checkBoolean(config.isString(path), "Malformed config value, expected string at: " + path);
+		return config.getString(path);
 	}
 
 	protected static int getInteger(String path, int def) {
 		path = addPathPrefix(path);
 		addDefault(path, def);
 
-		Common.checkBoolean(cfg.isInt(path), "Malformed config value, expected integer at: " + path);
-		return cfg.getInt(path);
+		Common.checkBoolean(config.isInt(path), "Malformed config value, expected integer at: " + path);
+		return config.getInt(path);
 	}
 
 	protected static double getDouble(String path, double def) {
 		path = addPathPrefix(path);
 		addDefault(path, def);
 
-		Common.checkBoolean(cfg.isDouble(path), "Malformed config value, expected double at: " + path);
-		return cfg.getDouble(path);
+		Common.checkBoolean(config.isDouble(path), "Malformed config value, expected double at: " + path);
+		return config.getDouble(path);
 	}
 
 	protected static HashMap<String, List<String>> getValuesAndList(String path, HashMap<String, List<String>> def) {
 		path = addPathPrefix(path);
 
 		// add default
-		if (!cfg.isSet(path)) {
+		if (!config.isSet(path)) {
 			validate(path, def);
 
 			for (final String str : def.keySet())
-				cfg.set(path + "." + str, def.get(str));
+				config.set(path + "." + str, def.get(str));
 		}
 
-		Common.checkBoolean(cfg.isConfigurationSection(path), "Malformed config value, expected configuration section at: " + path);
+		Common.checkBoolean(config.isConfigurationSection(path), "Malformed config value, expected configuration section at: " + path);
 		final HashMap<String, List<String>> keys = new HashMap<>();
 
-		for (final String key : cfg.getConfigurationSection(path).getKeys(true)) {
+		for (final String key : config.getConfigurationSection(path).getKeys(true)) {
 			if (keys.containsKey(key))
 				Common.warn("Duplicate key: " + key + " in " + path);
 			keys.put(key, getStringList(path + "." + key, Arrays.asList(""), false));
@@ -184,17 +185,17 @@ public abstract class ConfHelper {
 			path = addPathPrefix(path);
 
 		// add default
-		if (!cfg.isSet(path) && def != null) {
+		if (!config.isSet(path) && def != null) {
 			validate(path, def);
 
 			for (final String str : def.keySet())
-				cfg.set(path + "." + str, def.get(str));
+				config.set(path + "." + str, def.get(str));
 		}
 
-		Common.checkBoolean(cfg.isConfigurationSection(path), "Malformed config value, expected configuration section at: " + path);
+		Common.checkBoolean(config.isConfigurationSection(path), "Malformed config value, expected configuration section at: " + path);
 		final HashMap<String, Object> keys = new HashMap<>();
 
-		for (final String key : cfg.getConfigurationSection(path).getKeys(deep)) {
+		for (final String key : config.getConfigurationSection(path).getKeys(deep)) {
 			if (keys.containsKey(key))
 				Common.warn("Duplicate key: " + key + " in " + path);
 			keys.put(key, getObject(path + "." + key, "", false));
@@ -208,8 +209,8 @@ public abstract class ConfHelper {
 			path = addPathPrefix(path);
 		addDefault(path, def);
 
-		Common.checkBoolean(cfg.isList(path), "Malformed config value, expected list at: " + path);
-		return cfg.getStringList(path);
+		Common.checkBoolean(config.isList(path), "Malformed config value, expected list at: " + path);
+		return config.getStringList(path);
 	}
 
 	protected static List<String> getStringList(String path, List<String> def) {
@@ -224,11 +225,11 @@ public abstract class ConfHelper {
 		path = addPathPrefix(path);
 
 		// add default
-		if (!cfg.isConfigurationSection(path)) {
+		if (!config.isConfigurationSection(path)) {
 			for (final Group group : defaults) {
 				final String groupPath = path + "." + group.getName();
 
-				if (!cfg.isSet(groupPath))
+				if (!config.isSet(groupPath))
 					for (final GroupOption setting : group.getSettings()) {
 						final Object val = setting.getValue();
 						addDefault(groupPath + "." + setting.getOption(), val instanceof ChatMessage ? ((ChatMessage) val).getMessage() : val);
@@ -245,7 +246,7 @@ public abstract class ConfHelper {
 		// group name, settings
 		final List<Group> groups = new ArrayList<>();
 
-		for (final String groupName : cfg.getConfigurationSection(path).getKeys(false)) {
+		for (final String groupName : config.getConfigurationSection(path).getKeys(false)) {
 			// type, value (UNPARSED)
 			final HashMap<String, Object> settingsRaw = getValuesAndKeys(path + "." + groupName, null, false);
 
@@ -264,7 +265,7 @@ public abstract class ConfHelper {
 		path = addPathPrefix(path);
 
 		validate(path, value);
-		cfg.set(path, value);
+		config.set(path, value);
 	}
 
 	private static <T> void validate(String path, T def) {
@@ -278,9 +279,9 @@ public abstract class ConfHelper {
 	// --------------- Lazy helpers ---------------
 
 	private static <T> void addDefault(String path, T def) {
-		if (!cfg.isSet(path)) {
+		if (!config.isSet(path)) {
 			validate(path, def);
-			cfg.set(path, def);
+			config.set(path, def);
 		}
 	}
 

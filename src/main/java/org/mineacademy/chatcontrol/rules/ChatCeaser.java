@@ -34,9 +34,8 @@ import org.mineacademy.chatcontrol.util.CompatProvider;
 import org.mineacademy.chatcontrol.util.Writer;
 
 /**
- * Custom rule engine. Reads a set of rules from a file
+ * Custom rule engine. Reads a set of rules from a file.
  *
- * @author kangarko
  * @since 5.0.0
  */
 public final class ChatCeaser {
@@ -46,7 +45,10 @@ public final class ChatCeaser {
 	 */
 	private final HashMap<Rule.Type, List<Rule>> rulesMap = new HashMap<>();
 
-	private final Random rand = new Random();
+	/**
+	 * Random instance.
+	 */
+	private final Random random = new Random();
 
 	/**
 	 * Clears rules and load them .
@@ -60,8 +62,7 @@ public final class ChatCeaser {
 	/**
 	 * Fill {@link #rules} with rules in specified file paths.
 	 *
-	 * @param filePaths
-	 *            the paths for every rule file
+	 * @param filePaths the paths for every rule file
 	 */
 	private void loadRules(Rule.Type... filePaths) {
 		for (final Rule.Type ruleType : filePaths) {
@@ -98,9 +99,9 @@ public final class ChatCeaser {
 
 							if (packetRule) {
 								if ("then deny".equals(line))
-									rule.getPacketRule().setDeny();
+									rule.getPacketRule().setDenyingPacket();
 								else if ("dont verbose".equals(line))
-									rule.getPacketRule().setDoNotVerbose();
+									rule.getPacketRule().setNotVerbosing();
 								else if (line.startsWith("then replace "))
 									rule.getPacketRule().setReplacePacket(line.replaceFirst("then replace ", ""));
 								else if (line.startsWith("then rewrite "))
@@ -110,16 +111,10 @@ public final class ChatCeaser {
 								else
 									throw new NullPointerException("Unknown packet rule operator: " + line);
 							} else if ("then deny".equals(line))
-								rule.setCancelEvent();
+								rule.setCancellingEvent();
 
 							else if ("then log".equals(line))
-								rule.setLog();
-
-							// TODO remove
-							else if (line.startsWith("strip ")) {
-								Common.warn("Operator 'strip' was deprecated and replaced by 'before strip'. Please edit rule '" + rule + "' in " + ruleType.getFileName());
-								rule.setStripBefore(line.replaceFirst("strip ", ""));
-							}
+								rule.setLoggingEnabled();
 
 							else if (line.startsWith("before strip "))
 								rule.setStripBefore(line.replaceFirst("before strip ", ""));
@@ -209,15 +204,12 @@ public final class ChatCeaser {
 	 * Check the message against all rules. Can cancel the event or return modified
 	 * message.
 	 *
-	 * @param event
-	 *            the event - must be cancellable
-	 * @param pl
-	 *            the player that triggered filtering
-	 * @param msg
-	 *            the message that is being checked
+	 * @param event the event - must be cancellable
+	 * @param player the player that triggered filtering
+	 * @param message the message that is being checked
 	 * @return the message that was initially put, might be changed
 	 */
-	public <T extends Cancellable> String parseRules(T event, Player pl, String msg) {
+	public <T extends Cancellable> String parseRules(T event, Player player, String message) {
 		Rule.Type ruleType = Rule.Type.CHAT;
 
 		if (event instanceof PlayerCommandPreprocessEvent)
@@ -225,14 +217,14 @@ public final class ChatCeaser {
 		else if (event instanceof SignChangeEvent)
 			ruleType = Rule.Type.SIGN;
 
-		final String origin = msg;
+		final String origin = message;
 
 		// First iterate over all rules.
 		List<Rule> rules = rulesMap.get(GLOBAL);
 
 		Common.debug("Checking " + rules.size() + " global rules");
 
-		msg = iterateStandardRules(rules, event, pl, msg, ruleType, true);
+		message = iterateStandardRules(rules, event, player, message, ruleType, true);
 
 		// Then iterate over rules for the given event
 		rules = rulesMap.get(ruleType);
@@ -240,42 +232,42 @@ public final class ChatCeaser {
 		Common.debug("Checking " + rules.size() + " rules for " + ruleType + " (" + ruleType.getFileName() + ")");
 
 		// Then iterate over specific rules for events.
-		msg = iterateStandardRules(rules, event, pl, msg, ruleType, false);
+		message = iterateStandardRules(rules, event, player, message, ruleType, false);
 
 		if (event.isCancelled())
 			Common.verbose("&fOriginal message &ccancelled&f.");
-		else if (!origin.equals(msg))
-			Common.verbose("&fFINAL&a: &r" + msg);
+		else if (!origin.equals(message))
+			Common.verbose("&fFINAL&a: &r" + message);
 
-		return msg;
+		return message;
 	}
 
 	/**
 	 * Internal method, {@link #parseRules(Cancellable, Player, String)}
 	 */
-	private <T extends Cancellable> String iterateStandardRules(List<Rule> rules, T e, Player pl, String msg, Rule.Type type, boolean global) {
+	private <T extends Cancellable> String iterateStandardRules(List<Rule> rules, T event, Player player, String message, Rule.Type type, boolean global) {
 		for (final Rule rule : rules) {
-			if (/*!global && */rule.getIgnoredEvent() != null && rule.getIgnoredEvent() == type)
+			if (rule.getIgnoredEvent() != null && rule.getIgnoredEvent() == type)
 				continue;
 
-			if (rule.getIgnoredGamemodes() != null && rule.getIgnoredGamemodes().contains(pl.getGameMode()))
+			if (rule.getIgnoredGamemodes() != null && rule.getIgnoredGamemodes().contains(player.getGameMode()))
 				continue;
 
 			if (rule.getBypassPerm() != null)
-				if (Common.hasPermission(pl, rule.getBypassPerm()))
+				if (Common.hasPermission(player, rule.getBypassPerm()))
 					continue;
 
-			if (rule.matches(msg)) {
+			if (rule.matches(message)) {
 
-				Common.verbose("&f*--------- ChatControl rule match on " + pl.getName() + " --------- ID " + (rule.getId() != null ? rule.getId() : "UNSET"));
+				Common.verbose("&f*--------- ChatControl rule match on " + player.getName() + " --------- ID " + (rule.getId() != null ? rule.getId() : "UNSET"));
 				Common.verbose("&fMATCH&b: &r" + (Settings.DEBUG ? rule : rule.getMatch()));
-				Common.verbose("&fCATCH&b: &r" + msg);
+				Common.verbose("&fCATCH&b: &r" + message);
 
-				if (rule.log()) {
+				if (rule.isLoggingEnabled()) {
 					if (!Settings.VERBOSE_RULES)
-						Common.log("&4" + (type == Rule.Type.SIGN ? "[" + Localization.Parts.SIGN + " - " + Common.getFormattedLocation(pl.getLocation()) + "] " : "") + pl.getName() + " violated " + rule.toShortString() + " with message: &f" + msg);
+						Common.log("&4" + (type == Rule.Type.SIGN ? "[" + Localization.Parts.SIGN + " - " + Common.getFormattedLocation(player.getLocation()) + "] " : "") + player.getName() + " violated " + rule.toShortString() + " with message: &f" + message);
 
-					Writer.write(Writer.RULES_PATH, pl.getName(), (type == Rule.Type.SIGN ? "[" + Localization.Parts.SIGN + " - " + Common.getFormattedLocation(pl.getLocation()) + "] " : "") + rule.toShortString() + " caught message: " + msg);
+					Writer.write(Writer.RULES_PATH, player.getName(), (type == Rule.Type.SIGN ? "[" + Localization.Parts.SIGN + " - " + Common.getFormattedLocation(player.getLocation()) + "] " : "") + rule.toShortString() + " caught message: " + message);
 				}
 
 				if (rule.getCustomNotifyMessage() != null) {
@@ -283,121 +275,121 @@ public final class ChatCeaser {
 
 					for (final Player online : CompatProvider.getOnlinePlayers())
 						if (Common.hasPermission(online, rule.getCustomNotifyPermission()))
-							Common.tellLater(online, 1, replaceVariables(pl, rule, rule.getCustomNotifyMessage(), msg));
+							Common.tellLater(online, 1, replaceVariables(player, rule, rule.getCustomNotifyMessage(), message));
 				}
 
 				if (rule.getHandler() != null)
-					msg = handle(e, pl, msg, rule, type);
+					message = handle(event, player, message, rule, type);
 
-				if (e.isCancelled())
-					return msg; // The message will not appear in the chat, no need to continue.
+				if (event.isCancelled())
+					return message; // The message will not appear in the chat, no need to continue.
 
 				if (rule.getRewrites() != null && rule.getRewrites().length > 0)
-					msg = getRandomString(pl, rule, rule.getRewrites(), msg);
+					message = getRandomString(player, rule, rule.getRewrites(), message);
 
 				if (rule.getReplacements() != null && rule.getReplacements().length > 0)
-					msg = msg.replaceAll("(?i)" + rule.getMatch(), getRandomString(pl, rule, rule.getReplacements(), msg));
+					message = message.replaceAll("(?i)" + rule.getMatch(), getRandomString(player, rule, rule.getReplacements(), message));
 
 				if (rule.getCommandsToExecute() != null)
 					for (String command : rule.getCommandsToExecute()) {
-						command = replaceVariables(pl, rule, command, msg);
+						command = replaceVariables(player, rule, command, message);
 						Common.dispatchConsoleCommand(command);
 					}
 
 				if (rule.getWarnMessage() != null)
-					if (rule.cancelEvent()) // if not blocked, display after player's message
-						Common.tell(pl, replaceVariables(pl, rule, rule.getWarnMessage(), msg));
+					if (rule.isCancellingEvent()) // if not blocked, display after player's message
+						Common.tell(player, replaceVariables(player, rule, rule.getWarnMessage(), message));
 					else
-						Common.tellLater(pl, 1, replaceVariables(pl, rule, rule.getWarnMessage(), msg));
+						Common.tellLater(player, 1, replaceVariables(player, rule, rule.getWarnMessage(), message));
 
 				if (rule.getFine() != null)
-					HookManager.takeMoney(pl.getName(), rule.getFine());
+					HookManager.takeMoney(player.getName(), rule.getFine());
 
 				if (rule.getKickMessage() != null) {
-					final Player Pl = pl;
-					final Rule Rule = rule;
+					final Player finalPlayer = player;
+					final Rule finalRule = rule;
 
-					Bukkit.getScheduler().scheduleSyncDelayedTask(ChatControl.instance(), () -> {
-						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "kick " + Pl.getName() + " " + Common.colorize(Rule.getKickMessage()));
+					Bukkit.getScheduler().scheduleSyncDelayedTask(ChatControl.getInstance(), () -> {
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "kick " + finalPlayer.getName() + " " + Common.colorize(finalRule.getKickMessage()));
 					});
 				}
 
-				if (rule.cancelEvent()) {
-					e.setCancelled(true);
+				if (rule.isCancellingEvent()) {
+					event.setCancelled(true);
 
-					return msg; // The message will not appear in the chat, no need to continue.
+					return message; // The message will not appear in the chat, no need to continue.
 				}
 			}
 		}
 
 		HandlerCache.reset();
-		return msg;
+		return message;
 	}
 
-	/**
+	/*
 	 * Handlers a custom handler. Returns the original message (can be modified) Can
 	 * cancel the event.
 	 */
-	private <T extends Cancellable> String handle(T e, Player pl, String msg, Rule rule, Rule.Type type) {
+	private <T extends Cancellable> String handle(T event, Player player, String message, Rule rule, Rule.Type type) {
 		final Handler handler = rule.getHandler();
 
-		if (handler.getBypassPermission() != null && Common.hasPermission(pl, handler.getBypassPermission()))
-			return msg;
+		if (handler.getBypassPermission() != null && Common.hasPermission(player, handler.getBypassPermission()))
+			return message;
 
 		if (type == Rule.Type.COMMAND && handler.getIgnoredInCommands() != null)
 			for (final String ignored : handler.getIgnoredInCommands())
-				if (msg.startsWith(ignored))
-					return msg;
+				if (message.startsWith(ignored))
+					return message;
 
-		final String warnMessage = handler.getPlayerWarnMsg();
+		final String warnMessage = handler.getPlayerWarningMessage();
 
-		if (warnMessage != null && !HandlerCache.lastWarnMsg.equals(warnMessage)) {
+		if (warnMessage != null && !HandlerCache.lastWarnMessage.equals(warnMessage)) {
 
-			if (handler.blockMessage()) // if not blocked, display after player's message
-				Common.tell(pl, replaceVariables(pl, handler, warnMessage, msg));
+			if (handler.isMessageBlocked()) // if not blocked, display after player's message
+				Common.tell(player, replaceVariables(player, handler, warnMessage, message));
 			else
-				Common.tellLater(pl, 1, replaceVariables(pl, handler, warnMessage, msg));
+				Common.tellLater(player, 1, replaceVariables(player, handler, warnMessage, message));
 
-			HandlerCache.lastWarnMsg = warnMessage;
+			HandlerCache.lastWarnMessage = warnMessage;
 		}
 
-		final String broadcastMessage = handler.getBroadcastMsg();
+		final String broadcastMessage = handler.getBroadcastMessage();
 
-		if (broadcastMessage != null && !HandlerCache.lastBroadcastMsg.equals(broadcastMessage)) {
-			Common.broadcast(replaceVariables(pl, handler, broadcastMessage, msg));
-			HandlerCache.lastBroadcastMsg = broadcastMessage;
+		if (broadcastMessage != null && !HandlerCache.lastBroadcastMessage.equals(broadcastMessage)) {
+			Common.broadcast(replaceVariables(player, handler, broadcastMessage, message));
+			HandlerCache.lastBroadcastMessage = broadcastMessage;
 		}
 
-		if (handler.getStaffAlertMsg() != null) {
+		if (handler.getStaffAlertMessage() != null) {
 			Objects.requireNonNull(handler.getStaffAlertPermission(), "Staff alert permission is null for: " + this);
 
 			for (final Player online : CompatProvider.getOnlinePlayers())
 				if (Common.hasPermission(online, handler.getStaffAlertPermission()))
-					Common.tell(online, (type == Rule.Type.SIGN ? "[" + Localization.Parts.SIGN + " - " + Common.getFormattedLocation(pl.getLocation()) + "] " : "") + replaceVariables(pl, handler, handler.getStaffAlertMsg(), msg), pl.getName());
+					Common.tell(online, (type == Rule.Type.SIGN ? "[" + Localization.Parts.SIGN + " - " + Common.getFormattedLocation(player.getLocation()) + "] " : "") + replaceVariables(player, handler, handler.getStaffAlertMessage(), message), player.getName());
 		}
 
-		if (handler.getConsoleMsg() != null)
-			Common.log(replaceVariables(pl, handler, handler.getConsoleMsg(), msg));
+		if (handler.getConsoleMessage() != null)
+			Common.log(replaceVariables(player, handler, handler.getConsoleMessage(), message));
 
 		if (handler.getCommandsToExecute() != null)
 			for (final String cmd : handler.getCommandsToExecute())
-				Common.dispatchConsoleCommand(replaceVariables(pl, handler, cmd, msg));
+				Common.dispatchConsoleCommand(replaceVariables(player, handler, cmd, message));
 
 		if (handler.getWriteToFileName() != null)
-			Writer.write(handler.getWriteToFileName(), pl.getName(), replaceVariables(pl, handler, "[Handler={handler}, Rule ID={ruleID}] ", msg) + msg);
+			Writer.write(handler.getWriteToFileName(), player.getName(), replaceVariables(player, handler, "[Handler={handler}, Rule ID={ruleID}] ", message) + message);
 
-		if (handler.blockMessage() || type == Rule.Type.SIGN && Settings.Signs.BLOCK_WHEN_VIOLATES_RULE)
-			e.setCancelled(true);
+		if (handler.isMessageBlocked() || type == Rule.Type.SIGN && Settings.Signs.BLOCK_WHEN_VIOLATES_RULE)
+			event.setCancelled(true);
 
-		else if (handler.getMsgReplacement() != null)
+		else if (handler.getMessageReplacement() != null)
 			// return msg = Common.colorize( Common.replaceMatch(standardrule.getMatch(),
 			// msg, rule.getReplacePacket()));
-			return Common.replaceMatch(rule.getMatch(), msg, Common.colorize(replaceVariables(pl, handler, handler.getMsgReplacement(), msg)));
+			return Common.replaceMatch(rule.getMatch(), message, Common.colorize(replaceVariables(player, handler, handler.getMessageReplacement(), message)));
 
 		else if (handler.getRewriteTo() != null)
-			return Common.colorize(replaceVariables(pl, handler, handler.getRewriteTo(), msg));
+			return Common.colorize(replaceVariables(player, handler, handler.getRewriteTo(), message));
 
-		return msg;
+		return message;
 	}
 
 	/**
@@ -409,7 +401,6 @@ public final class ChatCeaser {
 	 * @throws PacketCancelledException
 	 *             if the packet should be cancelled
 	 */
-
 	public void parsePacketRules(Player player, Object input) throws PacketCancelledException {
 		if (input instanceof JSONObject) {
 			final JSONObject objects = (JSONObject) input;
@@ -450,91 +441,88 @@ public final class ChatCeaser {
 			Common.debug("Skipping unknown object: " + input.getClass().getTypeName());
 	}
 
-	public String parsePacketRulesRaw(Player player, String msg) throws PacketCancelledException {
-		if (msg == null || msg.isEmpty())
+	public String parsePacketRulesRaw(Player player, String message) throws PacketCancelledException {
+		if (message == null || message.isEmpty())
 			return "";
 
-		Common.debug("Checking Packet rules against: " + msg);
+		Common.debug("Checking packet rules against: " + message);
 
 		for (final Rule standardrule : rulesMap.get(PACKET))
-			if (standardrule.matches(Common.stripColors(msg.toLowerCase()))) {
+			if (standardrule.matches(Common.stripColors(message.toLowerCase()))) {
 				final PacketRule rule = standardrule.getPacketRule();
 				Objects.requireNonNull(rule, "Malformed rule - must be a packet rule: " + standardrule);
 
-				if (!rule.doNotVerboe()) {
+				if (!rule.isNotVerbosing()) {
 					Common.verbose("&f*--------- ChatControl rule match: chat packet ---------");
 					Common.verbose("&fMATCH&b: &r" + (Settings.DEBUG ? rule : standardrule.getMatch()));
-					Common.verbose("&fCATCH&b: &r" + msg);
+					Common.verbose("&fCATCH&b: &r" + message);
 				}
 
-				final String origin = msg;
+				final String origin = message;
 				final String world = player.getWorld().getName();
 
-				if (rule.deny()) {
-					if (!rule.doNotVerboe())
+				if (rule.isDenyingPacket()) {
+					if (!rule.isNotVerbosing())
 						Common.verbose("&fPacket sending &ccancelled&f.");
 					throw new PacketCancelledException();
 				}
 
 				else if (rule.getRewritePerWorld() != null && rule.getRewritePerWorld().get(world) != null) {
-					msg = Common.colorize(replaceVariables(player, standardrule, rule.getRewritePerWorld().get(world), msg));
+					message = Common.colorize(replaceVariables(player, standardrule, rule.getRewritePerWorld().get(world), message));
 
-					if (msg.equalsIgnoreCase("none") || msg.equalsIgnoreCase("hidden")) {
-						if (!rule.doNotVerboe())
+					if (message.equalsIgnoreCase("none") || message.equalsIgnoreCase("hidden")) {
+						if (!rule.isNotVerbosing())
 							Common.verbose("&fPacket sending &ccancelled&f.");
 						throw new PacketCancelledException();
 					}
 				}
 
 				else if (rule.getRewritePacket() != null)
-					msg = Common.colorize(replaceVariables(player, standardrule, rule.getRewritePacket(), msg));
+					message = Common.colorize(replaceVariables(player, standardrule, rule.getRewritePacket(), message));
 
 				else if (rule.getReplacePacket() != null)
-					msg = Common.colorize(Common.replaceMatch(standardrule.getMatch(), msg, rule.getReplacePacket()));
+					message = Common.colorize(Common.replaceMatch(standardrule.getMatch(), message, rule.getReplacePacket()));
 
 				// msg = msg.replaceAll(standardrule.getMatch(),
 				// Common.colorize(rule.getReplacePacket()));
 
-				if (!origin.equals(msg) && !rule.doNotVerboe())
-					Common.verbose("&fFINAL&a: &r" + msg);
+				if (!origin.equals(message) && !rule.isNotVerbosing())
+					Common.verbose("&fFINAL&a: &r" + message);
 			}
 
-		return msg;
+		return message;
 	}
 
 	/**
 	 * Replaces rule ID (if set) and handler name (if set) in the message and player
 	 * and world name.
 	 */
-	private String replaceVariables(Player player, Handler handler, String message, String msgReplacement) {
-		return replaceVariables0(player, handler.getRuleID(), message, msgReplacement).replace("{handler}", handler.getName());
+	private String replaceVariables(Player player, Handler handler, String message, String messageReplacement) {
+		return replaceVariables0(player, handler.getRuleId(), message, messageReplacement).replace("{handler}", handler.getName());
 	}
 
 	/**
 	 * Replaces rule ID (if set) in the message and player and world name.
 	 */
-	private String replaceVariables(Player player, Rule rule, String message, String msgReplacement) {
-		return replaceVariables0(player, rule.getId(), message, msgReplacement);
+	private String replaceVariables(Player player, Rule rule, String message, String messageReplacement) {
+		return replaceVariables0(player, rule.getId(), message, messageReplacement);
 	}
 
-	private String replaceVariables0(Player pl, String ruleId, String message, String msgReplacement) {
-		return message.replace("{ruleID}", ruleId != null ? ruleId : "UNSET").replace("{player}", pl.getName()).replace("{world}", pl.getWorld().getName()).replace("{message}", msgReplacement);
+	private String replaceVariables0(Player player, String ruleId, String message, String messageReplacement) {
+		return message.replace("{ruleID}", ruleId != null ? ruleId : "UNSET").replace("{player}", player.getName()).replace("{world}", player.getWorld().getName()).replace("{message}", messageReplacement);
 	}
 
 	/**
 	 * Get one colorized string with replaced rule variables from a list.
 	 *
-	 * @param rule
-	 *            the rule variables will be taken from
-	 * @param messages
-	 *            the messages to choose from
-	 * @return a colorized string with replaced variables randomly chosen from
-	 *         strings
+	 * @param rule the rule variables will be taken from
+	 * @param messages the messages to choose from
+	 * @return a colorized string with replaced variables randomly chosen from strings
 	 */
 	private String getRandomString(Player player, Rule rule, String[] messages, String msgReplacement) {
 		Common.checkBoolean(messages.length > 0, "Got empty message '" + String.join(", ", messages) + "'");
 
-		final String randomMsg = messages[rand.nextInt(messages.length)];
+		final String randomMsg = messages[random.nextInt(messages.length)];
 		return Common.colorize(replaceVariables(player, rule, randomMsg, msgReplacement));
 	}
 
@@ -543,21 +531,21 @@ public final class ChatCeaser {
 	}
 }
 
-class HandlerLoader {
+final class HandlerLoader {
 
-	private static YamlConfiguration cfg;
+	private static YamlConfiguration config;
 	private static String sectionName;
 
-	static Handler loadHandler(String name, String ruleID) {
+	static Handler loadHandler(String name, String ruleId) {
 		final File file = Writer.extract("handlers.yml");
-		cfg = YamlConfiguration.loadConfiguration(file);
+		config = YamlConfiguration.loadConfiguration(file);
 
-		if (!cfg.isConfigurationSection(name))
+		if (!config.isConfigurationSection(name))
 			throw new NullPointerException("Unknown handler: " + name);
 
-		sectionName = cfg.getConfigurationSection(name).getName();
+		sectionName = config.getConfigurationSection(name).getName();
 
-		final Handler handler = new Handler(sectionName, ruleID);
+		final Handler handler = new Handler(sectionName, ruleId);
 		String message;
 
 		message = getString("Bypass_With_Permission");
@@ -566,15 +554,15 @@ class HandlerLoader {
 
 		message = getString("Player_Warn_Message");
 		if (isValid(message))
-			handler.setPlayerWarnMsg(message);
+			handler.setPlayerWarningMessage(message);
 
 		message = getString("Broadcast_Message");
 		if (isValid(message))
-			handler.setBroadcastMsg(message);
+			handler.setBroadcastMessage(message);
 
 		message = getString("Staff_Alert_Message");
 		if (isValid(message))
-			handler.setStaffAlertMsg(message);
+			handler.setStaffAlertMessage(message);
 
 		message = getString("Staff_Alert_Permission");
 		if (isValid(message))
@@ -582,32 +570,32 @@ class HandlerLoader {
 
 		message = getString("Console_Message");
 		if (isValid(message))
-			handler.setConsoleMsg(message);
+			handler.setConsoleMessage(message);
 
 		message = getString("Write_To_File");
 		if (isValid(message))
 			handler.setWriteToFileName(message);
 
-		final Boolean block = cfg.getBoolean(sectionName + ".Block_Message");
+		final Boolean block = config.getBoolean(sectionName + ".Block_Message");
 		if (block != null && block)
-			handler.setBlockMessage();
+			handler.setMessageBlocked();
 
 		message = getString("Replace_Word");
 		if (isValid(message))
-			handler.setMsgReplacement(message);
+			handler.setMessageReplacement(message);
 
 		message = getString("Replace_Whole");
 		if (isValid(message))
 			handler.setRewriteTo(message);
 
 		List<String> list;
-		if (cfg.isSet(sectionName + ".Execute_Commands")) {
-			list = cfg.getStringList(sectionName + ".Execute_Commands");
+		if (config.isSet(sectionName + ".Execute_Commands")) {
+			list = config.getStringList(sectionName + ".Execute_Commands");
 			handler.setCommandsToExecute(list);
 		}
 
-		if (cfg.isSet(sectionName + ".Ignored_In_Commands")) {
-			list = cfg.getStringList(sectionName + ".Ignored_In_Commands");
+		if (config.isSet(sectionName + ".Ignored_In_Commands")) {
+			list = config.getStringList(sectionName + ".Ignored_In_Commands");
 			handler.setIgnoredInCommands(list);
 		}
 
@@ -616,14 +604,14 @@ class HandlerLoader {
 		return handler;
 	}
 
-	private static boolean isValid(String msg) {
-		return msg != null && !msg.isEmpty() && !msg.equalsIgnoreCase("none");
+	private static boolean isValid(String message) {
+		return message != null && !message.isEmpty() && !message.equalsIgnoreCase("none");
 	}
 
 	private static String getString(String path) {
-		final String msg = cfg.getString(sectionName + "." + path);
+		final String message = config.getString(sectionName + "." + path);
 
-		return msg != null && !msg.isEmpty() && !msg.equalsIgnoreCase("none") ? msg : null;
+		return message != null && !message.isEmpty() && !message.equalsIgnoreCase("none") ? message : null;
 	}
 }
 
@@ -631,12 +619,12 @@ class HandlerLoader {
  * Caches last messages displayed to the player and broadcasted to everyone,
  * prevents duplicate displaying when multiple rules are violated at once.
  */
-class HandlerCache {
-	static String lastWarnMsg = "";
-	static String lastBroadcastMsg = "";
+final class HandlerCache {
+	static String lastWarnMessage = "";
+	static String lastBroadcastMessage = "";
 
 	static void reset() {
-		lastWarnMsg = "";
-		lastBroadcastMsg = "";
+		lastWarnMessage = "";
+		lastBroadcastMessage = "";
 	}
 }

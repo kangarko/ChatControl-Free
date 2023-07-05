@@ -5,7 +5,13 @@ import java.util.Arrays;
 import org.mineacademy.chatcontrol.settings.ConfHelper.ChatMessage;
 import org.mineacademy.chatcontrol.util.Common;
 
-public class GroupOption {
+import lombok.Getter;
+
+/**
+ * Represents the different options a group can have.
+ */
+@Getter
+public final class GroupOption {
 
 	private final OptionType option;
 	private final Object value;
@@ -13,14 +19,6 @@ public class GroupOption {
 	private GroupOption(OptionType option, Object value) {
 		this.option = option;
 		this.value = value;
-	}
-
-	public OptionType getOption() {
-		return option;
-	}
-
-	public Object getValue() {
-		return value;
 	}
 
 	public enum OptionType {

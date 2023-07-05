@@ -13,6 +13,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 
+import lombok.Getter;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 
@@ -32,6 +33,7 @@ public final class CompatProvider {
 	 */
 	private static boolean isGetPlayersCollection = false;
 	private static boolean isGetHealthDouble = false;
+	@Getter
 	private static boolean bungeeApiPresent = true;
 	private static boolean hasSounds = true;
 	private static boolean newSoundClass = true;

@@ -12,8 +12,11 @@ import org.mineacademy.chatcontrol.group.GroupOption.OptionType;
 import org.mineacademy.chatcontrol.settings.ConfHelper.ChatMessage.Type;
 import org.mineacademy.chatcontrol.util.Common;
 
+/**
+ * A simple settings class managing settings.yml file.
+ */
 @SuppressWarnings("unused")
-public class Settings extends ConfHelper {
+public final class Settings extends ConfHelper {
 
 	private Settings() {
 	}
@@ -127,9 +130,9 @@ public class Settings extends ConfHelper {
 				pathPrefix("Chat.Formatter");
 
 				ENABLED = getBoolean("Enabled", false);
-				FORMAT = getString("Message_Format", "{pl_prefix}{player}:{pl_suffix} {message}");
-				GLOBAL_FORMAT = getString("Global_Message_Format", "&8[GLOBAL]&f {pl_prefix}{player}:{pl_suffix} {message}");
-				SPY_FORMAT = getString("Spy_Message_Format", "&8SPY: [{world}&8]&f {pl_prefix}{player}:{pl_suffix} {message}");
+				FORMAT = getString("Message_Format", "{player_prefix}{player}:{player_suffix} {message}");
+				GLOBAL_FORMAT = getString("Global_Message_Format", "&8[GLOBAL]&f {player_prefix}{player}:{player_suffix} {message}");
+				SPY_FORMAT = getString("Spy_Message_Format", "&8SPY: [{world}&8]&f {player_prefix}{player}:{player_suffix} {message}");
 				RANGED_MODE = getBoolean("Ranged_Mode", false);
 				RANGE = getDouble("Range", 100);
 			}
@@ -323,7 +326,6 @@ public class Settings extends ConfHelper {
 
 	public static class Rules {
 		public static boolean CHECK_CHAT, CHECK_COMMANDS, CHECK_SIGNS, CHECK_PACKETS;
-		public static boolean UNPACK_PACKET_MESSAGE;
 
 		private static void init() {
 			pathPrefix("Rules");
@@ -332,7 +334,6 @@ public class Settings extends ConfHelper {
 			CHECK_COMMANDS = getBoolean("Check_Commands", true);
 			CHECK_SIGNS = getBoolean("Check_Signs", true);
 			CHECK_PACKETS = getBoolean("Check_Packets", true);
-			UNPACK_PACKET_MESSAGE = getBoolean("Packets.Deserialize_Json", true);
 		}
 	}
 

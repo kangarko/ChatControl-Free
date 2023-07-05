@@ -6,19 +6,19 @@ import java.util.logging.LogRecord;
 import org.mineacademy.chatcontrol.settings.Settings;
 import org.mineacademy.chatcontrol.util.Common;
 
-public class ConsoleFilter implements Filter {
+public final class ConsoleFilter implements Filter {
 
 	@Override
 	public boolean isLoggable(LogRecord record) {
-		final String msg = record.getMessage();
+		final String message = record.getMessage();
 
-		if (msg == null || msg.isEmpty())
+		if (message == null || message.isEmpty())
 			return false;
 
 		for (final String ignored : Settings.Console.FILTER_MESSAGES)
-			if (msg.equalsIgnoreCase(ignored) || msg.toLowerCase().contains(ignored.toLowerCase()))
+			if (message.equalsIgnoreCase(ignored) || message.toLowerCase().contains(ignored.toLowerCase()))
 				return false;
-			else if (Common.isRegexMatch(ignored, msg))
+			else if (Common.isRegexMatch(ignored, message))
 				return false;
 
 		return true;

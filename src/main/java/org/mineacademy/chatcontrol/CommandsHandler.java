@@ -15,10 +15,10 @@ import org.mineacademy.chatcontrol.util.Common;
 import org.mineacademy.chatcontrol.util.CompatProvider;
 import org.mineacademy.chatcontrol.util.Permissions;
 
-public class CommandsHandler implements CommandExecutor {
+public final class CommandsHandler implements CommandExecutor {
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		try {
 			handleCommand(sender, args);
 
@@ -36,7 +36,7 @@ public class CommandsHandler implements CommandExecutor {
 		if (args.length == 0) {
 			Common.tell(sender,
 					"&8-----------------------------------------------------|",
-					"&3ChatControl &8// &7Running &Fv" + ChatControl.instance().getDescription().getVersion(),
+					"&3ChatControl &8// &7Running &Fv" + ChatControl.getInstance().getDescription().getVersion(),
 					"&3ChatControl &8// &7By &Fkangarko&7 \u00A9 2013 - 2019");
 			return;
 		}
@@ -55,18 +55,18 @@ public class CommandsHandler implements CommandExecutor {
 			checkPerm(sender, Permissions.Commands.MUTE);
 
 			if (param.isEmpty())
-				Common.broadcastIfEnabled(Settings.Mute.BROADCAST, sender, ChatControl.muted ? Localization.MUTE_UNMUTE_BROADCAST : Localization.MUTE_BROADCAST, reason);
+				Common.broadcastIfEnabled(Settings.Mute.BROADCAST, sender, ChatControl.isMuted() ? Localization.MUTE_UNMUTE_BROADCAST : Localization.MUTE_BROADCAST, reason);
 			else if ((param.equals("-silent") || param.equals("-s")) && Common.hasPermission(sender, Permissions.Commands.MUTE_SILENT)) {
 				// do nothing
 			} else if ((param.equals("-anonymous") || param.equals("-a")) && Common.hasPermission(sender, Permissions.Commands.MUTE_ANONYMOUS))
-				Common.broadcastIfEnabled(Settings.Mute.BROADCAST, sender, ChatControl.muted ? Localization.MUTE_ANON_UNMUTE_BROADCAST : Localization.MUTE_ANON_BROADCAST, reason);
+				Common.broadcastIfEnabled(Settings.Mute.BROADCAST, sender, ChatControl.isMuted() ? Localization.MUTE_ANON_UNMUTE_BROADCAST : Localization.MUTE_ANON_BROADCAST, reason);
 			else if (param.startsWith("-")) {
 				Common.tell(sender, Localization.WRONG_PARAMETERS);
 				return;
 			}
 
-			Common.tell(sender, ChatControl.muted ? Localization.MUTE_UNMUTE_SUCCESS : Localization.MUTE_SUCCESS);
-			ChatControl.muted = !ChatControl.muted;
+			Common.tell(sender, ChatControl.isMuted() ? Localization.MUTE_UNMUTE_SUCCESS : Localization.MUTE_SUCCESS);
+			ChatControl.setMuted(!ChatControl.isMuted());
 		}
 
 		/**
@@ -90,14 +90,14 @@ public class CommandsHandler implements CommandExecutor {
 			final CommandSender Sender = sender;
 			if (param.isEmpty())
 				// Workaround; delay the message so it's displayed after blank lines.
-				Bukkit.getScheduler().scheduleSyncDelayedTask(ChatControl.instance(), () -> {
+				Bukkit.getScheduler().scheduleSyncDelayedTask(ChatControl.getInstance(), () -> {
 					Common.broadcastIfEnabled(Settings.Clear.BROADCAST, Sender, Localization.CLEAR_BROADCAST, Reason);
 				}, 2);
 
 			else if ((param.equals("-silent") || param.equals("-s")) && Common.hasPermission(sender, Permissions.Commands.CLEAR_SILENT)) {
 				// broadcast nothing
 			} else if ((param.equals("-anonymous") || param.equals("-a")) && Common.hasPermission(sender, Permissions.Commands.CLEAR_ANONYMOUS))
-				Bukkit.getScheduler().scheduleSyncDelayedTask(ChatControl.instance(), () -> {
+				Bukkit.getScheduler().scheduleSyncDelayedTask(ChatControl.getInstance(), () -> {
 					Common.broadcastIfEnabled(Settings.Clear.BROADCAST, Sender, Localization.CLEAR_ANON_BROADCAST, Reason);
 				}, 2);
 
@@ -131,7 +131,7 @@ public class CommandsHandler implements CommandExecutor {
 			final String fakePlayer = args.length == 3 ? Common.colorize(args[2]) : sender.getName();
 
 			final Player onlineFakePlayer = Bukkit.getPlayer(fakePlayer);
-			final PlayerCache fakePlayerData = onlineFakePlayer != null && onlineFakePlayer.isOnline() ? ChatControl.getDataFor(onlineFakePlayer) : null;
+			final PlayerCache fakePlayerData = onlineFakePlayer != null && onlineFakePlayer.isOnline() ? ChatControl.getCache(onlineFakePlayer) : null;
 
 			ChatMessage fakeMessage;
 			GroupSpecificHelper<ChatMessage> messageHelper;
@@ -186,7 +186,7 @@ public class CommandsHandler implements CommandExecutor {
 		else if ("reload".equals(argument) || "znovunacitat".equals(argument) || "r".equals(argument) || "rl".equals("argument")) {
 			checkPerm(sender, Permissions.Commands.RELOAD);
 
-			final ChatControl instance = ChatControl.instance();
+			final ChatControl instance = ChatControl.getInstance();
 			try {
 				ConfHelper.loadAll();
 				instance.onReload();
@@ -207,7 +207,7 @@ public class CommandsHandler implements CommandExecutor {
 
 			Common.tell(sender,
 					" ",
-					"&3  ChatControl &f(v" + ChatControl.instance().getDescription().getVersion() + ")",
+					"&3  ChatControl &f(v" + ChatControl.getInstance().getDescription().getVersion() + ")",
 					"&2  [] &f= optional arguments (use only 1 at once)",
 					"&6  <> &f= required arguments",
 					" ",
@@ -230,8 +230,8 @@ public class CommandsHandler implements CommandExecutor {
 		if (onlinePlayer != null && onlinePlayer.isOnline()) {
 			message = message.replace("{player}", onlinePlayer.getName());
 
-			if (ChatControl.instance().formatter != null)
-				message = ChatControl.instance().formatter.replacePlayerVariables(onlinePlayer, message);
+			if (ChatControl.getInstance().getFormatter() != null)
+				message = ChatControl.getInstance().getFormatter().replacePlayerVariables(onlinePlayer, message);
 		}
 
 		return Common.colorize(message).replace("{player}", fallbackPlayer);

@@ -108,16 +108,16 @@ Chat:
 
     # Default chat message format.
     # The prefix has to include the 'pl_' because without it the plugin's prefix name will be given instead.
-    Message_Format: '{pl_prefix}{player}:{pl_suffix} {message}'
+    Message_Format: '{player_prefix}{player}:{player_suffix} {message}'
 
     # If Ranged_Mode is enabled, this format is used when a message is printed to the global chat by prefixing it with '!'
     # NB: Player must also have the 'chatcontrol.chat.global' permission to speak to the global chat.
-    Global_Message_Format: '&8[GLOBAL]&f {pl_prefix}{player}:{pl_suffix} {message}'
+    Global_Message_Format: '&8[GLOBAL]&f {player_prefix}{player}:{player_suffix} {message}'
 
     # If Ranged_Mode is enabled, this format is used when a player with 'chatcontrol.chat.spy' permission receives ranged message
     # that he normally should't see.
     # To spy on private messages (e.g. /tell or /mail), use Essentials /socialspy feature.
-    Spy_Message_Format: '&8SPY: [{world}&8]&f {pl_prefix}{player}:{pl_suffix} {message}'
+    Spy_Message_Format: '&8SPY: [{world}&8]&f {player_prefix}{player}:{player_suffix} {message}'
 
     # If enabled and a players write a message, it will only be sent to players
     # within distance of the player specified in Range
@@ -149,8 +149,8 @@ Clear:
 
 Messages:
   # Use 'default' to not modify, 'hide' to not display or write a custom message
-  # Variables: {player} {pl_suffix} {pl_prefix} (when Vault is installed)
-  # {countrycode} and {countryname} when AuthMe is installed
+  # Variables: {player} {player_suffix} {player_prefix} (when Vault is installed)
+  #            and {country_code} and {country_name} 
   Join: default
   Quit: default
   Kick: default
@@ -251,25 +251,17 @@ Rules:
   # Needs ProtocolLib. If enabled, messages will be checked against rules/packets.txt
   # which supports replacing even bukkit / plugin messages.
   # Won't work on Minecraft 1.19 and up. Upgrade to mineacademy.org/chatcontrol-red for new MC support.
-  Check_Packets: true
-  
-  Packets:
-  
-    # Since Minecraft 1.7x, every message is a chat component. Unpacking it will bring better/more expected results.
-    # Disable if experiencing issues with chat formatting plugins. Messages with hover/click effects won't be checked.
-    Deserialize_Json: true
+  Check_Packets: false
 
 Console:
   Filter:
-    # Filter console messages specified below?
-    Enabled: true
+    # Filter console messages specified below? *Some messages you filter can conflict with Multicraft panels!!*
+    Enabled: false
     
     # Remove certain messages from the server console.
     # Does not need to be whole message, just a part of the message you want to block.
     Filter_Console_Messages:
     - Reached end of stream for
-    - Connection reset
-    - lost connection
 
 Signs:
   Duplication:
@@ -396,7 +388,7 @@ Reset_Cache_On_Quit: false
 # Before that, please ensure you've saved the file in an encoding that supports new line operator.
 Enforce_New_Line: false
 
-# Search for players geographical information for {countryname} and {countrycode} variables?
+# Search for players geographical information for {country_name} and {country_code} variables?
 # Disable to improve performance a tiny bit.
 Lookup_Geo_Data: true
 

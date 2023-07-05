@@ -18,57 +18,61 @@ import org.mineacademy.chatcontrol.settings.Localization;
 import org.mineacademy.chatcontrol.settings.Settings;
 import org.mineacademy.chatcontrol.util.Common;
 import org.mineacademy.chatcontrol.util.CompatProvider;
+import org.mineacademy.chatcontrol.util.GeoAPI;
 import org.mineacademy.chatcontrol.util.Permissions;
 
-public class PlayerListener implements Listener {
+/**
+ * Listens for player-related events.
+ */
+public final class PlayerListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
-	public void onPreLogin(AsyncPlayerPreLoginEvent e) {
-		ChatControl.getGeoFor(e.getAddress());
+	public void onPreLogin(AsyncPlayerPreLoginEvent event) {
+		GeoAPI.getResponse(event.getAddress());
 	}
 
 	@EventHandler(ignoreCancelled = true)
-	public void onLogin(PlayerLoginEvent e) {
-		final PlayerCache plData = ChatControl.getDataFor(e.getPlayer());
-		final long difference = System.currentTimeMillis() / 1000L - plData.lastLogin;
+	public void onLogin(PlayerLoginEvent event) {
+		final PlayerCache cache = ChatControl.getCache(event.getPlayer());
+		final long difference = System.currentTimeMillis() / 1000L - cache.lastLogin;
 
-		if (plData.lastLogin > 0 && difference < Settings.AntiBot.REJOIN_TIME) {
+		if (cache.lastLogin > 0 && difference < Settings.AntiBot.REJOIN_TIME) {
 			final long time = Settings.AntiBot.REJOIN_TIME - difference;
-			final String msg = Common.colorize(Localization.ANTIBOT_REJOIN_WAIT_MESSAGE.replace("{time}", String.valueOf(time)).replace("{seconds}", Localization.Parts.SECONDS.formatNumbers(time)));
-			msg.split("\n");
+			final String message = Common.colorize(Localization.ANTIBOT_REJOIN_WAIT_MESSAGE.replace("{time}", String.valueOf(time)).replace("{seconds}", Localization.Parts.SECONDS.formatNumbers(time)));
 
-			e.disallow(org.bukkit.event.player.PlayerLoginEvent.Result.KICK_OTHER, msg);
+			message.split("\n");
+			event.disallow(org.bukkit.event.player.PlayerLoginEvent.Result.KICK_OTHER, message);
 		}
 	}
 
 	@EventHandler
-	public void onJoin(PlayerJoinEvent e) {
-		final Player player = e.getPlayer();
+	public void onJoin(PlayerJoinEvent event) {
+		final Player player = event.getPlayer();
 		final long now = System.currentTimeMillis() / 1000L;
-		final PlayerCache plData = ChatControl.getDataFor(player);
+		final PlayerCache cache = ChatControl.getCache(player);
 
 		if (!Common.hasPermission(player, Permissions.Bypass.REJOIN))
-			plData.lastLogin = now;
+			cache.lastLogin = now;
 
-		plData.loginLocation = player.getLocation();
+		cache.loginLocation = player.getLocation();
 
 		// Developer easter egg
 		if (player.getName().equals("kangarko"))
-			Common.tellLater(player, 30, Common.consoleLine(), "&e Na serveri je nainstalovany ChatControl v" + ChatControl.instance().getDescription().getVersion() + "!", Common.consoleLine());
+			Common.tellLater(player, 30, Common.consoleLine(), "&e Na serveri je nainstalovany ChatControl v" + ChatControl.getInstance().getDescription().getVersion() + "!", Common.consoleLine());
 
-		if (Common.isVanishedMeta(player) || ChatControl.muted && Settings.Mute.SILENT_JOIN) {
-			e.setJoinMessage(null);
+		if (Common.isVanishedMeta(player) || ChatControl.isMuted() && Settings.Mute.SILENT_JOIN) {
+			event.setJoinMessage(null);
 			return;
 		}
 
-		final ChatMessage joinMessage = Settings.Messages.JOIN.getFor(plData);
+		final ChatMessage joinMessage = Settings.Messages.JOIN.getFor(cache);
 
 		switch (joinMessage.getType()) {
 			case HIDDEN:
-				e.setJoinMessage(null);
+				event.setJoinMessage(null);
 				break;
 			case CUSTOM:
-				e.setJoinMessage(replacePlayerVariables(joinMessage.getMessage(), player));
+				event.setJoinMessage(replacePlayerVariables(joinMessage.getMessage(), player));
 				break;
 			default:
 				break;
@@ -76,35 +80,35 @@ public class PlayerListener implements Listener {
 	}
 
 	@EventHandler
-	public void onQuit(PlayerQuitEvent e) {
-		handleLeaveMessage(e);
+	public void onQuit(PlayerQuitEvent event) {
+		handleLeaveMessage(event);
 
 		if (Settings.RESET_CACHE_ON_QUIT)
-			ChatControl.removeDataFor(e.getPlayer());
+			ChatControl.removeCache(event.getPlayer());
 	}
 
-	private void handleLeaveMessage(PlayerQuitEvent e) {
-		final Player player = e.getPlayer();
-		final PlayerCache plData = ChatControl.getDataFor(player);
+	private void handleLeaveMessage(PlayerQuitEvent event) {
+		final Player player = event.getPlayer();
+		final PlayerCache cache = ChatControl.getCache(player);
 
 		if (Settings.Messages.QUIT_ONLY_WHEN_LOGGED && !HookManager.isLogged(player)) {
-			e.setQuitMessage(null);
+			event.setQuitMessage(null);
 			return;
 		}
 
-		if (Common.isVanishedMeta(player) || ChatControl.muted && Settings.Mute.SILENT_QUIT) {
-			e.setQuitMessage(null);
+		if (Common.isVanishedMeta(player) || ChatControl.isMuted() && Settings.Mute.SILENT_QUIT) {
+			event.setQuitMessage(null);
 			return;
 		}
 
-		final ChatMessage leaveMessage = Settings.Messages.QUIT.getFor(plData);
+		final ChatMessage leaveMessage = Settings.Messages.QUIT.getFor(cache);
 
 		switch (leaveMessage.getType()) {
 			case HIDDEN:
-				e.setQuitMessage(null);
+				event.setQuitMessage(null);
 				break;
 			case CUSTOM:
-				e.setQuitMessage(replacePlayerVariables(leaveMessage.getMessage(), player));
+				event.setQuitMessage(replacePlayerVariables(leaveMessage.getMessage(), player));
 				break;
 			default:
 				break;
@@ -113,37 +117,37 @@ public class PlayerListener implements Listener {
 	}
 
 	@EventHandler(ignoreCancelled = true)
-	public void onKick(PlayerKickEvent e) {
-		final Player pl = e.getPlayer();
-		final String reason = e.getReason();
+	public void onKick(PlayerKickEvent event) {
+		final Player player = event.getPlayer();
+		final String reason = event.getReason();
 
-		if (Common.hasPermission(pl, Permissions.Bypass.SPAM_KICK) && (reason.equals("disconnect.spam") || reason.equals("Kicked for spamming"))) {
-			e.setCancelled(true);
+		if (Common.hasPermission(player, Permissions.Bypass.SPAM_KICK) && (reason.equals("disconnect.spam") || reason.equals("Kicked for spamming"))) {
+			event.setCancelled(true);
 			return;
 		}
 
-		if (ChatControl.muted && Settings.Mute.SILENT_KICK) {
-			e.setLeaveMessage(null);
+		if (ChatControl.isMuted() && Settings.Mute.SILENT_KICK) {
+			event.setLeaveMessage(null);
 			return;
 		}
 
-		final PlayerCache plData = ChatControl.getDataFor(pl);
-		final ChatMessage kickMessage = Settings.Messages.KICK.getFor(plData);
+		final PlayerCache cache = ChatControl.getCache(player);
+		final ChatMessage kickMessage = Settings.Messages.KICK.getFor(cache);
 
 		switch (kickMessage.getType()) {
 			case HIDDEN:
 
 				try {
-					e.setLeaveMessage(null);
+					event.setLeaveMessage(null);
 
 				} catch (final Throwable t) {
 					// MC 1.16 on Paper with Adventure
-					e.setLeaveMessage("");
+					event.setLeaveMessage("");
 				}
 
 				break;
 			case CUSTOM:
-				e.setLeaveMessage(replacePlayerVariables(kickMessage.getMessage(), pl));
+				event.setLeaveMessage(replacePlayerVariables(kickMessage.getMessage(), player));
 				break;
 			default:
 				break;
@@ -151,56 +155,56 @@ public class PlayerListener implements Listener {
 	}
 
 	@EventHandler
-	public void onDeath(PlayerDeathEvent e) {
-		if (ChatControl.muted && Settings.Mute.SILENT_DEATHS)
-			e.setDeathMessage(null);
+	public void onDeath(PlayerDeathEvent event) {
+		if (ChatControl.isMuted() && Settings.Mute.SILENT_DEATHS)
+			event.setDeathMessage(null);
 	}
 
 	@EventHandler(ignoreCancelled = true)
-	public void onSignChange(SignChangeEvent e) {
+	public void onSignChange(SignChangeEvent event) {
 		if (CompatProvider.getOnlinePlayers().size() < Settings.MIN_PLAYERS_TO_ENABLE)
 			return;
 
-		final Player pl = e.getPlayer();
-		final PlayerCache plData = ChatControl.getDataFor(pl);
-		String msg = e.getLine(0) + e.getLine(1) + e.getLine(2) + e.getLine(3);
+		final Player player = event.getPlayer();
+		final PlayerCache cache = ChatControl.getCache(player);
+		String message = event.getLine(0) + event.getLine(1) + event.getLine(2) + event.getLine(3);
 
-		msg = msg.trim();
+		message = message.trim();
 
-		if (Settings.Signs.DUPLICATION_CHECK && plData.lastSignText.equalsIgnoreCase(msg) && !Common.hasPermission(pl, Permissions.Bypass.SIGN_DUPLICATION)) {
+		if (Settings.Signs.DUPLICATION_CHECK && cache.lastSignText.equalsIgnoreCase(message) && !Common.hasPermission(player, Permissions.Bypass.SIGN_DUPLICATION)) {
 			if (Settings.Signs.DUPLICATION_ALERT_STAFF)
 				for (final Player online : CompatProvider.getOnlinePlayers())
-					if (!online.getName().equals(pl.getName()) && Common.hasPermission(online, Permissions.Notify.SIGN_DUPLICATION))
-						Common.tell(online, Localization.SIGNS_DUPLICATION_STAFF.replace("{message}", msg), pl.getName());
+					if (!online.getName().equals(player.getName()) && Common.hasPermission(online, Permissions.Notify.SIGN_DUPLICATION))
+						Common.tell(online, Localization.SIGNS_DUPLICATION_STAFF.replace("{message}", message), player.getName());
 
-			Common.tell(pl, Localization.SIGNS_DUPLICATION);
-			e.setCancelled(true);
+			Common.tell(player, Localization.SIGNS_DUPLICATION);
+			event.setCancelled(true);
 
 			if (Settings.Signs.DROP_SIGN)
-				e.getBlock().breakNaturally();
+				event.getBlock().breakNaturally();
 
 			return;
 		}
 
-		if (Settings.Rules.CHECK_SIGNS && !Common.hasPermission(e.getPlayer(), Permissions.Bypass.RULES)) {
-			ChatControl.instance().chatCeaser.parseRules(e, pl, msg);
+		if (Settings.Rules.CHECK_SIGNS && !Common.hasPermission(event.getPlayer(), Permissions.Bypass.RULES)) {
+			ChatControl.getInstance().getChatCeaser().parseRules(event, player, message);
 
-			if (e.isCancelled()) {
-				Common.tellLater(pl, 2, Localization.SIGNS_BROKE); // display at the bottom
-				e.setCancelled(true);
+			if (event.isCancelled()) {
+				Common.tellLater(player, 2, Localization.SIGNS_BROKE); // display at the bottom
+				event.setCancelled(true);
 
 				if (Settings.Signs.DROP_SIGN)
-					e.getBlock().breakNaturally();
+					event.getBlock().breakNaturally();
 			}
 		}
 	}
 
-	private String replacePlayerVariables(String msg, Player pl) {
-		msg = msg.replace("{player}", pl.getName());
+	private String replacePlayerVariables(String message, Player player) {
+		message = message.replace("{player}", player.getName());
 
-		if (ChatControl.instance().formatter != null)
-			msg = ChatControl.instance().formatter.replacePlayerVariables(pl, msg);
+		if (ChatControl.getInstance().getFormatter() != null)
+			message = ChatControl.getInstance().getFormatter().replacePlayerVariables(player, message);
 
-		return Common.colorize(msg);
+		return Common.colorize(message);
 	}
 }

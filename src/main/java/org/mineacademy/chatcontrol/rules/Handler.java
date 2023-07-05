@@ -5,12 +5,13 @@ import java.util.Objects;
 
 import org.mineacademy.chatcontrol.util.Common;
 
+import lombok.Getter;
+
 /**
- * Custom handler that handles message caught by {@link Rule}
- *
- * @author kangarko
+ * Custom handler that handles message caught by {@link Rule}.
  */
-public class Handler {
+@Getter
+public final class Handler {
 
 	/**
 	 * The name of the handler. It's automatically set from the handler name in
@@ -21,7 +22,7 @@ public class Handler {
 	/**
 	 * The id/name of the rule associated with this handler.
 	 */
-	private String ruleID = "UNSET";
+	private String ruleId = "UNSET";
 
 	/**
 	 * A permission that makes player bypass the checks.
@@ -37,16 +38,16 @@ public class Handler {
 	 * A message displayed to the player that triggered the handler. Set to 'none'
 	 * to disable.
 	 */
-	private String playerWarnMsg;
+	private String playerWarningMessage;
 
 	/**
 	 * A message broadcasted to everyone. Set to 'none' to disable.
 	 */
-	private String broadcastMsg;
+	private String broadcastMessage;
 
 	/**
-	 * People with specified permission will recieve {@link #staffAlertMsg}.
-	 * Functional only when {@link #staffAlertMsg} is 'none'.
+	 * People with specified permission will recieve {@link #staffAlertMessage}.
+	 * Functional only when {@link #staffAlertMessage} is 'none'.
 	 */
 	private String staffAlertPermission;
 
@@ -54,12 +55,12 @@ public class Handler {
 	 * A message broadcasted to staff with {@link #staffAlertPermission}. Set to
 	 * 'none' to disable.
 	 */
-	private String staffAlertMsg;
+	private String staffAlertMessage;
 
 	/**
 	 * A message logged in the server's console. Set to 'none' to disable.
 	 */
-	private String consoleMsg;
+	private String consoleMessage;
 
 	/**
 	 * A list of commands to be executed. Variables: {player} {message} Can be empty.
@@ -76,7 +77,7 @@ public class Handler {
 	 * Should the message be blocked from appearing? This cancels for instance
 	 * player chat event or command event.
 	 */
-	private boolean blockMessage = false;
+	private boolean messageBlocked = false;
 
 	/**
 	 * Economy. How much money to take from player? Requires Vault.
@@ -86,7 +87,7 @@ public class Handler {
 	/**
 	 * A replacement that replaces only part of the message caught by a rule.
 	 */
-	private String msgReplacement;
+	private String messageReplacement;
 
 	/**
 	 * A message that replaces the entire message caught by a rule.
@@ -104,15 +105,7 @@ public class Handler {
 		this.name = name;
 
 		if (ruleID != null)
-			this.ruleID = ruleID;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public String getRuleID() {
-		return ruleID;
+			this.ruleId = ruleID;
 	}
 
 	public void setBypassPermission(String bypassPermission) {
@@ -121,68 +114,40 @@ public class Handler {
 		this.bypassPermission = bypassPermission;
 	}
 
-	public String getBypassPermission() {
-		return bypassPermission;
-	}
-
-	public List<String> getIgnoredInCommands() {
-		return ignoredInCommands;
-	}
-
 	public void setIgnoredInCommands(List<String> ignoredInCommands) {
 		Common.checkBoolean(this.ignoredInCommands == null, "Ignored commands already set for: " + this);
 
 		this.ignoredInCommands = ignoredInCommands;
 	}
 
-	public void setPlayerWarnMsg(String playerWarnMsg) {
-		Common.checkBoolean(this.playerWarnMsg == null, "Player warn message already set for: " + this);
+	public void setPlayerWarningMessage(String playerWarnMsg) {
+		Common.checkBoolean(this.playerWarningMessage == null, "Player warn message already set for: " + this);
 
-		this.playerWarnMsg = playerWarnMsg;
+		this.playerWarningMessage = playerWarnMsg;
 	}
 
-	public String getPlayerWarnMsg() {
-		return playerWarnMsg;
+	public void setBroadcastMessage(String broadcastMsg) {
+		Common.checkBoolean(this.broadcastMessage == null, "Broadcast message already set for: " + this);
+
+		this.broadcastMessage = broadcastMsg;
 	}
 
-	public void setBroadcastMsg(String broadcastMsg) {
-		Common.checkBoolean(this.broadcastMsg == null, "Broadcast message already set for: " + this);
+	public void setStaffAlertMessage(String staffAlertMsg) {
+		Common.checkBoolean(this.staffAlertMessage == null, "Staff alert message already set for: " + this);
 
-		this.broadcastMsg = broadcastMsg;
-	}
-
-	public String getBroadcastMsg() {
-		return broadcastMsg;
-	}
-
-	public void setStaffAlertMsg(String staffAlertMsg) {
-		Common.checkBoolean(this.staffAlertMsg == null, "Staff alert message already set for: " + this);
-
-		this.staffAlertMsg = staffAlertMsg;
-	}
-
-	public String getStaffAlertMsg() {
-		return staffAlertMsg;
+		this.staffAlertMessage = staffAlertMsg;
 	}
 
 	public void setStaffAlertPermission(String staffAlertPermission) {
-		Objects.requireNonNull(staffAlertMsg, "Staff alert message is null, cannot get staff permission! Handler: " + this);
+		Objects.requireNonNull(staffAlertMessage, "Staff alert message is null, cannot get staff permission! Handler: " + this);
 
 		this.staffAlertPermission = staffAlertPermission;
 	}
 
-	public String getStaffAlertPermission() {
-		return staffAlertPermission;
-	}
+	public void setConsoleMessage(String consoleMsg) {
+		Common.checkBoolean(this.consoleMessage == null, "Console message already set for: " + this);
 
-	public void setConsoleMsg(String consoleMsg) {
-		Common.checkBoolean(this.consoleMsg == null, "Console message already set for: " + this);
-
-		this.consoleMsg = consoleMsg;
-	}
-
-	public String getConsoleMsg() {
-		return consoleMsg;
+		this.consoleMessage = consoleMsg;
 	}
 
 	public void setCommandsToExecute(List<String> commandsToExecute) {
@@ -191,32 +156,16 @@ public class Handler {
 		this.commandsToExecute = commandsToExecute;
 	}
 
-	public List<String> getCommandsToExecute() {
-		return commandsToExecute;
-	}
-
 	public void setWriteToFileName(String writeToFileName) {
 		Common.checkBoolean(this.writeToFileName == null, "Write to file path already set for: " + this);
 
 		this.writeToFileName = writeToFileName;
 	}
 
-	public String getWriteToFileName() {
-		return writeToFileName;
-	}
+	public void setMessageBlocked() {
+		Common.checkBoolean(!messageBlocked, "Message is already blocked for: " + this);
 
-	public void setBlockMessage() {
-		Common.checkBoolean(!blockMessage, "Message is already blocked for: " + this);
-
-		blockMessage = true;
-	}
-
-	public boolean blockMessage() {
-		return blockMessage;
-	}
-
-	public Double getFine() {
-		return fine;
+		messageBlocked = true;
 	}
 
 	public void parseFine(String line) {
@@ -230,26 +179,18 @@ public class Handler {
 		}
 	}
 
-	public void setMsgReplacement(String msgReplacement) {
-		Common.checkBoolean(!blockMessage, "Replacement cannot be defined when the message is blocked: " + this);
+	public void setMessageReplacement(String msgReplacement) {
+		Common.checkBoolean(!messageBlocked, "Replacement cannot be defined when the message is blocked: " + this);
 		Common.checkBoolean(rewriteTo == null, "Whole message replacement already defined for: " + this);
 
-		this.msgReplacement = msgReplacement;
-	}
-
-	public String getMsgReplacement() {
-		return msgReplacement;
+		this.messageReplacement = msgReplacement;
 	}
 
 	public void setRewriteTo(String wholeMsgReplacement) {
-		Common.checkBoolean(!blockMessage, "Whole replacement cannot be defined when the message is blocked: " + this);
-		Common.checkBoolean(msgReplacement == null, "Part message replacement already defined for: " + this);
+		Common.checkBoolean(!messageBlocked, "Whole replacement cannot be defined when the message is blocked: " + this);
+		Common.checkBoolean(messageReplacement == null, "Part message replacement already defined for: " + this);
 
 		rewriteTo = wholeMsgReplacement;
-	}
-
-	public String getRewriteTo() {
-		return rewriteTo;
 	}
 
 	private String printCommands() {
@@ -262,8 +203,9 @@ public class Handler {
 
 	@Override
 	public String toString() {
-		return Common.stripColors("    Handler{\n" + "        Name: \'" + name + "\'\n" + (ruleID != null ? "        Rule ID: " + ruleID + "\n" : "") + (ignoredInCommands != null ? "        Ignored In Commands: " + ignoredInCommands + "\n" : "") + (bypassPermission != null ? "        Bypass Permission: \'" + bypassPermission + "\'\n" : "") + (playerWarnMsg != null ? "        Player Warn Msg: \'" + playerWarnMsg + "\'\n" : "")
-				+ (broadcastMsg != null ? "        Broadcast Msg: \'" + broadcastMsg + "\'" : "") + (staffAlertPermission != null ? "        Staff Alert Permission: \'" + staffAlertPermission + "\'\n" : "") + (staffAlertMsg != null ? "        Staff Alert Msg: \'" + staffAlertMsg + "\'\n" : "") + (consoleMsg != null ? "        Console Msg: \'" + consoleMsg + "\'\n" : "") + (commandsToExecute != null ? "        Commands To Execute: \'" + printCommands() + "\'\n" : "")
-				+ (writeToFileName != null ? "        Write To File Name: \'" + writeToFileName + "\'\n" : "") + (blockMessage ? "        Block Message: \'" + blockMessage + "\'\n" : "") + (msgReplacement != null ? "        Replace Part With: \'" + msgReplacement + "\'\n" : "") + (rewriteTo != null ? "        Replace Whole With: \'" + rewriteTo + "\'\n" : "") + "    }");
+		return Common.stripColors("    Handler{\n" + "        Name: \'" + name + "\'\n" + (ruleId != null ? "        Rule ID: " + ruleId + "\n" : "") + (ignoredInCommands != null ? "        Ignored In Commands: " + ignoredInCommands + "\n" : "") + (bypassPermission != null ? "        Bypass Permission: \'" + bypassPermission + "\'\n" : "") + (playerWarningMessage != null ? "        Player Warn Msg: \'" + playerWarningMessage + "\'\n" : "")
+				+ (broadcastMessage != null ? "        Broadcast Msg: \'" + broadcastMessage + "\'" : "") + (staffAlertPermission != null ? "        Staff Alert Permission: \'" + staffAlertPermission + "\'\n" : "") + (staffAlertMessage != null ? "        Staff Alert Msg: \'" + staffAlertMessage + "\'\n" : "") + (consoleMessage != null ? "        Console Msg: \'" + consoleMessage + "\'\n" : "")
+				+ (commandsToExecute != null ? "        Commands To Execute: \'" + printCommands() + "\'\n" : "")
+				+ (writeToFileName != null ? "        Write To File Name: \'" + writeToFileName + "\'\n" : "") + (messageBlocked ? "        Block Message: \'" + messageBlocked + "\'\n" : "") + (messageReplacement != null ? "        Replace Part With: \'" + messageReplacement + "\'\n" : "") + (rewriteTo != null ? "        Replace Whole With: \'" + rewriteTo + "\'\n" : "") + "    }");
 	}
 }

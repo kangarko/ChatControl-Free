@@ -15,27 +15,30 @@ import org.mineacademy.chatcontrol.util.CompatProvider;
 import org.mineacademy.chatcontrol.util.Permissions;
 import org.mineacademy.chatcontrol.util.Writer;
 
-public class CommandListener implements Listener {
+/**
+ * Listens for command event.
+ */
+public final class CommandListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
-	public void onPlayerCommand(PlayerCommandPreprocessEvent e) {
+	public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
 		if (CompatProvider.getOnlinePlayers().size() < Settings.MIN_PLAYERS_TO_ENABLE)
 			return;
 
-		String command = e.getMessage();
+		String command = event.getMessage();
 		final String[] args = command.split(" ");
 
-		final Player pl = e.getPlayer();
-		final PlayerCache plData = ChatControl.getDataFor(pl);
+		final Player player = event.getPlayer();
+		final PlayerCache cache = ChatControl.getCache(player);
 
 		muteCheck:
-		if (ChatControl.muted) {
-			if (Common.hasPermission(pl, Permissions.Bypass.MUTE))
+		if (ChatControl.isMuted()) {
+			if (Common.hasPermission(player, Permissions.Bypass.MUTE))
 				break muteCheck;
 
 			if (Settings.Mute.DISABLED_CMDS_WHEN_MUTED.contains(args[0].replaceFirst("/", ""))) {
-				Common.tell(pl, Localization.CANNOT_COMMAND_WHILE_MUTED);
-				e.setCancelled(true);
+				Common.tell(player, Localization.CANNOT_COMMAND_WHILE_MUTED);
+				event.setCancelled(true);
 				return;
 			}
 		}
@@ -43,22 +46,22 @@ public class CommandListener implements Listener {
 		timeCheck:
 		{
 			final long now = System.currentTimeMillis() / 1000L;
-			final int commandDelay = Settings.AntiSpam.Commands.DELAY.getFor(plData);
+			final int commandDelay = Settings.AntiSpam.Commands.DELAY.getFor(cache);
 
-			if (now - plData.lastCommandTime < commandDelay) {
-				if (Common.hasPermission(pl, Permissions.Bypass.DELAY_COMMANDS))
+			if (now - cache.lastCommandTime < commandDelay) {
+				if (Common.hasPermission(player, Permissions.Bypass.DELAY_COMMANDS))
 					break timeCheck;
 
 				if (Settings.AntiSpam.Commands.WHITELIST_DELAY.contains(args[0].replaceFirst("/", "")))
 					break timeCheck;
 
-				final long time = commandDelay - (now - plData.lastCommandTime);
+				final long time = commandDelay - (now - cache.lastCommandTime);
 
-				Common.tell(pl, Localization.COMMAND_WAIT_MESSAGE.replace("{time}", String.valueOf(time)).replace("{seconds}", Localization.Parts.SECONDS.formatNumbers(time)));
-				e.setCancelled(true);
+				Common.tell(player, Localization.COMMAND_WAIT_MESSAGE.replace("{time}", String.valueOf(time)).replace("{seconds}", Localization.Parts.SECONDS.formatNumbers(time)));
+				event.setCancelled(true);
 				return;
 			} else
-				plData.lastCommandTime = now;
+				cache.lastCommandTime = now;
 		}
 
 		dupeCheck:
@@ -72,48 +75,49 @@ public class CommandListener implements Listener {
 
 			strippedCmd = Common.stripUnicodeOrDuplicates(strippedCmd);
 
-			if (Common.getSimilarity(strippedCmd, plData.lastCommand) > Settings.AntiSpam.Commands.SIMILARITY) {
-				if (Common.hasPermission(pl, Permissions.Bypass.SIMILAR_COMMANDS))
+			if (Common.getSimilarity(strippedCmd, cache.lastCommand) > Settings.AntiSpam.Commands.SIMILARITY) {
+				if (Common.hasPermission(player, Permissions.Bypass.SIMILAR_COMMANDS))
 					break dupeCheck;
 
 				if (Settings.AntiSpam.Commands.WHITELIST_SIMILARITY.contains(args[0].replaceFirst("/", "")))
 					break dupeCheck;
 
-				Common.tell(pl, Localization.ANTISPAM_SIMILAR_COMMAND);
-				e.setCancelled(true);
+				Common.tell(player, Localization.ANTISPAM_SIMILAR_COMMAND);
+				event.setCancelled(true);
 				return;
 			}
-			plData.lastCommand = strippedCmd;
+			cache.lastCommand = strippedCmd;
 		}
 
-		if (Settings.Rules.CHECK_COMMANDS && !Common.hasPermission(e.getPlayer(), Permissions.Bypass.RULES))
-			command = ChatControl.instance().chatCeaser.parseRules(e, pl, command);
+		if (Settings.Rules.CHECK_COMMANDS && !Common.hasPermission(event.getPlayer(), Permissions.Bypass.RULES))
+			command = ChatControl.getInstance().getChatCeaser().parseRules(event, player, command);
 
-		if (e.isCancelled()) { // some of the rule or handler has cancelled it
+		if (event.isCancelled()) { // some of the rule or handler has cancelled it
 			return;
 		}
 
-		if (!command.equals(e.getMessage()))
-			e.setMessage(command);
+		if (!command.equals(event.getMessage()))
+			event.setMessage(command);
 
-		if (Settings.Writer.ENABLED && !Settings.Writer.WHITELIST_PLAYERS.contains(pl.getName()))
+		if (Settings.Writer.ENABLED && !Settings.Writer.WHITELIST_PLAYERS.contains(player.getName()))
 			for (final String prikaz : Settings.Writer.INCLUDE_COMMANDS)
 				if (command.toLowerCase().startsWith("/" + prikaz.toLowerCase()))
-					Writer.write(Writer.CHAT_PATH, "[CMD] " + pl.getName(), command);
+					Writer.write(Writer.CHAT_PATH, "[CMD] " + player.getName(), command);
 
 		sound:
 		if (CompatProvider.hasSounds() && Settings.SoundNotify.ENABLED_IN_COMMANDS.contains(args[0].replaceFirst("/", "")))
 			if (HookManager.isEssentialsLoaded() && (command.startsWith("/r ") || command.startsWith("/reply "))) {
-				final Player reply = HookManager.getReplyTo(pl.getName());
+				final Player replyPlayer = HookManager.getReplyTo(player.getName());
 
-				if (reply != null && Common.hasPermission(reply, Permissions.Notify.WHEN_MENTIONED))
-					reply.playSound(reply.getLocation(), Settings.SoundNotify.SOUND.sound, Settings.SoundNotify.SOUND.volume, Settings.SoundNotify.SOUND.pitch);
+				if (replyPlayer != null && Common.hasPermission(replyPlayer, Permissions.Notify.WHEN_MENTIONED))
+					replyPlayer.playSound(replyPlayer.getLocation(), Settings.SoundNotify.SOUND.sound, Settings.SoundNotify.SOUND.volume, Settings.SoundNotify.SOUND.pitch);
+
 			} else if (args.length > 2) {
-				final Player player = Bukkit.getPlayer(args[1]);
-				if (player == null || !player.isOnline())
+				final Player targetPlayer = Bukkit.getPlayer(args[1]);
+				if (targetPlayer == null || !targetPlayer.isOnline())
 					break sound;
 
-				player.playSound(player.getLocation(), Settings.SoundNotify.SOUND.sound, Settings.SoundNotify.SOUND.volume, Settings.SoundNotify.SOUND.pitch);
+				targetPlayer.playSound(targetPlayer.getLocation(), Settings.SoundNotify.SOUND.sound, Settings.SoundNotify.SOUND.volume, Settings.SoundNotify.SOUND.pitch);
 			}
 	}
 }

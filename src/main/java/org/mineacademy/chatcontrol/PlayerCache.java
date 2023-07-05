@@ -8,33 +8,28 @@ import org.mineacademy.chatcontrol.group.Group;
 import org.mineacademy.chatcontrol.settings.Settings;
 import org.mineacademy.chatcontrol.util.Common;
 
-public class PlayerCache {
+/**
+ * Represents temporary player data.
+ */
+public final class PlayerCache {
 
 	public String lastMessage = "";
 	public String lastCommand = "";
-
 	public String lastSignText = "";
-
 	public long lastMessageTime = 0;
 	public long lastCommandTime = 0;
-
 	public Location loginLocation = null;
 	public long lastLogin = 0;
-
 	public List<Group> groups = null;
 
-	// Reason for this: I cannot get the player instance from PreLoginEvent.
-	public void onCall(Player pl) {
-		assignGroups(pl);
-	}
-
-	private void assignGroups(Player pl) {
+	public void assignGroups(Player player) {
 		if (!Settings.Groups.ENABLED)
 			return;
 
 		if (groups == null || Settings.Groups.ALWAYS_CHECK_UPDATES) {
-			Common.debug("&bLoading group for &f" + pl.getName() + "&b ...");
-			groups = Group.loadFor(pl);
+			Common.debug("&bLoading group for &f" + player.getName() + "&b ...");
+
+			groups = Group.loadFor(player);
 		}
 	}
 }
