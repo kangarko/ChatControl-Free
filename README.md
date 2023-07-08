@@ -10,6 +10,8 @@
 # ChatControl Free
 ChatControl Pro is a legendary chat plugin that took the marketplace by storm in 2013 and has since generated over 500,000 downloads.
 
+**Notice**: ChatControl Free has been replaced by [ChatControl Red](https://mineacademy.org/chatcontrol). We will still update ChatControl Free but for new features such as HEX, Bungee, [item] placeholder etc. upgrade to ChatControl Red.
+
 * Completely eliminate, prevent and punish swears, ads, spam and anything you want by customizable filters
 * Anti-spam and chat limits
 * Anti-duplication for messages and commands
