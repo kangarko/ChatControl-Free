@@ -1,4 +1,4 @@
-# We're still active: We have left SpigotMC and [continue ChatControl development here](https://mineacademy.org/chatcontrol-red).
+# SpigotMC.org banned us and is censoring "MineAcademy" mentions. We're still active. [Read more here](https://mineacademy.org/spigotmc-ban?st=github&sc=spigotban).
 
 <p align="center">
   Learn Java and code highly-customized Minecraft plugins in 20 days (without experience):
