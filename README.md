@@ -1,9 +1,7 @@
-# SpigotMC.org banned us and is censoring "MineAcademy" mentions. We're still active. [Read more here](https://mineacademy.org/spigotmc-ban?st=github&sc=spigotban).
-
 <p align="center">
-  Learn Java and code highly-customized Minecraft plugins in 20 days (without experience):
-  <a href="https://mineacademy.org/project-orion?st=github&sc=chatcontrol_free&utm_source=github&utm_medium=overview&utm_campaign=chatcontrol_free">
-    <img src="https://i.imgur.com/lpZ2pJN.jpg" />
+  <small><i>Learn Java, code Minecraft plugins and launch a unique network from the ground up in 20 days (without experience):</i></small>
+  <a href="https://mineacademy.org/project-orion?st=github&sc=chatcontrolfree&utm_source=github&utm_medium=overview&utm_campaign=chatcontrolfree">
+    <img src="https://i.imgur.com/SVHA9Kf.png" />
   </a>
 </p>
 
