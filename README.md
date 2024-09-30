@@ -1,3 +1,5 @@
+# We're still active and have migrated away from SpigotMC. [Read more here](https://mineacademy.org/spigotmc-ban?st=github&sc=spigotban_ccp).
+
 <p align="center">
   <small><i>Learn Java, code Minecraft plugins and launch a unique network from the ground up in 20 days (without experience):</i></small>
   <a href="https://mineacademy.org/project-orion?st=github&sc=chatcontrolfree&utm_source=github&utm_medium=overview&utm_campaign=chatcontrolfree">
