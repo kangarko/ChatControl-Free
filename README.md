@@ -1,9 +1,9 @@
-# We're still active and have migrated away from SpigotMC. [Read more here](https://mineacademy.org/spigotmc-ban?st=github&sc=spigotban_ccp).
+# [We've migrated away from SpigotMC](https://mineacademy.org/spigotmc-ban?st=github&sc=spigotban). To get the new ChatControl, [click here](https://github.com/kangarko/ChatControl/).
 
 <p align="center">
-  <small><i>Learn Java, code Minecraft plugins and launch a unique network from the ground up in 20 days (without experience):</i></small>
-  <a href="https://mineacademy.org/project-orion?st=github&sc=chatcontrolfree&utm_source=github&utm_medium=overview&utm_campaign=chatcontrolfree">
-    <img src="https://i.imgur.com/SVHA9Kf.png" />
+  <small><i>Learn how to code hyper-customized Minecraft plugins & servers In 30 days. Stop being held hostage by developers and limited plugins or spending years on learning code:</i></small>
+  <a href="https://mineacademy.org/project-orion?st=github&sc=chatcontrolfree">
+    <img src="https://mineacademy.org/assets/branding/spigot-overview-2026-04-05.png" />
   </a>
 </p>
 
